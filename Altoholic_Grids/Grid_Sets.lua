@@ -307,7 +307,7 @@ local function InitTransmogSetsInfo(sets)
 	table.sort(pvpSortedDescriptions)
 end
 
-InitTransmogSetsInfo(C_TransmogSets.GetAllSets())
+--InitTransmogSetsInfo(C_TransmogSets.GetAllSets())
 
 local function BuildView()
 	view = view or {}

@@ -174,14 +174,7 @@
 				</KeyValues>
 			</Button>
 			
-			<Button parentKey="Sets" inherits="AltoTabGridsMenuIconTemplate" id="13">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="120" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\inv_chest_cloth_81" />
-				</KeyValues>
-			</Button>
+
 			
 			<!-- Tooltip for Garrison Levels, to avoid messing with Blizzard's own -->
 			<Frame parentKey="BuildingLevelTooltip" inherits="TooltipBorderedFrameTemplate" hidden="true" frameStrata="TOOLTIP" clampedToScreen="true">

@@ -14,7 +14,7 @@ addon:Controller("AltoholicUI.TabGrids", {
 		frame.Archeology.text = GetSpellInfo(78670)
 		frame.Dailies.text = "Daily Quests"
 		frame.FollowerAbilities.text = format("%s/%s", GARRISON_RECRUIT_ABILITIES, GARRISON_RECRUIT_TRAITS)
-		frame.Sets.text = WARDROBE_SETS
+--		frame.Sets.text = WARDROBE_SETS
 		
 		frame.SelectRealm:RegisterClassEvent("RealmChanged", function()
 				frame.Status:SetText("")
