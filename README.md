@@ -1,5 +1,5 @@
 # Altoholic-Classic
-Altoholic Classic fork by Teelo
+Altoholic Classic fork by Teelo-Jubei'thos (Retail) / Teelo-Arugal (Classic)
 
 My quick-and-dirty attempt at making Altoholic work for WoW Classic. I'm open to taking pull requests to improve it.
 
