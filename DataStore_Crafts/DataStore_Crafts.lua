@@ -160,7 +160,9 @@ local function LocalizeProfessionSpellIDs()
 end
 
 local function GetRecipeRank(info)
-	local currentRank = 0
+    print("Deprecated function called: GetRecipeRank")
+    return;
+--[[	local currentRank = 0
 	local totalRanks = 1
 	local highestRankID = info.recipeID
 
@@ -190,7 +192,7 @@ local function GetRecipeRank(info)
 		highestRankID = info.recipeID
 	end
 	
-	return currentRank, totalRanks, highestRankID
+	return currentRank, totalRanks, highestRankID]]--
 end
 
 -- *** Scanning functions ***
@@ -275,10 +277,15 @@ local function ScanRecipeCategories(profession)
 	profession.MaxRank = select(3, GetTradeSkillLine())
 end
 
-local function ScanRecipes()
-	local tradeskillName = GetTradeSkillLine() --select(7, C_TradeSkillUI.GetTradeSkillLine())
-	if not tradeskillName or tradeskillName == "UNKNOWN" then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
-                 
+local function ScanRecipes(useCraftInstead)
+    local tradeskillName
+    if (useCraftInstead) then
+        tradeskillName = GetCraftDisplaySkillLine()
+    else
+        tradeskillName = GetTradeSkillLine() --select(7, C_TradeSkillUI.GetTradeSkillLine())
+    end
+	if (not tradeskillName) or (tradeskillName == "UNKNOWN") then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
+                                                  
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
 	
@@ -293,7 +300,12 @@ local function ScanRecipes()
 	local crafts = profession.Crafts
 	wipe(crafts)
 		
-	local numRecipes = GetNumTradeSkills(); --C_TradeSkillUI.GetAllRecipeIDs()
+	local numRecipes 
+    if (useCraftInstead) then
+        numRecipes = GetNumCrafts();
+    else
+        numRecipes = GetNumTradeSkills(); --C_TradeSkillUI.GetAllRecipeIDs()
+    end
 	if not numRecipes or (numRecipes == 0) then return end
 	
 	local resultItems = addon.ref.global.ResultItems
@@ -305,19 +317,45 @@ local function ScanRecipes()
 	
 	wipe(profession.Cooldowns)
     
+    -- Setting the default to 1 because enchanting doesn't have categories
     local categoryID = 1
 	
-	for recipeID = GetFirstTradeSkill(), numRecipes do
-        local skillType = select(2, GetTradeSkillInfo(recipeID))
-		if (skillType ~= "header") then
+    local firstTradeSkillNum = 1
+    if (not useCraftInstead) then
+        firstTradeSkillNum = GetFirstTradeSkill()
+    end    
+    
+	for recipeID = firstTradeSkillNum, numRecipes do
+        local skillType, itemLink
+        if (useCraftInstead) then
+            skillType = select(3, GetCraftInfo(recipeID))
+            itemLink = GetCraftItemLink(recipeID)
+        else
+            skillType = select(2, GetTradeSkillInfo(recipeID))
+            itemLink = GetTradeSkillItemLink(recipeID) --C_TradeSkillUI.GetRecipeItemLink(recipeID)
+        end
+		if (skillType == "header") then
+            categoryID = recipeID
+        else
     		-- scan reagents for all recipes (even unlearned)
     		wipe(reagentsInfo)
     		
-    		local numReagents = GetTradeSkillNumReagents(recipeID) --C_TradeSkillUI.GetRecipeNumReagents(recipeID)
+    		local numReagents 
+            if (useCraftInstead) then
+                numReagents = GetCraftNumReagents(recipeID)
+            else
+                numReagents = GetTradeSkillNumReagents(recipeID) --C_TradeSkillUI.GetRecipeNumReagents(recipeID)
+            end
     		for reagentIndex = 1, numReagents do
-    			local _, _, count = GetTradeSkillReagentInfo(recipeID, reagentIndex) --C_TradeSkillUI.GetRecipeReagentInfo(recipeID, reagentIndex)
-    			local link = GetTradeSkillReagentItemLink(recipeID, reagentIndex) --C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
-    			
+                local count, link
+                if (useCraftInstead) then
+    			     _, _, count = GetCraftReagentInfo(recipeID, reagentIndex)
+    			     link = GetCraftReagentItemLink(recipeID, reagentIndex) 
+                else
+                     _, _, count = GetTradeSkillReagentInfo(recipeID, reagentIndex) --C_TradeSkillUI.GetRecipeReagentInfo(recipeID, reagentIndex)
+    			     link = GetTradeSkillReagentItemLink(recipeID, reagentIndex) --C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+    			end
+                
     			if link and count then
     				local itemID = tonumber(link:match("item:(%d+)"))
     				if itemID then
@@ -329,9 +367,12 @@ local function ScanRecipes()
     		reagentsDB[recipeID] = table.concat(reagentsInfo, "|")
     
     		-- Resulting item ID
-    		local itemLink = GetTradeSkillItemLink(recipeID) --C_TradeSkillUI.GetRecipeItemLink(recipeID)
     		if itemLink then
-    			local _, maxMade = GetTradeSkillNumMade(recipeID) --C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
+                -- there does not seem to be an equivalent Craft function to GetTradeSkillNumMade. Presuming its always 1 for those windows. I mean its enchanting so it must be.
+    			local maxMade = 1
+                if (not useCraftInstead) then
+                    _, maxMade = GetTradeSkillNumMade(recipeID) --C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
+                end
     			if maxMade > 255 then maxMade = 255 end
     			
     			local itemID = tonumber(itemLink:match("item:(%d+)"))
@@ -362,41 +403,52 @@ local function ScanRecipes()
     		--end
     		
     		-- scan cooldown
-    		local cooldown = GetTradeSkillCooldown(recipeID)--C_TradeSkillUI.GetRecipeCooldown(recipeID)
+    		local cooldown = nil
+            if (not useCraftInstead) then
+                cooldown = GetTradeSkillCooldown(recipeID)--C_TradeSkillUI.GetRecipeCooldown(recipeID)
+            end
     		if cooldown then
     			-- ex: "Hexweave Cloth|86220|1533539676" expire at "now + cooldown"
     			table.insert(profession.Cooldowns, format("%s|%d|%d", GetTradeSkillInfo(recipeID), cooldown, cooldown + time()))
     		end
-        else
-            categoryID = recipeID
         end
 	end
 	
 	addon:SendMessage("DATASTORE_RECIPES_SCANNED", char, tradeskillName)
 end
 
-local function ScanTradeSkills()
-	ScanRecipes()	
+local function ScanTradeSkills(useCraftInstead)
+	ScanRecipes(useCraftInstead)	
 	addon.ThisCharacter.lastUpdate = time()
 end
 
 -- Updating ScanProfessionInfo with a version for Classic that scans the currently open tradeskill window
-local function ClassicScanProfessionInfo()
+local function ClassicScanProfessionInfo(useCraftInstead)
     -- arguments should be: index and mainIndex ... wtf are these even?
-    local profName = GetTradeSkillLine();
+    local profName
+    if (useCraftInstead) then
+        profName = GetCraftDisplaySkillLine();
+        -- Ignore Beast Training window, which is programmed as a "craft"
+    else
+        profName = GetTradeSkillLine();
+    end
+    if (profName == "UNKNOWN") then
+        print("DataStore_Crafts error: profName is UNKNOWN")
+        return
+    end
 	local char = addon.ThisCharacter
     local index = 0
     local mainIndex = false
     if (profName == "Cooking") then
         index = 3
-    elseif (profName == "First Aid") then    
-        index = 4
-    elseif (profName == "Fishing") then
-        index = 5
-    elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) then
+--    elseif (profName == "First Aid") then    
+--        index = 4
+--    elseif (profName == "Fishing") then
+--        index = 5
+    elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
         index = 1
         mainIndex = true
-    elseif (char["Prof"..2] == profName) or (char["Prof"..2] == nil) then
+    elseif (char["Prof"..2] == profName) or (char["Prof"..2] == nil) or (char["Prof"..2] == "UNKNOWN") then
         index = 2
         mainIndex = true
     else
@@ -411,20 +463,23 @@ local function ClassicScanProfessionInfo()
 	if not char or not index then return end
 	                           
 	--local profName, texture, rank, maxRank, _, _, _, _, _, _, currentLevelName = GetProfessionInfo(index);
-    local _, rank, maxRank = GetTradeSkillLine();
+    local _, rank, maxRank
+    if (useCraftInstead) then
+        _, rank, maxRank = GetCraftDisplaySkillLine();
+    else
+        _, rank, maxRank = GetTradeSkillLine();        
+    end
 	local profession = char.Professions[profName]
 	profession.CurrentLevelName = ClassicProfessionLevelToLevelName(rank)
-	
---	if profName == GetSpellInfo(SPELL_ID_ARCHAEOLOGY) then
---		profession.Rank = rank
---		profession.MaxRank = maxRank
---	end
 	
 	if mainIndex then
 		char["Prof"..index] = profName
 	end
-                       
-    ScanTradeSkills()
+                          
+    profession.Rank = rank
+	profession.MaxRank = maxRank
+                          
+    ScanTradeSkills(useCraftInstead)
 end
 
 local function ScanArcheologyItems()
@@ -445,10 +500,22 @@ end
 local function OnTradeSkillShow()
     -- can't link tradeskills from other players in Classic, so this line is not needed
 	-- if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
-	
+
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
 	addon.isOpen = true
     ClassicScanProfessionInfo();
+end
+
+local function OnCraftClose()
+	addon:UnregisterEvent("CRAFT_CLOSE")
+	addon.isOpen = nil
+end
+
+-- This one is for Enchanting. For some reason Enchanting isn't programmed as a "tradeskill"
+local function OnCraftShow()
+    addon:RegisterEvent("CRAFT_CLOSE", OnCraftClose)
+	addon.isOpen = true
+    ClassicScanProfessionInfo(true);
 end
 
 local function OnArtifactHistoryReady()
@@ -817,17 +884,10 @@ end
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("TRADE_SKILL_SHOW", OnTradeSkillShow)
+    addon:RegisterEvent("CRAFT_SHOW", OnCraftShow)
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 	addon:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", OnDataSourceChanged)
-		
-	local arch = nil --  GetProfessions()
-
-	if arch then
-		addon:RegisterEvent("RESEARCH_ARTIFACT_HISTORY_READY", OnArtifactHistoryReady)
-		addon:RegisterEvent("RESEARCH_ARTIFACT_COMPLETE", OnArtifactComplete)
-		RequestArtifactCompletionHistory()		-- this will trigger RESEARCH_ARTIFACT_HISTORY_READY
-	end
 	
 --	addon:SetupOptions()
 	ClearExpiredProfessions()	-- automatically cleanup guild profession links that are from an older version
