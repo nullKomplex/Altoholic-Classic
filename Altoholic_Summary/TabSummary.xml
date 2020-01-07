@@ -37,7 +37,7 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-			<Button parentKey="MenuItem5" inherits="AltoTabSummaryMenuItemTemplate" id="5">
+<!--			<Button parentKey="MenuItem5" inherits="AltoTabSummaryMenuItemTemplate" id="5">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
@@ -46,7 +46,7 @@
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
-			</Button>
+			</Button> -->
 			<!-- <Button parentKey="MenuItem7" inherits="AltoTabSummaryMenuItemTemplate" id="7"> -->
 				<!-- <Anchors> -->
 					<!-- <Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" /> -->
@@ -183,8 +183,8 @@
 				self.MenuItem2:SetText(L["Bag Usage"])
 				self.MenuItem3:SetText(SKILLS)
 				self.MenuItem4:SetText(L["Activity"])
-				self.MenuItem5:SetText(CURRENCY)
-				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)
+<!--				self.MenuItem5:SetText(CURRENCY)
+				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)-->
 				
 				-- "Artifacts"
 				-- self.MenuItem7:SetText(GetCategoryInfo(15256))	

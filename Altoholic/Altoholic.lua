@@ -24,8 +24,8 @@ local function InitLocalization()
 
 	AltoholicFrameTab1:SetText(L["Summary"])
 	AltoholicFrameTab2:SetText(L["Characters"])
-	AltoholicFrameTab6:SetText(L["Agenda"])
-	AltoholicFrameTab7:SetText(L["Grids"])
+--	AltoholicFrameTab6:SetText(L["Agenda"])
+	AltoholicFrameTab5:SetText(L["Grids"])
 	
 	AltoAccountSharingName:SetText(L["Account Name"])
 	AltoAccountSharingText1:SetText(L["Send account sharing request to:"])

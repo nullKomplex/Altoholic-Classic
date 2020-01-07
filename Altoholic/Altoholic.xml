@@ -30,7 +30,7 @@
 			<OnLoad>
 				self:RegisterForDrag("LeftButton")
 				self.elapsed = 0
-				PanelTemplates_SetNumTabs(self, 7)
+				PanelTemplates_SetNumTabs(self, 5)
 				PanelTemplates_SetTab(self, 1)
 			</OnLoad>
 			<OnDragStart>
@@ -145,7 +145,7 @@
 					<KeyValue key="context" value="Guild" />
 				</KeyValues>
 			</Button>
-			<Button name="$parentTab5" inherits="AltoTabTemplate" id="5" text="ACHIEVEMENT_BUTTON">
+<!--			<Button name="$parentTab5" inherits="AltoTabTemplate" id="5" text="ACHIEVEMENT_BUTTON">
 				<Anchors>
 					<Anchor point="TOPLEFT" relativeTo="$parentTab4" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
@@ -160,10 +160,10 @@
 				<KeyValues>
 					<KeyValue key="context" value="Agenda" />
 				</KeyValues>
-			</Button>
-			<Button name="$parentTab7" inherits="AltoTabTemplate" id="7">
+			</Button>         -->
+			<Button name="$parentTab5" inherits="AltoTabTemplate" id="7">
 				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parentTab6" relativePoint="TOPRIGHT" x="-8" y="0" />
+					<Anchor point="TOPLEFT" relativeTo="$parentTab4" relativePoint="TOPRIGHT" x="-8" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="context" value="Grids" />

@@ -141,14 +141,14 @@ local mandatoryModules = {		-- mandatory modules are sent anyway (if the charact
 }
 
 local optionalModules = {		-- this defines the order in which modules should be listed
-	"DataStore_Achievements",
+--	"DataStore_Achievements",
 	"DataStore_Auctions",
 	"DataStore_Containers",
 	"DataStore_Crafts",
-	"DataStore_Currencies",
+--	"DataStore_Currencies",
 	"DataStore_Inventory",
 	"DataStore_Mails",
-	"DataStore_Pets",
+--	"DataStore_Pets",
 	"DataStore_Quests",
 	"DataStore_Reputations",
 	-- "DataStore_Skills",
@@ -157,15 +157,15 @@ local optionalModules = {		-- this defines the order in which modules should be 
 }
 
 local moduleLabels = {		-- these are the labels
-	["DataStore_Achievements"] = ACHIEVEMENT_BUTTON,		-- "Achievements"
+--	["DataStore_Achievements"] = ACHIEVEMENT_BUTTON,		-- "Achievements"
 	["DataStore_Auctions"] = format("%s & %s", AUCTIONS, BIDS),
 --	["DataStore_Characters"] = ,
 	["DataStore_Containers"] = L["Containers"],
 	["DataStore_Crafts"] = TRADE_SKILLS,
-	["DataStore_Currencies"] = CURRENCY,
+--	["DataStore_Currencies"] = CURRENCY,
 	["DataStore_Inventory"] = L["Equipment"],
 	["DataStore_Mails"] = L["Mails"],
-	["DataStore_Pets"] = format("%s & %s", COMPANIONS, MOUNTS),
+--	["DataStore_Pets"] = format("%s & %s", COMPANIONS, MOUNTS),
 	["DataStore_Quests"] = L["Quests"],
 	["DataStore_Reputations"] = L["Reputations"],
 	-- ["DataStore_Skills"] = SKILLS,
