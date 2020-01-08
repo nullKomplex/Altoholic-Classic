@@ -446,8 +446,8 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     local mainIndex = false
     if (profName == "Cooking") then
         index = 3
---    elseif (profName == "First Aid") then    
---        index = 4
+    elseif (profName == "First Aid") then    
+        index = 4
 --    elseif (profName == "Fishing") then
 --        index = 5
     elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
@@ -551,7 +551,8 @@ skillUpMsg = gsub(skillUpMsg, arg2pattern, "(%%d+)")
 local function OnChatMsgSkill(self, msg)
 	if msg and addon.isOpen then	-- point gained while ts window is open ? rescan
 		local skill = msg:match(skillUpMsg)
-		if skill and skill == C_TradeSkillUI.GetTradeSkillLine() then	-- if we gained a skill point in the currently opened profession pane, rescan
+        -- TODO: check if the skillup was for the currently open profession pane
+		if skill then -- and skill == --C_TradeSkillUI.GetTradeSkillLine() then	-- if we gained a skill point in the currently opened profession pane, rescan
 			ScanTradeSkills()
 		end
 	end
@@ -672,15 +673,17 @@ local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 	local crafts = profession.Crafts
 	
 	-- loop through categories
-	for catIndex = 1, _GetNumRecipeCategories(profession) do
+	for _, catIndex in pairs(profession.Categories) do -- = 1, _GetNumRecipeCategories(profession) do
+        local catID = catIndex.id
+        
 		-- if there is no filter on main category, or if it is just the one we want to see
-		if (mainCategory == 0) or (mainCategory == catIndex) then
+		if (mainCategory == 0) or (mainCategory == catID) then
 			-- loop through subcategories
 			--for subCatIndex = 1, _GetNumRecipeCategorySubItems(profession, catIndex) do
 				-- if there is no filter on sub category, or if it is just the one we want to see
 			--	if (subCategory == 0) or (subCategory == subCatIndex) then
 			--		local subCatID, _, recipes = _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
-					local recipes = profession.Crafts[catIndex]
+					local recipes = profession.Crafts[catID]
 					if type(recipes) == "table" then
 						-- loop through recipes
 						for i = 1, #recipes do
