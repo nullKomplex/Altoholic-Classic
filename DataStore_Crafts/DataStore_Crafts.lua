@@ -671,7 +671,10 @@ local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 	-- mainCategory : category index (or 0 for all)
 	-- subCategory : sub-category index (or 0 for all)
 	local crafts = profession.Crafts
-	
+    
+    -- bugfix for error thrown when the player hasn't registered this profession at all yet
+	if(profession.Categories == nil) then return; end
+    
 	-- loop through categories
 	for _, catIndex in pairs(profession.Categories) do -- = 1, _GetNumRecipeCategories(profession) do
         local catID = catIndex.id
@@ -750,7 +753,7 @@ local function _IsCraftKnown(profession, spellID)
 		end
 	end)
 
-	return isKnown
+	return false
 end
 
 local function _GetGuildCrafters(guild)

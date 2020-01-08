@@ -688,11 +688,11 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
 
 	-- track daily quests turn-ins
-	if QuestIsDaily() or emissaryQuests[questID] then
-		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
-		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
-	end
-	-- TODO: there's also QuestIsWeekly() which should probably also be tracked
+--	if QuestIsDaily() or emissaryQuests[questID] then
+--		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
+--		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
+--	end
+--	-- TODO: there's also QuestIsWeekly() which should probably also be tracked
 
 	addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 end)

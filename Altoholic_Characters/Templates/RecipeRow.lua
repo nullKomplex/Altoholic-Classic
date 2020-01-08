@@ -4,7 +4,7 @@ local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 addon:Controller("AltoholicUI.RecipeRow", {
 	Update = function(frame, profession, recipeID, color, isLearned, recipeRank, totalRanks)
-		
+		               
 		-- ** set the crafted item **
 		local craftedItemID, maxMade = DataStore:GetCraftResultItem(recipeID)
 		local itemName, itemLink, itemRarity
