@@ -123,7 +123,6 @@ local function Tradeskill_OnEnter(frame, skillName, showRecipeStats)
 	
 	local curRank, maxRank = DataStore:GetProfessionInfo(DataStore:GetProfession(character, skillName))
 	local profession = DataStore:GetProfession(character, skillName)
-
 	local tt = AltoTooltip
 	
 	tt:ClearLines()

@@ -242,10 +242,18 @@ local function GetTradeSkillHeaders()
     return headers
 end
 
-local function ScanRecipeCategories(profession)
+local function ScanRecipeCategories(profession, useCraftInstead)
 	-- clear storage
 	profession.Categories = profession.Categories or {}
 	wipe(profession.Categories)
+    
+    if useCraftInstead then
+        table.insert(profession.Categories, {id = 1})
+        return
+    else
+        profession.Rank = select(2, GetTradeSkillLine())
+	    profession.MaxRank = select(3, GetTradeSkillLine())
+    end
 	
 	local names = addon.ref.global.RecipeCategoryNames
 --	local cumulatedRank = 0
@@ -272,9 +280,6 @@ local function ScanRecipeCategories(profession)
 			id = headerID,   
 		})
 	end
-	
-	profession.Rank = select(2, GetTradeSkillLine())
-	profession.MaxRank = select(3, GetTradeSkillLine())
 end
 
 local function ScanRecipes(useCraftInstead)
@@ -289,7 +294,7 @@ local function ScanRecipes(useCraftInstead)
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
 	
-	ScanRecipeCategories(profession)
+	ScanRecipeCategories(profession, useCraftInstead)
 	           
 	-- Get profession link
 --	local profLink = C_TradeSkillUI.GetTradeSkillListLink()
@@ -598,20 +603,22 @@ local function _GetProfessionInfo(profession)
 	-- or a link (type == string)
 	
 	local rank, maxRank, spellID, _
-	local link
+    -- No profession links in Classic, time for a workaround
+--	local link
 
 	if type(profession) == "table" then
 		rank = profession.Rank
 		maxRank = profession.MaxRank 
-		link = profession.FullLink
+		--link = profession.FullLink
 	elseif type(profession) == "string" then
+        print("x")
 		link = profession
 	end
 	
-	if link and type(link) ~= "number" then
-		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
-		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
-	end
+--	if link and type(link) ~= "number" then
+--		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
+--		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
+--	end
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
 end
@@ -654,6 +661,12 @@ end
 
 -- Iterate through all recipes, and callback a function for each of them
 local function _IterateRecipes(profession, mainCategory, subCategory, callback)
+    
+    if (subCategory ~= 0) then
+        print("Error in DataStore_Crafts - subCategory is not zero, subCategories do not exist in Classic")
+        return
+    end
+    
 	-- mainCategory : category index (or 0 for all)
 	-- subCategory : sub-category index (or 0 for all)
 	local crafts = profession.Crafts
@@ -663,11 +676,11 @@ local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 		-- if there is no filter on main category, or if it is just the one we want to see
 		if (mainCategory == 0) or (mainCategory == catIndex) then
 			-- loop through subcategories
-			for subCatIndex = 1, _GetNumRecipeCategorySubItems(profession, catIndex) do
+			--for subCatIndex = 1, _GetNumRecipeCategorySubItems(profession, catIndex) do
 				-- if there is no filter on sub category, or if it is just the one we want to see
-				if (subCategory == 0) or (subCategory == subCatIndex) then
-					local subCatID, _, recipes = _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
-					
+			--	if (subCategory == 0) or (subCategory == subCatIndex) then
+			--		local subCatID, _, recipes = _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
+					local recipes = profession.Crafts[catIndex]
 					if type(recipes) == "table" then
 						-- loop through recipes
 						for i = 1, #recipes do
@@ -677,8 +690,8 @@ local function _IterateRecipes(profession, mainCategory, subCategory, callback)
 							if stop then return end
 						end
 					end
-				end
-			end
+			--	end
+			--end
 		end
 	end
 end
@@ -853,11 +866,11 @@ local PublicMethods = {
 	GetProfession2 = _GetProfession2,
 	GetCookingRank = _GetCookingRank,
 	GetFishingRank = _GetFishingRank,
-	GetArchaeologyRank = _GetArchaeologyRank,
-	GetArchaeologyRaceArtifacts = _GetArchaeologyRaceArtifacts,
-	GetRaceNumArtifacts = _GetRaceNumArtifacts,
-	GetArtifactInfo = _GetArtifactInfo,
-	IsArtifactKnown = _IsArtifactKnown,
+--	GetArchaeologyRank = _GetArchaeologyRank,
+--	GetArchaeologyRaceArtifacts = _GetArchaeologyRaceArtifacts,
+--	GetRaceNumArtifacts = _GetRaceNumArtifacts,
+--	GetArtifactInfo = _GetArtifactInfo,
+--	IsArtifactKnown = _IsArtifactKnown,
 	GetCraftReagents = _GetCraftReagents,
 	GetCraftResultItem = _GetCraftResultItem,
 }
