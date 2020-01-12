@@ -506,10 +506,13 @@ function addon:GetIDFromLink(link)
 	end
 end
 
-function addon:GetSpellIDFromRecipeLink(link)
+function addon:GetItemNameFromRecipeLink(link)
 	-- returns nil if recipe id is not in the DB, returns the spellID otherwise
-	local recipeID = addon:GetIDFromLink(link)
-	return LCI:GetRecipeLearnedSpell(recipeID)
+	--local recipeID = addon:GetIDFromLink(link)
+	--return LCI:GetRecipeLearnedSpell(recipeID)
+    local isRecipe, craftName = string.match(GetItemInfo(link), "(%a+)\:%s(.+)")
+    if (isRecipe ~= "Recipe") then return nil end
+    return craftName
 end
 
 -- copied to formatter service

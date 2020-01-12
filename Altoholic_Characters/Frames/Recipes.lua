@@ -112,7 +112,7 @@ local function GetRecipeList(character, professionName, mainCategory, subCategor
 	
 	DataStore:IterateRecipes(profession, mainCategory, subCategory, function(recipeData) 
 		local color, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
-		
+		 
 		-- filter by learned / unlearned ..
 		if (isLearned and viewLearned) or (not isLearned and viewUnlearned) then
 			if RecipePassesColorFilter(color) and RecipePassesSlotFilter(recipeID) and RecipePassesSearchFilter(recipeID) then
@@ -150,7 +150,7 @@ addon:Controller("AltoholicUI.Recipes", {
 		for rowIndex = 1, numRows do
 			local rowFrame = scrollFrame:GetRow(rowIndex)
 			local line = rowIndex + offset
-			
+			       
 			if line <= #recipeList then	-- if the line is visible
 				local color, recipeID, isLearned, recipeRank, totalRanks = DataStore:GetRecipeInfo(recipeList[line])
 				rowFrame:Update(currentProfession, recipeID, RecipeColors[color], isLearned, recipeRank, totalRanks)

@@ -390,14 +390,9 @@ local function GetItemCount(searchedID)
 end
 
 function addon:GetRecipeOwners(professionName, link, recipeLevel)
-	local craftName
-	local spellID = addon:GetSpellIDFromRecipeLink(link)
-
-	if not spellID then		-- spell id unknown ? let's parse the tooltip
-		craftName = GetCraftNameFromRecipeLink(link)
-		if not craftName then return end		-- still nothing usable ? then exit
-	end
-	
+	local craftName = GetCraftNameFromRecipeLink(link)
+	if not craftName then return end		-- still nothing usable ? then exit
+	   
 	local know = {}				-- list of alts who know this recipe
 	local couldLearn = {}		-- list of alts who could learn it
 	local willLearn = {}			-- list of alts who will be able to learn it later
@@ -410,22 +405,21 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 	local profession, isKnownByChar
 	for characterName, character in pairs(DataStore:GetCharacters()) do
 		profession = DataStore:GetProfession(character, professionName)
-
 		isKnownByChar = nil
 		if profession then
-			if spellID then			-- if spell id is known, just find its equivalent in the professions
-				isKnownByChar = DataStore:IsCraftKnown(profession, spellID)
-			else
+--			if spellID then			-- if spell id is known, just find its equivalent in the professions
+--				isKnownByChar = DataStore:IsCraftKnown(profession, spellID)
+--			else
 				DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
 					local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
-					local skillName = GetSpellInfo(recipeID) or ""
-
+					local skillName = DataStore:GetResultItemName(recipeID) --GetSpellInfo(recipeID) or ""
+                    
 					if string.lower(skillName) == string.lower(craftName) and isLearned then
 						isKnownByChar = true
 						return true	-- stop iteration
 					end
 				end)
-			end
+--			end
 
 			local coloredName = DataStore:GetColoredCharacterName(character)
 			
