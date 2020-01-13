@@ -354,13 +354,17 @@ local function ScanRecipes(useCraftInstead)
     
 	for recipeIndex = firstTradeSkillNum, numRecipes do
         local recipeID = GenerateSpellID(recipeIndex, profession.Name)
-        local skillType, itemLink
+        local skillType, itemLink, itemName
         if (useCraftInstead) then
             skillType = select(3, GetCraftInfo(recipeIndex))
             itemLink = GetCraftItemLink(recipeIndex)
+            itemName = GetCraftInfo(recipeIndex)
         else
             skillType = select(2, GetTradeSkillInfo(recipeIndex))
             itemLink = GetTradeSkillItemLink(recipeIndex) --C_TradeSkillUI.GetRecipeItemLink(recipeID)
+            if (itemLink) then  --exclude headers
+                itemName = GetItemNameFromLink(itemLink)
+            end
         end
 		if (skillType == "header") then
             categoryID = recipeIndex
@@ -402,11 +406,14 @@ local function ScanRecipes(useCraftInstead)
                     _, maxMade = GetTradeSkillNumMade(recipeIndex) --C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
                 end
     			if maxMade > 255 then maxMade = 255 end
-    			
+    			          
     			local itemID = tonumber(itemLink:match("item:(%d+)"))
+                          
     			if itemID then
     				resultItems[recipeID] = maxMade + LShift(itemID, 8) 	-- bits 0-7 = maxMade, bits 8+ = item id
-                    resultItemNames[recipeID] = GetItemNameFromLink(itemLink)
+                    resultItemNames[recipeID] = itemName
+                elseif itemName then
+                    resultItemNames[recipeID] = itemName
     			end
     		end
     		
@@ -770,7 +777,7 @@ end
 local function _IsCraftKnown(profession, spellID)
 	-- returns true if a given spell ID is known in the profession passed as first argument
 	local isKnown = false
-              print(spellID)
+
     if (not profession) then return false end                
 
         -- need to hash the spell ID
