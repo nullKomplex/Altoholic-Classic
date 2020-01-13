@@ -58,7 +58,7 @@
 					<Anchor point="TOPLEFT" x="300" y="-40" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_Everyones a Hero_rank2" />
+					<KeyValue key="iconFile" value="Interface\FriendsFrame\PlusManz-PlusManz.blp" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="FactionIcon" inherits="AltoTabSummaryIconTemplate" id="2">
@@ -66,7 +66,7 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.RealmsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Achievement_BG_winWSG" />
+					<KeyValue key="iconFile" value="Interface\PVPFrame\RandomPVPIcon.blp" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="LevelIcon" inherits="AltoTabSummaryIconTemplate" id="3">
@@ -74,7 +74,7 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.FactionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\achievement_level_100" />
+					<KeyValue key="iconFile" value="Interface\Icons\VAS_CharacterTransfer.blp" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="ProfessionsIcon" inherits="AltoTabSummaryIconTemplate" id="4">
@@ -82,7 +82,7 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.LevelIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+					<KeyValue key="iconFile" value="Interface\Icons\Trade_Mining.blp" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="ClassIcon" inherits="AltoTabSummaryIconTemplate" id="5">
@@ -90,7 +90,7 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Achievement_Character_Gnome_Female" />
+					<KeyValue key="iconFile" value="Interface\Icons\Spell_Fire_FireBolt.blp" />
 				</KeyValues>
 			</Button>
 			<Button parentKey="DataStoreOptionsIcon" inherits="AltoTabSummaryIconTemplate" id="7">
@@ -122,7 +122,7 @@
 				</Scripts>
 			</Button>
 			
-			<Button parentKey="RequestSharing" inherits="AltoButtonTemplate">
+	<!--		<Button parentKey="RequestSharing" inherits="AltoButtonTemplate">    Easier for me to just remove account sharing than port it to classic
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.AltoholicOptionsIcon" relativePoint="TOPLEFT" x="-15" y="0" />
 				</Anchors>
@@ -140,7 +140,7 @@
 						Altoholic.Tabs.Summary:AccountSharingButton_OnClick()
 					</OnClick>
 				</Scripts>
-			</Button>
+			</Button>  -->
 			
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>
@@ -188,7 +188,7 @@
 				
 				-- "Artifacts"
 				-- self.MenuItem7:SetText(GetCategoryInfo(15256))	
-				self.RequestSharing:SetText(L["Account Sharing"])
+--				self.RequestSharing:SetText(L["Account Sharing"])
 				
 				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())
 			</OnLoad>

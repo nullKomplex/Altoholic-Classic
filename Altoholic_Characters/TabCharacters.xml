@@ -56,7 +56,7 @@
 							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
 						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\Spell_Nature_NatureGuardian" />
+							<KeyValue key="iconFile" value="Interface\Icons\Ability_Marksmanship.blp" />
 						</KeyValues>
 					</Button>
 					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
@@ -88,17 +88,17 @@
 							<Anchor point="TOPLEFT" relativeKey="$parent.SpellbookIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
 						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\Achievement_GuildPerk_WorkingOvertime" />
+							<KeyValue key="iconFile" value="Interface\Icons\Trade_Mining.blp" />
 						</KeyValues>
 					</Button>
-					<Button parentKey="GarrisonIcon" inherits="AltoTabCharactersIconTemplate" id="9">
+				<!--	<Button parentKey="GarrisonIcon" inherits="AltoTabCharactersIconTemplate" id="9">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
 						<KeyValues>
 							<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_resource" />
 						</KeyValues>
-					</Button>
+					</Button>-->
 				</Frames>
 			</Frame>
 	

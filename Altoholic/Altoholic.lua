@@ -685,16 +685,16 @@ function addon:DDM_Initialize(frame, func)
 	frame.initialize = func
 end
 
-local ICON_CHARACTERS_ALLIANCE = "Interface\\Icons\\Achievement_Character_Gnome_Female"
-local ICON_CHARACTERS_HORDE = "Interface\\Icons\\Achievement_Character_Orc_Male"
+local ICON_CHARACTERS_ALLIANCE = "Interface\\Icons\\Achievement_Character_Dwarf_Male"
+local ICON_CHARACTERS_HORDE = "Interface\\Icons\\Achievement_Character_Troll_Male"
 -- mini Easter egg icons, if you read the code using these, please don't spoil it :)
 local ICON_CHARACTERS_MIDSUMMER = "Interface\\Icons\\INV_Misc_Toy_07"
 local ICON_CHARACTERS_HALLOWSEND_ALLIANCE = "Interface\\Icons\\INV_Mask_06"
 local ICON_CHARACTERS_HALLOWSEND_HORDE = "Interface\\Icons\\INV_Mask_03"
 local ICON_CHARACTERS_DOTD_ALLIANCE = "Interface\\Icons\\INV_Misc_Bone_HumanSkull_02"
 local ICON_CHARACTERS_DOTD_HORDE = "Interface\\Icons\\INV_Misc_Bone_OrcSkull_01"
-local ICON_CHARACTERS_WINTERVEIL_ALLIANCE = "Interface\\Icons\\Achievement_WorldEvent_LittleHelper"
-local ICON_CHARACTERS_WINTERVEIL_HORDE = "Interface\\Icons\\Achievement_WorldEvent_XmasOgre"
+--local ICON_CHARACTERS_WINTERVEIL_ALLIANCE = "Interface\\Icons\\Achievement_WorldEvent_LittleHelper"
+--local ICON_CHARACTERS_WINTERVEIL_HORDE = "Interface\\Icons\\Achievement_WorldEvent_XmasOgre"
 
 function addon:GetCharacterIcon()
 	local faction = UnitFactionGroup("player")
@@ -702,9 +702,9 @@ function addon:GetCharacterIcon()
 	local icon = isAlliance and ICON_CHARACTERS_ALLIANCE or ICON_CHARACTERS_HORDE
 	local day = (tonumber(date("%m")) * 100) + tonumber(date("%d"))	-- ex: dec 15 = 1215, for easy tests below
 	
-	if (day >= 1215) or (day <= 102) then				-- winter veil
-		icon = isAlliance and ICON_CHARACTERS_WINTERVEIL_ALLIANCE or ICON_CHARACTERS_WINTERVEIL_HORDE
-	elseif (day >= 621) and (day <= 704) then			-- midsummer
+--	if (day >= 1215) or (day <= 102) then				-- winter veil
+--		icon = isAlliance and ICON_CHARACTERS_WINTERVEIL_ALLIANCE or ICON_CHARACTERS_WINTERVEIL_HORDE
+	if (day >= 621) and (day <= 704) then			-- midsummer
 		icon = ICON_CHARACTERS_MIDSUMMER
 	elseif (day >= 1018) and (day <= 1031) then		-- hallow's end
 		icon = isAlliance and ICON_CHARACTERS_HALLOWSEND_ALLIANCE or ICON_CHARACTERS_HALLOWSEND_HORDE
