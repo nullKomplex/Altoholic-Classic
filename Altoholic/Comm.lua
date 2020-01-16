@@ -128,7 +128,7 @@ function Altoholic:AccSharingHandler(prefix, message, distribution, sender)
 	local self = Altoholic.Comm.Sharing
 
 	if self and self.msgHandler then
-		self[self.msgHandler](self, prefix, message, distribution, sender)
+	    self[self.msgHandler](self, prefix, message, distribution, sender)
 	end
 end
 
@@ -142,17 +142,17 @@ function Altoholic.Comm.Sharing:EmptyHandler(prefix, message, distribution, send
 end
 
 function Altoholic.Comm.Sharing:ActiveHandler(prefix, message, distribution, sender)
-	local success, msgType, msgData
+    local success, msgType, msgData
 	
-	if compressionMode == 1 then	
-		success, msgType, msgData = Altoholic:Deserialize(message)
+	if compressionMode == 1 then
+	    success, msgType, msgData = Altoholic:Deserialize(message)
 --	else
 --		local decompData = LibComp:Decompress(message)
 --		success, msgType, msgData = Altoholic:Deserialize(decompData)
 	end
 	
 	if not success then
-		self.SharingEnabled = nil
+	    self.SharingEnabled = nil
 		-- self:Print(msgType)
 		-- self:Print(string.sub(decompData, 1, 15))
 		return
@@ -278,7 +278,7 @@ function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 		Whisper(sender, MSG_ACCOUNT_SHARING_REFUSEDINCOMBAT)
 		return
 	end
-	
+		
 	local auth = Altoholic.Sharing.Clients:GetRights(sender)
 	
 	if not auth then		-- if the sender is not a known client, add him with defaults rights (=ask)
@@ -287,7 +287,7 @@ function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 	end
 	
 	if auth == AUTH_AUTO then
-		self:SendSourceTOC(sender)
+	    self:SendSourceTOC(sender)
 	elseif auth == AUTH_ASK then
 		Altoholic:Print(format(L["Account sharing request received from %s"], sender))
 		
@@ -307,7 +307,7 @@ function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
 end
 
 function Altoholic.Comm.Sharing:SendSourceTOC(sender)
-	self.SharingEnabled = true
+    self.SharingEnabled = true
 	self.SourceTOC = Altoholic.Sharing.Content:GetSourceTOC()
 	-- self.NetSrcCurItem = 0					-- to display that item is 1 of x
 	self.AuthorizedRecipient = sender
