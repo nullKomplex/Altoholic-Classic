@@ -122,7 +122,7 @@
 				</Scripts>
 			</Button>
 			
-	<!--		<Button parentKey="RequestSharing" inherits="AltoButtonTemplate">    Easier for me to just remove account sharing than port it to classic
+			<Button parentKey="RequestSharing" inherits="AltoButtonTemplate">
 				<Anchors>
 					<Anchor point="TOPRIGHT" relativeKey="$parent.AltoholicOptionsIcon" relativePoint="TOPLEFT" x="-15" y="0" />
 				</Anchors>
