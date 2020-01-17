@@ -491,26 +491,27 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	local toc = {}
 
 	for realm in pairs(DS:GetRealms()) do			-- all realms on this account
-		table.insert(toc, format("%s|%s", TOC_SETREALM, realm))
-	
+	    table.insert(toc, format("%s|%s", TOC_SETREALM, realm))
+			
 		for guildName, guild in pairs(DS:GetGuilds(realm)) do		-- add guilds
-			if isGuildShared(realm, guildName) then
-				table.insert(toc, format("%s|%s", TOC_SETGUILD, guildName))
-				
-				for tabID = 1, 8 do		-- add guild bank tabs
-					local tabName = DS:GetGuildBankTabName(guild, tabID)
-					if tabName and isGuildBankTabShared(realm, guildName, tabID) then
-						serializedData = Altoholic:Serialize(DS:GetGuildBankTab(guild, tabID))
-						lastUpdate = DS:GetGuildBankTabLastUpdate(guild, tabID)
-						table.insert(toc, format("%s|%s|%s|%s|%s", TOC_BANKTAB, tabName, tabID, strlen(serializedData), lastUpdate or 0))
-					end
-				end
+		    if isGuildShared(realm, guildName) then
+			    table.insert(toc, format("%s|%s", TOC_SETGUILD, guildName))
+								
+				--no guild bank in classic
+				--for tabID = 1, 8 do		-- add guild bank tabs
+					--local tabName = DS:GetGuildBankTabName(guild, tabID)
+					--if tabName and isGuildBankTabShared(realm, guildName, tabID) then
+						--serializedData = Altoholic:Serialize(DS:GetGuildBankTab(guild, tabID))
+						--lastUpdate = DS:GetGuildBankTabLastUpdate(guild, tabID)
+						--table.insert(toc, format("%s|%s|%s|%s|%s", TOC_BANKTAB, tabName, tabID, strlen(serializedData), lastUpdate or 0))
+					--end
+				--end
 			end
 		end
 	
 		for characterName, character in pairs(DS:GetCharacters(realm)) do
-			if isCharacterShared(character) then
-				-- get the size of mandatory modules
+		    if isCharacterShared(character) then
+			    -- get the size of mandatory modules
 				local size = 0
 				for k, module in pairs(mandatoryModules) do
 					serializedData = Altoholic:Serialize(DS:GetCharacterTable(module, characterName, realm))
@@ -521,12 +522,15 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 				lastUpdate = DS:GetModuleLastUpdate("DataStore_Characters", characterName, realm)
 				table.insert(toc, format("%s|%s|%s|%s|%s", TOC_SETCHAR, characterName, class, size, lastUpdate or 0))
 				
-				
 				for k, module in pairs(optionalModules) do
-					if isCharacterDataShared(character, module) then
-						-- evaluate the size of transferred data
-						serializedData = Altoholic:Serialize(DS:GetCharacterTable(module, characterName, realm))
-						lastUpdate = DS:GetModuleLastUpdate(module, characterName, realm)
+
+					-- DataStore_Spells and DataStore_Talents aren't working yet
+					if (module ~= "DataStore_Spells" and module ~= "DataStore_Talents") then
+					    if isCharacterDataShared(character, module) then
+    						-- evaluate the size of transferred data
+	    					serializedData = Altoholic:Serialize(DS:GetCharacterTable(module, characterName, realm))
+		    				lastUpdate = DS:GetModuleLastUpdate(module, characterName, realm)
+					    end
 					
 						-- only pass the key to the right datastore module (ex 4 for DataStore_Crafts)
 						table.insert(toc, format("%s|%s|%s|%s", TOC_DATASTORE, k, strlen(serializedData), lastUpdate or 0))
@@ -537,10 +541,11 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	end
 	
 	-- add reference here
-	for class, _ in pairs(DS:GetReferenceTable()) do
-		serializedData = Altoholic:Serialize(DS:GetClassReference(class))
-		table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
-	end
+	-- whatever this is it doesn't work in classic
+	--for class, _ in pairs(DS:GetReferenceTable()) do
+		--serializedData = Altoholic:Serialize(DS:GetClassReference(class))
+		--table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
+	--end
 	
 	return toc
 end
