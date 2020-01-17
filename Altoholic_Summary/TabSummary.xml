@@ -127,7 +127,7 @@
 					<Anchor point="TOPRIGHT" relativeKey="$parent.AltoholicOptionsIcon" relativePoint="TOPLEFT" x="-15" y="0" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Achievement_Reputation_01" />
+					<KeyValue key="iconFile" value="Interface\Icons\UI_Chat.blp" />
 				</KeyValues>
 				<Scripts>
 					<OnEnter>
