@@ -10,11 +10,6 @@ local ICON_QUESTIONMARK = "Interface\\RaidFrame\\ReadyCheck-Waiting"
 
 local xPacks = {
 	EXPANSION_NAME0,	-- "Classic"
-	EXPANSION_NAME1,	-- "The Burning Crusade"
-	EXPANSION_NAME2,	-- "Wrath of the Lich King"
-	EXPANSION_NAME3,	-- "Cataclysm"
-	EXPANSION_NAME4,	-- "Mists of Pandaria"
-	EXPANSION_NAME5,	-- "Warlords of Draenor"
 }
 
 local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"

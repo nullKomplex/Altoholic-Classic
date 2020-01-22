@@ -86,10 +86,6 @@ end
 
 local xPacks = {
 	EXPANSION_NAME0,	-- "Classic"
-	EXPANSION_NAME1,	-- "The Burning Crusade"
-	EXPANSION_NAME2,	-- "Wrath of the Lich King"
-	EXPANSION_NAME3,	-- "Cataclysm"
-	EXPANSION_NAME4,	-- "Mists of Pandaria"
 	L["All-in-one"],
 }
 
