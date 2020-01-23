@@ -478,6 +478,8 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     local mainIndex = false
     if (profName == "Cooking") then
         index = 3
+    elseif (profName == "Poisons") then
+        return -- Don't scan Poisons
     elseif (profName == "First Aid") then    
         index = 4
 --    elseif (profName == "Fishing") then
