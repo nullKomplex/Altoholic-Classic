@@ -245,6 +245,8 @@ local function GetTradeSkillHeaders()
 end
 
 local function ScanRecipeCategories(profession, useCraftInstead)
+    if (#GetTradeSkillHeaders() == 0) then return end
+    
 	-- clear storage
 	profession.Categories = profession.Categories or {}
 	wipe(profession.Categories)
@@ -308,7 +310,7 @@ local function ScanRecipes(useCraftInstead)
     else
         tradeskillName = GetTradeSkillLine() --select(7, C_TradeSkillUI.GetTradeSkillLine())
     end
-
+                     
 	if (not tradeskillName) or (tradeskillName == "UNKNOWN") then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
                                                 
 	local char = addon.ThisCharacter
@@ -322,9 +324,6 @@ local function ScanRecipes(useCraftInstead)
 --	if profLink then	-- sometimes a nil value may be returned, so keep the old one if nil
 --		profession.FullLink = profLink
 --	end
-	
-	local crafts = profession.Crafts
-	wipe(crafts)
 		
 	local numRecipes 
     if (useCraftInstead) then
@@ -332,8 +331,13 @@ local function ScanRecipes(useCraftInstead)
     else
         numRecipes = GetNumTradeSkills(); --C_TradeSkillUI.GetAllRecipeIDs()
     end
-	if not numRecipes or (numRecipes == 0) then return end
-	
+    
+	if (not numRecipes) or (numRecipes == 0) then return end
+	                           
+    -- Moved this down here because, for some reason, the first time opening a profession book after a reload doesn't make any of them visible to addons?
+    local crafts = profession.Crafts
+	wipe(crafts)
+    
 	local resultItems = addon.ref.global.ResultItems
     local resultItemNames = addon.ref.global.ResultItemNames
 	local reagentsDB = addon.ref.global.Reagents
@@ -463,6 +467,7 @@ end
 local function ClassicScanProfessionInfo(useCraftInstead)
     -- arguments should be: index and mainIndex ... wtf are these even?
     local profName
+    
     if (useCraftInstead) then
         profName = GetCraftDisplaySkillLine();
         -- Ignore Beast Training window, which is programmed as a "craft"
@@ -482,8 +487,6 @@ local function ClassicScanProfessionInfo(useCraftInstead)
         return -- Don't scan Poisons
     elseif (profName == "First Aid") then    
         index = 4
---    elseif (profName == "Fishing") then
---        index = 5
     elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
         index = 1
         mainIndex = true
@@ -498,7 +501,7 @@ local function ClassicScanProfessionInfo(useCraftInstead)
 --	if char and mainIndex and not index then
 --		char["Prof"..mainIndex] = nil			-- profession may have been cleared, nil it
 --	end
-
+       
 	if not char or not index then return end
 	                           
 	--local profName, texture, rank, maxRank, _, _, _, _, _, _, currentLevelName = GetProfessionInfo(index);
@@ -539,7 +542,7 @@ end
 local function OnTradeSkillShow()
     -- can't link tradeskills from other players in Classic, so this line is not needed
 	-- if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
-
+              
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
 	addon.isOpen = true
     ClassicScanProfessionInfo();
