@@ -231,7 +231,7 @@ local cachedItemID, cachedCount, cachedTotal, cachedSource
 local cachedRecipeOwners
 
 local itemCounts = {}
-local itemCountsLabels = {	L["Bags"], L["Bank"], VOID_STORAGE, REAGENT_BANK, L["AH"], L["Equipped"], L["Mail"], CURRENCY }
+local itemCountsLabels = {	L["Bags"], L["Bank"], L["AH"], L["Equipped"], L["Mail"], CURRENCY }
 local counterLines = {}		-- list of lines containing a counter to display in the tooltip
 
 local function AddCounterLine(owner, counters)

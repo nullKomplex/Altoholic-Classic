@@ -108,14 +108,7 @@ local function LevelIcon_Initialize(frame, level)
 	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1))
 	frame:AddTitle()
 	frame:AddButtonWithArgs("1-59", 2, OnLevelFilterChange, 1, 59, (option == 2))
-	frame:AddButtonWithArgs("60-69", 3, OnLevelFilterChange, 60, 69, (option == 3))
-	frame:AddButtonWithArgs("70-79", 4, OnLevelFilterChange, 70, 79, (option == 4))
-	frame:AddButtonWithArgs("80-89", 5, OnLevelFilterChange, 80, 89, (option == 5))
-	frame:AddButtonWithArgs("90-99", 6, OnLevelFilterChange, 90, 99, (option == 6))
-	frame:AddButtonWithArgs("90-100", 7, OnLevelFilterChange, 90, 100, (option == 7))
-	frame:AddButtonWithArgs("100-110", 8, OnLevelFilterChange, 100, 110, (option == 8))
-	frame:AddButtonWithArgs("110-120", 9, OnLevelFilterChange, 110, 120, (option == 9))
-	frame:AddButtonWithArgs("120", 10, OnLevelFilterChange, 120, 120, (option == 10))
+	frame:AddButtonWithArgs("60", 3, OnLevelFilterChange, 60, 60, (option == 3))
 	frame:AddCloseMenu()
 end
 
@@ -192,7 +185,6 @@ end
 local addonList = {
 	"DataStore_Auctions",
 	"DataStore_Characters",
-	"DataStore_Garrisons",
 	"DataStore_Inventory",
 	"DataStore_Mails",
 	"DataStore_Quests",

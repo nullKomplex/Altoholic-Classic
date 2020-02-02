@@ -73,11 +73,7 @@ local function UpdateSpread()
 				itemButton.Icon:SetDesaturated(false)
 				
 				-- 15/10/2014: note, find a better way for this than this ugly hack
-				if containerID == "VoidStorage.Tab1" then
-					itemButton:SetID(201)	-- use id 201 for void storage, only required a few lines below
-				elseif containerID == "VoidStorage.Tab2" then
-					itemButton:SetID(202)	-- use id 202 for void storage, only required a few lines below
-				elseif containerID == -3 then
+				if containerID == -3 then
 					itemButton:SetID(300)
 				else
 					itemButton:SetID(containerID)
@@ -94,10 +90,6 @@ local function UpdateSpread()
 					elseif id == 100 then
 						GameTooltip:AddLine(L["Bank"],0.5,0.5,1);
 						GameTooltip:AddLine(L["28 Slot"],1,1,1);
-					elseif id >= 201 and id <= 202 then
-						GameTooltip:AddLine(VOID_STORAGE,0.5,0.5,1);
-					elseif id == 300 then
-						GameTooltip:AddLine(REAGENT_BANK,0.5,0.5,1);
 					else
 						local character = Altoholic.Tabs.Characters:GetAltKey()
 						local _, link = DS:GetContainerInfo(character, id)
@@ -186,15 +178,6 @@ local function UpdateAllInOne()
 		end
 		table.insert(containerList, 100)
 	end
-	
---[[	if addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") then
-		table.insert(containerList, "VoidStorage.Tab1")
-		table.insert(containerList, "VoidStorage.Tab2")
-	end]]--
-	
---[[	if addon:GetOption("UI.Tabs.Characters.ViewReagentBank") then
---		table.insert(containerList, REAGENTBANK_CONTAINER)
-	end]]--
 	
 	local itemButton
 	if #containerList > 0 then
@@ -292,16 +275,6 @@ function ns:UpdateCache()
 		if DataStore:GetContainer(character, 100) then 	-- if bank has been visited, add it
 			UpdateBagIndices(100, 28)
 		end
-	end
-	
-	if addon:GetOption("UI.Tabs.Characters.ViewVoidStorage") then
-		UpdateBagIndices("VoidStorage.Tab1", 80)
-		UpdateBagIndices("VoidStorage.Tab2", 80)
-	end
-	
-	if addon:GetOption("UI.Tabs.Characters.ViewReagentBank") then
---		local _, _, size = DataStore:GetContainerInfo(character, REAGENTBANK_CONTAINER)
---		UpdateBagIndices(REAGENTBANK_CONTAINER, size)
 	end
 end
 

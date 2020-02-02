@@ -11,5 +11,4 @@
 locale.xml
 
 DataStore_Crafts.lua
-Data\Archeology.lua
 Options.xml

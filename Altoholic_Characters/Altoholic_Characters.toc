@@ -18,4 +18,3 @@ Frames\Quests.xml
 Frames\Recipes.xml
 Frames\Spellbook.xml
 Frames\Talents.xml
-Frames\Garrisons.xml

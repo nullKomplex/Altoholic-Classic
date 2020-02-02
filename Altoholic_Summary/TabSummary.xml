@@ -183,11 +183,7 @@
 				self.MenuItem2:SetText(L["Bag Usage"])
 				self.MenuItem3:SetText(SKILLS)
 				self.MenuItem4:SetText(L["Activity"])
-<!--				self.MenuItem5:SetText(CURRENCY)
-				self.MenuItem6:SetText(GARRISON_FOLLOWERS_TITLE)-->
-				
-				-- "Artifacts"
-				-- self.MenuItem7:SetText(GetCategoryInfo(15256))	
+
 --				self.RequestSharing:SetText(L["Account Sharing"])
 				
 				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())
