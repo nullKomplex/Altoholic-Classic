@@ -60,8 +60,6 @@ local SPELL_ID_ALCHEMY = 2259
 local SPELL_ID_BLACKSMITHING = 3100
 local SPELL_ID_ENCHANTING = 7411
 local SPELL_ID_ENGINEERING = 4036
---local SPELL_ID_INSCRIPTION = 45357
---local SPELL_ID_JEWELCRAFTING = 25229
 local SPELL_ID_LEATHERWORKING = 2108
 local SPELL_ID_TAILORING = 3908
 local SPELL_ID_SKINNING = 8613
@@ -70,7 +68,6 @@ local SPELL_ID_HERBALISM = 2366
 local SPELL_ID_SMELTING = 2656
 local SPELL_ID_COOKING = 2550
 local SPELL_ID_FISHING = 7731
---local SPELL_ID_ARCHAEOLOGY = 78670
 
 local ProfessionSpellID = {
 	-- GetSpellInfo with this value will return localized spell name
@@ -78,8 +75,6 @@ local ProfessionSpellID = {
 	["Blacksmithing"] = SPELL_ID_BLACKSMITHING,
 	["Enchanting"] = SPELL_ID_ENCHANTING,
 	["Engineering"] = SPELL_ID_ENGINEERING,
---	["Inscription"] = SPELL_ID_INSCRIPTION,
---	["Jewelcrafting"] = SPELL_ID_JEWELCRAFTING,
 	["Leatherworking"] = SPELL_ID_LEATHERWORKING,
 	["Tailoring"] = SPELL_ID_TAILORING,
 	["Skinning"] = SPELL_ID_SKINNING,
