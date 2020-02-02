@@ -14,12 +14,9 @@ local Factions = {
 		{	-- [1]
 			name = FACTION_ALLIANCE,	-- 469
 			{ name = DataStore:GetFactionName(69), icon = "Achievement_Character_Nightelf_Female" },	-- "Darnassus"
-			{ name = DataStore:GetFactionName(930), icon = "Achievement_Character_Draenei_Male" },	--  name = "Exodar"
 			{ name = DataStore:GetFactionName(54), icon = "Achievement_Character_Gnome_Female" },	-- "Gnomeregan"
 			{ name = DataStore:GetFactionName(47), icon = "Achievement_Character_Dwarf_Male" },		-- "Ironforge"
 			{ name = DataStore:GetFactionName(72), icon = "Achievement_Character_Human_Male" },		-- "Stormwind"
-			{ name = DataStore:GetFactionName(1134), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0, bottom = 0.25 },	-- "Gilneas"
-			{ name = DataStore:GetFactionName(1353), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0, bottom = 0.25 },	-- "Tushui Pandaren"
 			{ name = DataStore:GetFactionName(469), icon = "INV_BannerPVP_02" },	-- "Alliance"
 		},
 		{	-- [2]
@@ -28,9 +25,6 @@ local Factions = {
 			{ name = DataStore:GetFactionName(76), icon = "Achievement_Character_Orc_Male" },		-- "Orgrimmar"
 			{ name = DataStore:GetFactionName(81), icon = "Achievement_Character_Tauren_Male" },		-- "Thunder Bluff"
 			{ name = DataStore:GetFactionName(68), icon = "Achievement_Character_Undead_Female" },		-- "Undercity"
-			{ name = DataStore:GetFactionName(911), icon = "Achievement_Character_Bloodelf_Male" },		-- "Silvermoon City"
-			{ name = DataStore:GetFactionName(1133), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.625, right = 0.75, top = 0.25, bottom = 0.5 },	--  name = "Bilgewater Cartel"
-			{ name = DataStore:GetFactionName(1352), icon = "Interface\\Glues\\CharacterCreate\\UI-CHARACTERCREATE-RACES", left = 0.75, right = 0.875, top = 0.25, bottom = 0.5 },	-- "Huojin Pandaren" 
 			{ name = DataStore:GetFactionName(67), icon = "INV_BannerPVP_01" },	-- "Horde" 
 		},
 		{	-- [3]
@@ -67,17 +61,10 @@ local Factions = {
 			{ name = DataStore:GetFactionName(70), icon = "INV_Misc_ArmorKit_03" },		-- "Syndicate" 
 			{ name = DataStore:GetFactionName(59), icon = "INV_Ingot_Thorium" },		-- "Thorium Brotherhood" 
 			{ name = DataStore:GetFactionName(576), icon = "Achievement_Reputation_timbermaw" },		-- "Timbermaw Hold" 
-			{ name = DataStore:GetFactionName(922), icon = "Achievement_Zone_Ghostlands" },		-- "Tranquillien" 
 			{ name = DataStore:GetFactionName(589), icon = "Ability_Mount_PinkTiger" },		-- "Wintersaber Trainers" 
 			{ name = DataStore:GetFactionName(270), icon = "INV_Bijou_Green" },		-- "Zandalar Tribe" 
 		}
-	},
-	{	-- [8]
-		name = GUILD,
-		{	-- [1]
-			name = GUILD,
-		}
-	},
+	}
 }
 
 local CAT_GUILD = #Factions
