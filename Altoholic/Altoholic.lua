@@ -266,8 +266,7 @@ local function MerchantFrame_UpdateMerchantInfoHook()
 					local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
 					
 					local r, g, b = 1, 1, 1
-					
-					-- also applies to garrison blueprints
+
 					if IsBOPItemKnown(itemID) then		-- recipe is bop and already known, useless to alts : red.
 						r, g, b = 1, 0, 0
 					elseif itemType == L["ITEM_TYPE_RECIPE"] and itemSubType ~= L["ITEM_SUBTYPE_BOOK"] then		-- is it a recipe ?
@@ -654,21 +653,6 @@ function addon:ShowWidgetTooltip(frame)
 	AltoTooltip:ClearLines();
 	AltoTooltip:AddLine(frame.tooltip)
 	AltoTooltip:Show(); 
-end
-
-function addon:DrawFollowerTooltip(frame)
-	local character = frame.key
-	if not character then return end
-
-	-- get the follower link
-	local link = DataStore:GetFollowerLink(character, frame.followerID)
-	if not link then return end
-	
-	-- toggle the tooltip, use blizzard's own function for that
-	local _, garrisonFollowerID, quality, level, itemLevel, ability1, ability2, ability3, ability4, trait1, trait2, trait3, trait4 = strsplit(":", link);
-	FloatingGarrisonFollowerTooltip:ClearAllPoints()
-	FloatingGarrisonFollowerTooltip:SetPoint("TOPLEFT", frame, "TOPRIGHT", 1, 1)
-	FloatingGarrisonFollower_Toggle(tonumber(garrisonFollowerID), tonumber(quality), tonumber(level), tonumber(itemLevel), tonumber(ability1), tonumber(ability2), tonumber(ability3), tonumber(ability4), tonumber(trait1), tonumber(trait2), tonumber(trait3), tonumber(trait4))
 end
 
 function addon:OnTimeToNextWarningChanged(frame)

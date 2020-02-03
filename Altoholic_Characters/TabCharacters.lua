@@ -28,7 +28,6 @@ local VIEW_MAILS = 6
 local VIEW_COMPANIONS = 7
 local VIEW_SPELLS = 8
 local VIEW_PROFESSION = 9
-local VIEW_GARRISONS = 10
 
 -- Second mini easter egg, the bag icon changes depending on the amount of chars at level max (on the current realm), or based on the time of the year
 local BAG_ICONS = {
@@ -62,7 +61,6 @@ local function HideAll()
 	AltoholicTabCharacters.QuestLog:Hide()
 	AltoholicTabCharacters.Talents:Hide()
 	AltoholicTabCharacters.Spellbook:Hide()
-	AltoholicTabCharacters.GarrisonMissions:Hide()
 	AltoholicTabCharacters.Recipes:Hide()
 	
 	AltoholicFrameContainers:Hide()
@@ -147,9 +145,6 @@ function ns:ShowCharInfo(view)
 
 	elseif view == VIEW_PROFESSION then
 		AltoholicTabCharacters.Recipes:Update()
-				
-	elseif view == VIEW_GARRISONS then
-		AltoholicTabCharacters.GarrisonMissions:Update()
 	end
 end
 
@@ -245,7 +240,6 @@ local function OnCharacterChange(self)
 	EnableIcon(menuIcons.MailIcon)
 --	EnableIcon(menuIcons.SpellbookIcon)
 	EnableIcon(menuIcons.ProfessionsIcon)
---	EnableIcon(menuIcons.GarrisonIcon)
 	
 	DropDownList1:Hide()
 	
@@ -266,10 +260,6 @@ local function OnContainerChange(self)
 		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBags")
 	elseif self.value == 2 then
 		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBank")
-	elseif self.value == 3 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewVoidStorage")
-	elseif self.value == 4 then
-		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewReagentBank")
 	elseif self.value == 5 then
 		addon:ToggleOption(nil, "UI.Tabs.Characters.ViewBagsAllInOne")
 	end
@@ -359,12 +349,6 @@ end
 local function OnShowUnlearned(self)
 	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewUnlearnedRecipes")
 	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnGarrisonMenuChange(self)
-	addon:SetOption("UI.Tabs.Characters.GarrisonMissions", self.value)
-	CloseDropDownMenus()
-	ns:ViewCharInfo(VIEW_GARRISONS)
 end
 
 local function OnViewChange(self)
@@ -471,8 +455,6 @@ local function BagsIcon_Initialize(self, level)
 	DDM_Add(L["View"], nil, function() ns:ViewCharInfo(VIEW_BAGS) end)
 	DDM_Add(L["Bags"], 1, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBags"))
 	DDM_Add(L["Bank"], 2, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBank"))
---	DDM_Add(VOID_STORAGE, 3, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewVoidStorage"))
---	DDM_Add(REAGENT_BANK , 4, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewReagentBank"))
 	DDM_Add(L["All-in-one"], 5, OnContainerChange, nil, addon:GetOption("UI.Tabs.Characters.ViewBagsAllInOne"))
 		
 	DDM_AddTitle(" ")
@@ -803,10 +785,6 @@ local function ProfessionsIcon_Initialize(self, level)
 	end
 end
 
-local function GarrisonIcon_Initialize(self, level)
-	print("Error in TabCharacters: Garrison content was called - should not be possible")
-end
-
 local menuIconCallbacks = {
 	CharactersIcon_Initialize,
 	BagsIcon_Initialize,
@@ -816,7 +794,6 @@ local menuIconCallbacks = {
 	MailIcon_Initialize,
 	SpellbookIcon_Initialize,
 	ProfessionsIcon_Initialize,
-	GarrisonIcon_Initialize,
 }
 
 function ns:Icon_OnEnter(frame)
@@ -850,7 +827,7 @@ function ns:OnLoad()
 	local bagIcon = ICON_VIEW_BAGS
 
 	-- bag icon gets better with more chars at lv max
-	local LVMax = 110
+	local LVMax = 60
 	local numLvMax = 0
 	for _, character in pairs(DataStore:GetCharacters()) do
 		if DataStore:GetCharacterLevel(character) >= LVMax then

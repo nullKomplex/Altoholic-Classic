@@ -30,8 +30,6 @@ local MSG_BANKTAB_REQUEST_ACK					= 4	-- .. ack the request, tell the requester 
 local MSG_BANKTAB_REQUEST_REJECTED			= 5	-- .. refuse the request
 local MSG_BANKTAB_TRANSFER						= 6	-- .. or send the data
 
-local VOID_STORAGE_TAB = "VoidStorage.Tab"
-
 local AddonDB_Defaults = {
 	global = {
 		Guilds = {
@@ -406,29 +404,6 @@ local function ScanBag(bagID)
 	ScanBagSlotsInfo()
 end
 
-local function ScanVoidStorage()
-	-- delete the old data from the "VoidStorage" container, now stored in .Tab1, .Tab2 (since they'll likely add more later on)
-	wipe(addon.ThisCharacter.Containers["VoidStorage"])
-
-	local bag
-	local itemID
-	
-	for tab = 1, 2 do
-		bag = addon.ThisCharacter.Containers[VOID_STORAGE_TAB .. tab]
-		bag.size = 80
-	
-		for slot = 1, bag.size do
-			itemID = GetVoidItemInfo(tab, slot)
-			bag.ids[slot] = itemID
-		end
-	end
-	addon:SendMessage("DATASTORE_VOIDSTORAGE_UPDATED")
-end
-
-local function ScanReagentBank()
-	--ScanContainer(REAGENTBANK_CONTAINER, BAGS)
-end
-
 -- *** Event Handlers ***
 local function OnBagUpdate(event, bag)
 	if bag < 0 then
@@ -526,26 +501,6 @@ local function OnAuctionHouseShow()
 	addon:RegisterEvent("AUCTION_HOUSE_CLOSED", OnAuctionHouseClosed)
 end
 
-local function OnVoidStorageClosed()
-	--addon:UnregisterEvent("VOID_STORAGE_CLOSE")
-	--addon:UnregisterEvent("VOID_STORAGE_UPDATE")
-	--addon:UnregisterEvent("VOID_STORAGE_CONTENTS_UPDATE")
-	--addon:UnregisterEvent("VOID_TRANSFER_DONE")
-end
-
-local function OnVoidStorageTransferDone()
-	ScanVoidStorage()
-end
-
-local function OnVoidStorageOpened()
-	--ScanVoidStorage()
-	--addon:RegisterEvent("VOID_STORAGE_CLOSE", OnVoidStorageClosed)
-	--addon:RegisterEvent("VOID_STORAGE_UPDATE", ScanVoidStorage)
-	--addon:RegisterEvent("VOID_STORAGE_CONTENTS_UPDATE", ScanVoidStorage)
-	--addon:RegisterEvent("VOID_TRANSFER_DONE", OnVoidStorageTransferDone)
-end
-
-
 -- ** Mixins **
 local function _GetContainer(character, containerID)
 	-- containerID can be number or string
@@ -581,10 +536,6 @@ local function _GetContainerInfo(character, containerID)
 	
 	if containerID == MAIN_BANK_SLOTS then	-- main bank slots
 		icon = "Interface\\Icons\\inv_misc_enggizmos_17"
---	elseif containerID == REAGENTBANK_CONTAINER then
---		icon = "Interface\\Icons\\inv_misc_bag_satchelofcenarius"
---	elseif string.sub(containerID, 1, string.len(VOID_STORAGE_TAB)) == VOID_STORAGE_TAB then
---		icon = "Interface\\Icons\\spell_nature_astralrecalgroup"
 		size = 80
 	end
 	
@@ -651,12 +602,7 @@ end
 local function _GetContainerItemCount(character, searchedID)
 	local bagCount = 0
 	local bankCount = 0
-	local voidCount = 0
-	local reagentBankCount = 0
 	local id
-	
-	-- old voidstorage, simply delete it, might still be listed if players haven't logged on all their alts					
-	character.Containers["VoidStorage"] = nil
 		
 	for containerName, container in pairs(character.Containers) do
 		for slotID = 1, container.size do
@@ -664,14 +610,10 @@ local function _GetContainerItemCount(character, searchedID)
 			
 			if (id) and (id == searchedID) then
 				local itemCount = container.counts[slotID] or 1
-				if (containerName == "VoidStorage.Tab1") or (containerName == "VoidStorage.Tab2") then
-					voidCount = voidCount + 1
-				elseif (containerName == "Bag"..MAIN_BANK_SLOTS) then
+				if (containerName == "Bag"..MAIN_BANK_SLOTS) then
 					bankCount = bankCount + itemCount
 				elseif (containerName == "Bag-2") then
 					bagCount = bagCount + itemCount
-				elseif (containerName == "Bag-3") then
-					reagentBankCount = reagentBankCount + itemCount
 				else
 					local bagNum = tonumber(string.sub(containerName, 4))
 					if (bagNum >= 0) and (bagNum <= 4) then
@@ -684,7 +626,7 @@ local function _GetContainerItemCount(character, searchedID)
 		end
 	end
 
-	return bagCount, bankCount, voidCount, reagentBankCount
+	return bagCount, bankCount
 end
 
 local function _GetNumBagSlots(character)
@@ -701,10 +643,6 @@ end
 
 local function _GetNumFreeBankSlots(character)
 	return character.numFreeBankSlots
-end
-
-local function _GetVoidStorageItem(character, index)
-	return character.Containers["VoidStorage"].ids[index]
 end
 
 -- local function _DeleteGuild(name, realm, account)
@@ -820,7 +758,6 @@ local PublicMethods = {
 	GetNumFreeBagSlots = _GetNumFreeBagSlots,
 	GetNumBankSlots = _GetNumBankSlots,
 	GetNumFreeBankSlots = _GetNumFreeBankSlots,
-	GetVoidStorageItem = _GetVoidStorageItem,
 	-- DeleteGuild = _DeleteGuild,
 	GetGuildBankItemCount = _GetGuildBankItemCount,
 	GetGuildBankTab = _GetGuildBankTab,
@@ -925,7 +862,6 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetNumFreeBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumBankSlots")
 	DataStore:SetCharacterBasedMethod("GetNumFreeBankSlots")
-	DataStore:SetCharacterBasedMethod("GetVoidStorageItem")
 	
 	DataStore:SetGuildBasedMethod("GetGuildBankItemCount")
 	DataStore:SetGuildBasedMethod("GetGuildBankTab")
@@ -948,13 +884,8 @@ function addon:OnEnable()
 		ScanBag(bagID)
 	end
 	
-	ScanReagentBank()
-	
 	addon:RegisterEvent("BAG_UPDATE", OnBagUpdate)
 	addon:RegisterEvent("BANKFRAME_OPENED", OnBankFrameOpened)
---	addon:RegisterEvent("GUILDBANKFRAME_OPENED", OnGuildBankFrameOpened)
---	addon:RegisterEvent("VOID_STORAGE_OPEN", OnVoidStorageOpened)
---	addon:RegisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED", OnPlayerReagentBankSlotsChanged)
 	
 	-- disable bag updates during multi sell at the AH
 	addon:RegisterEvent("AUCTION_HOUSE_SHOW", OnAuctionHouseShow)
@@ -963,8 +894,5 @@ end
 function addon:OnDisable()
 	addon:UnregisterEvent("BAG_UPDATE")
 	addon:UnregisterEvent("BANKFRAME_OPENED")
---	addon:UnregisterEvent("GUILDBANKFRAME_OPENED")
 	addon:UnregisterEvent("AUCTION_HOUSE_SHOW")
---	addon:UnregisterEvent("VOID_STORAGE_OPEN")
---	addon:UnregisterEvent("PLAYERREAGENTBANKSLOTS_CHANGED")
 end

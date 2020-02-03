@@ -682,9 +682,7 @@ local function BrowseCharacter(character)
 	local containers = DataStore:GetContainers(character)
 	if containers then
 		for containerName, container in pairs(containers) do
-			if string.sub(containerName, 1, string.len("VoidStorage")) == "VoidStorage" then
-				currentResultLocation = VOID_STORAGE
-			elseif (containerName == "Bag100") then
+			if (containerName == "Bag100") then
 				currentResultLocation = L["Bank"]
 			elseif (containerName == "Bag-2") then
 				currentResultLocation = KEYRING
@@ -895,13 +893,6 @@ function ns:FindItem(searchType, searchSubType)
 	
 	if SearchLoots then
 		addon.Tabs.Search:SetMode("loots")
-		-- if addon:GetOption("UI.Tabs.Search.SortDescending") then 		-- descending sort ?
-			-- AltoholicTabSearch.SortButtons.Sort3.ascendingSort = true		-- say it's ascending now, it will be toggled
-			-- ns:SortResults(AltoholicTabSearch.SortButtons.Sort3, "iLvl")
-		-- else
-			-- AltoholicTabSearch.SortButtons.Sort3.ascendingSort = nil
-			-- ns:SortResults(AltoholicTabSearch.SortButtons.Sort3, "iLvl")
-		-- end
 	else
 		addon.Tabs.Search:SetMode("realm")
 	end
@@ -977,14 +968,6 @@ function ns:FindEquipmentUpgrade()
 	else
 		addon.Tabs.Search:SetMode("loots")
 	end
-	
-	-- if addon:GetOption("UI.Tabs.Search.SortDescending") then 		-- descending sort ?
-		-- AltoholicTabSearch.SortButtons.Sort8.ascendingSort = true		-- say it's ascending now, it will be toggled
-		-- ns:SortResults(AltoholicTabSearch.SortButtons.Sort8, "iLvl")
-	-- else
-		-- AltoholicTabSearch.SortButtons.Sort8.ascendingSort = nil
-		-- ns:SortResults(AltoholicTabSearch.SortButtons.Sort8, "iLvl")
-	-- end
 
 	ns:Update()
 end

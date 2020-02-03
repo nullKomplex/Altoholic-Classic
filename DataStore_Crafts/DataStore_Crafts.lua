@@ -60,8 +60,6 @@ local SPELL_ID_ALCHEMY = 2259
 local SPELL_ID_BLACKSMITHING = 3100
 local SPELL_ID_ENCHANTING = 7411
 local SPELL_ID_ENGINEERING = 4036
---local SPELL_ID_INSCRIPTION = 45357
---local SPELL_ID_JEWELCRAFTING = 25229
 local SPELL_ID_LEATHERWORKING = 2108
 local SPELL_ID_TAILORING = 3908
 local SPELL_ID_SKINNING = 8613
@@ -70,7 +68,6 @@ local SPELL_ID_HERBALISM = 2366
 local SPELL_ID_SMELTING = 2656
 local SPELL_ID_COOKING = 2550
 local SPELL_ID_FISHING = 7731
---local SPELL_ID_ARCHAEOLOGY = 78670
 
 local ProfessionSpellID = {
 	-- GetSpellInfo with this value will return localized spell name
@@ -78,8 +75,6 @@ local ProfessionSpellID = {
 	["Blacksmithing"] = SPELL_ID_BLACKSMITHING,
 	["Enchanting"] = SPELL_ID_ENCHANTING,
 	["Engineering"] = SPELL_ID_ENGINEERING,
---	["Inscription"] = SPELL_ID_INSCRIPTION,
---	["Jewelcrafting"] = SPELL_ID_JEWELCRAFTING,
 	["Leatherworking"] = SPELL_ID_LEATHERWORKING,
 	["Tailoring"] = SPELL_ID_TAILORING,
 	["Skinning"] = SPELL_ID_SKINNING,
@@ -560,14 +555,6 @@ local function OnCraftShow()
     ClassicScanProfessionInfo(true);
 end
 
-local function OnArtifactHistoryReady()
-	ScanArcheologyItems()
-end
-
-local function OnArtifactComplete()
-	ScanArcheologyItems()
-end
-
 -- this turns
 --	"Your skill in %s has increased to %d."
 -- into
@@ -855,29 +842,6 @@ local function _GetFishingRank(character)
 	end
 end
 
---local function _GetArchaeologyRank(character)
---	local profession = _GetProfession(character, GetSpellInfo(SPELL_ID_ARCHAEOLOGY))
---	if profession then
---		return _GetProfessionInfo(profession)
---	end
---end
-
-local function _GetArchaeologyRaceArtifacts(race)
-	return addon.artifactDB[race]
-end
-
-local function _GetRaceNumArtifacts(race)
-	return #addon.artifactDB[race]
-end
-
-local function _GetArtifactInfo(race, index)
-	return addon.artifactDB[race][index]
-end
-
-local function _IsArtifactKnown(character, spellID)
-	return character.ArcheologyItems[spellID]
-end
-
 local function _GetCraftReagents(recipeID)
 	return addon.ref.global.Reagents[recipeID]
 end
@@ -921,11 +885,6 @@ local PublicMethods = {
 	GetProfession2 = _GetProfession2,
 	GetCookingRank = _GetCookingRank,
 	GetFishingRank = _GetFishingRank,
---	GetArchaeologyRank = _GetArchaeologyRank,
---	GetArchaeologyRaceArtifacts = _GetArchaeologyRaceArtifacts,
---	GetRaceNumArtifacts = _GetRaceNumArtifacts,
---	GetArtifactInfo = _GetArtifactInfo,
---	IsArtifactKnown = _IsArtifactKnown,
 	GetCraftReagents = _GetCraftReagents,
 	GetCraftResultItem = _GetCraftResultItem,
     GetResultItemName = _GetResultItemName
@@ -943,8 +902,6 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetProfession2")
 	DataStore:SetCharacterBasedMethod("GetCookingRank")
 	DataStore:SetCharacterBasedMethod("GetFishingRank")
-	DataStore:SetCharacterBasedMethod("GetArchaeologyRank")
-	DataStore:SetCharacterBasedMethod("IsArtifactKnown")
 	
 	DataStore:SetGuildBasedMethod("GetGuildCrafters")
 	DataStore:SetGuildBasedMethod("GetGuildMemberProfession")

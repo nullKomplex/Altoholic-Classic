@@ -90,10 +90,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Characters.ViewBags"] = true,
 			["UI.Tabs.Characters.ViewBank"] = true,
 			["UI.Tabs.Characters.ViewBagsAllInOne"] = false,
-			["UI.Tabs.Characters.ViewVoidStorage"] = false,
-			["UI.Tabs.Characters.ViewReagentBank"] = false,
 			["UI.Tabs.Characters.ViewBagsRarity"] = 0,						-- rarity level of items (not a boolean !)
-			["UI.Tabs.Characters.GarrisonMissions"] = 1,						-- available missions = 1, active missions = 2
 			["UI.Tabs.Characters.SortAscending"] = true,						-- ascending or descending sort order
 			["UI.Tabs.Characters.ViewLearnedRecipes"] = true,				-- View learned recipes ?
 			["UI.Tabs.Characters.ViewUnlearnedRecipes"] = false,			-- View unlearned recipes ?
@@ -121,12 +118,8 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Grids.Mounts.CurrentFaction"] = 1,						-- Current faction 
 			["UI.Tabs.Grids.Tradeskills.CurrentXPack"] = 1,					-- Current expansion pack 
 			["UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"] = 1,			-- Current tradeskill index
-			["UI.Tabs.Grids.Archaeology.CurrentRace"] = 1,					-- Current race index
 			["UI.Tabs.Grids.Dungeons.CurrentXPack"] = 1,						-- Current expansion pack 
 			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index
-			["UI.Tabs.Grids.Garrisons.CurrentBuildings"] = 1,				-- Current building type
-			["UI.Tabs.Grids.Garrisons.CurrentFollowers"] = 1,				-- Current follower type
-			["UI.Tabs.Grids.Garrisons.CurrentStats"] = 1,					-- Current stats (abilities = 1, traits = 2, counters = 3)
 			["UI.Tabs.Grids.Sets.IncludePVE"] = true,							-- Include PVE Sets
 			["UI.Tabs.Grids.Sets.IncludePVP"] = true,							-- Include PVP Sets
 			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack 
@@ -144,7 +137,6 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
 			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
 			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
-			["UI.Tooltip.ShowGuildBankCountPerTab"] = false,	-- guild count = guild:count or guild (tab 1: x, tab2: y ..)
 			
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts

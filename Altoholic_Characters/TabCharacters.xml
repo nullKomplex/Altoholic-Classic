@@ -91,14 +91,6 @@
 							<KeyValue key="iconFile" value="Interface\Icons\Trade_Mining.blp" />
 						</KeyValues>
 					</Button>
-				<!--	<Button parentKey="GarrisonIcon" inherits="AltoTabCharactersIconTemplate" id="9">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.ProfessionsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\inv_garrison_resource" />
-						</KeyValues>
-					</Button>-->
 				</Frames>
 			</Frame>
 	
