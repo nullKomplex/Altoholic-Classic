@@ -37,67 +37,6 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Large Obsidian Chunk"]]            = 22203, -- Large Obsidian Shard. Both drop on both nodes.
 	[L["Small Obsidian Chunk"]]            = 22202, -- Small Obsidian Shard. Both drop on both nodes.
 	
-	-- TBC
-	[L["Adamantite Deposit"]]              = 23425, -- Adamantite Ore
-	[L["Fel Iron Deposit"]]                = 23424, -- Fel Iron Ore
-	[L["Khorium Vein"]]                    = 23426, -- Khorium Ore
-	[L["Nethercite Deposit"]]              = 32464, -- Nethercite Ore
-	[L["Rich Adamantite Deposit"]]         = 23425, -- Adamantite Ore
-	
-	-- WotLK
-	["Cobalt Deposit"]                     = 36909, -- Cobalt Ore
-	["Rich Cobalt Deposit"]                = 36909, -- Cobalt Ore
-	["Saronite Deposit"]                   = 36912, -- Saronite Ore
-	["Rich Saronite Deposit"]              = 36912, -- Saronite Ore
-	["Titanium Vein"]                      = 36910, -- Titanium Ore
-
-	-- Cataclysm
-	["Obsidium Deposit"]                   = 53038, -- Obsidium Ore
-	["Rich Obsidium Deposit"]              = 53038, -- Obsidium Ore
-	["Elementium Vein"]                    = 52185, -- Elementium Ore
-	["Rich Elementium Vein"]               = 52185, -- Elementium Ore
-	["Pyrite Deposit"]                     = 52183, -- Pyrite Ore
-	["Rich Pyrite Deposit"]                = 52183, -- Pyrite Ore
-
-	-- MoP
-	["Ghost Iron Deposit"]                 = 72092, -- Ghost Iron Ore
-	["Rich Ghost Iron Deposit"]            = 72092, -- Ghost Iron Ore
-	["Kyparite Deposit"]                   = 72093, -- Kyparite Ore
-	["Rich Kyparite Deposit"]              = 72093, -- Kyparite Ore
-	["Trillium Vein"]                      = 72095, -- Trillium Bar, because this node produces two ores
-	["Rich Trillium Vein"]                 = 72095, -- Trillium Bar, because this node produces two ores
-
-	-- WoD
-	["Blackrock Deposit"]                  = 109118, -- Blackrock Ore
-	["Rich Blackrock Deposit"]             = 109118, -- Blackrock Ore
-	["True Iron Deposit"]                  = 109119, -- True Iron Ore 
-	["Rich True Iron Deposit"]             = 109119, -- True Iron Ore
-	["Smoldering True Iron Deposit"]       = 109119, -- True Iron Ore
-
-	-- Legion
-	["Leystone Deposit"]                   = 123918, -- Leystone Ore
-	["Leystone Seam"]                      = 123918, -- Leystone Ore
-	["Rich Leystone Deposit"]              = 123918, -- Leystone Ore
-	["Felslate Deposit"]                   = 123919, -- Felslate
-	["Felslate Seam"]                      = 123919, -- Felslate
-	["Rich Felslate Deposit"]              = 123919, -- Felslate
-	
-	["Empyrium Deposit"]                   = 151564, -- Empyrium
-	["Empyrium Seam"]                      = 151564, -- Empyrium
-	["Rich Empyrium Deposit"]              = 151564, -- Empyrium
-	["Astral Glory"]     				      = 151565,	
-	
-	-- Battle for Azeroth
-	["Monelite Deposit"]				   		= 152512, -- Monelite Ore
-	["Rich Monelite Deposit"]			   	= 152512, -- Monelite Ore
-	["Monelite Seam"]					   		= 152512, -- Monelite Ore
-	["Storm Silver Deposit"]			   	= 152579, -- Storm Silver Ore
-	["Rich Storm Silver Deposit"]		   	= 152579, -- Storm Silver Ore
-	["Storm Silver Seam"]				   	= 152579, -- Storm Silver Ore
-	["Platinum Deposit"]				   		= 152513, -- Platinum Ore
-	["Rich Platinum Deposit"]			   	= 152513, -- Platinum Ore
-
-	
 	-- Herbs
 	-- Classic
 	[L["Arthas' Tears"]]        =  8836,
@@ -128,71 +67,7 @@ local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, than
 	[L["Stranglekelp"]]         =  3820,
 	[L["Sungrass"]]             =  8838,
 	[L["Wild Steelbloom"]]      =  3355,
-	[L["Wintersbite"]]          =  3819,
-
-	-- TBC
-	[L["Ancient Lichen"]]       = 22790,
-	[L["Dreaming Glory"]]       = 22786,
-	[L["Felweed"]]              = 22785,
-	[L["Flame Cap"]]            = 22788,
-	[L["Glowcap"]]              = 24245,
-	[L["Mana Thistle"]]         = 22793,
-	[L["Netherbloom"]]          = 22791,
-	[L["Netherdust Bush"]]      = 32468, -- Netherdust Pollen
-	[L["Nightmare Vine"]]       = 22792,
-	[L["Ragveil"]]              = 22787,
-	[L["Sanguine Hibiscus"]]    = 24246,
-	[L["Terocone"]]             = 22789,
-
-	-- WotLK
-	["Goldclover"]              = 36901,
-	["Adder's Tongue"]          = 36903,
-	["Tiger Lily"]              = 36904,
-	["Lichbloom"]               = 36905,
-	["Icethorn"]                = 36906,
-	["Talandra's Rose"]         = 36907,
-	["Frost Lotus"]             = 36908,
-	["Firethorn"]               = 39970,
-
-	-- Cataclysm
-	["Cinderbloom"]             = 52983,
-	["Stormvine"]               = 52984,
-	["Azshara's Veil"]          = 52985,
-	["Heartblossom"]            = 52986,
-	["Twilight Jasmine"]        = 52987,
-	["Whiptail"]                = 52988,
-	["Deathspore Pod"]          = 52989,
-
-	-- MoP
-	["Green Tea Leaf"]          = 72234,
-	["Silkweed"]                = 72235,
-	["Rain Poppy"]              = 72237,
-	["Snow Lily"]               = 79010,
-	["Fool's Cap"]              = 79011,
-
-	-- WoD
-	["Frostweed"]               = 109124,
-	["Fireweed"]                = 109125,
-	["Gorgrond Flytrap"]        = 109126,
-	["Starflower"]              = 109127,
-	["Nagrand Arrowbloom"]      = 109128,
-	["Talador Orchid"]          = 109129,
-
-	-- Legion
-	["Aethril"]                 = 124101,
-	["Dreamleaf"]               = 124102,
-	["Foxflower"]               = 124103,
-	["Fjarnskaggl"]             = 124104,
-	["Starlight Rose"]          = 124105,	
-	
-	-- Battle for Azeroth
-	["Akunda's Bite"]           = 152507,
-	["Anchor Weed"]             = 152510,
-	["Riverbud"]                = 152505,
-	["Sea Stalk"]               = 152511,
-	["Siren's Pollen"]          = 152509,	
-	["Star Moss"]               = 152506,	
-	["Winter's Kiss"]           = 152508,	
+	[L["Wintersbite"]]          =  3819,	
 }
 
 -- *** Utility functions ***
@@ -231,7 +106,7 @@ local cachedItemID, cachedCount, cachedTotal, cachedSource
 local cachedRecipeOwners
 
 local itemCounts = {}
-local itemCountsLabels = {	L["Bags"], L["Bank"], L["AH"], L["Equipped"], L["Mail"], CURRENCY }
+local itemCountsLabels = {	L["Bags"], L["Bank"], L["AH"], L["Equipped"], L["Mail"] }
 local counterLines = {}		-- list of lines containing a counter to display in the tooltip
 
 local function AddCounterLine(owner, counters)
@@ -270,10 +145,10 @@ local function GetRealmsList()
 end
 
 local function GetCharacterItemCount(character, searchedID)
-	itemCounts[1], itemCounts[2], itemCounts[3], itemCounts[4] = DataStore:GetContainerItemCount(character, searchedID)
-	itemCounts[5] = DataStore:GetAuctionHouseItemCount(character, searchedID)
-	itemCounts[6] = DataStore:GetInventoryItemCount(character, searchedID)
-	itemCounts[7] = DataStore:GetMailItemCount(character, searchedID)
+	itemCounts[1], itemCounts[2] = DataStore:GetContainerItemCount(character, searchedID)
+	itemCounts[3] = DataStore:GetAuctionHouseItemCount(character, searchedID)
+	itemCounts[4] = DataStore:GetInventoryItemCount(character, searchedID)
+	itemCounts[5] = DataStore:GetMailItemCount(character, searchedID)
 	
 	local charCount = 0
 	for _, v in pairs(itemCounts) do
@@ -296,6 +171,7 @@ local function GetCharacterItemCount(character, searchedID)
 		end
 		
 		local t = {}
+
 		for k, v in pairs(itemCounts) do
 			if v > 0 then	-- if there are more than 0 items in this container
 				table.insert(t, colors.white .. itemCountsLabels[k] .. ": "  .. colors.teal .. v)
@@ -344,47 +220,6 @@ local function GetItemCount(searchedID)
 	end
 	
 	local showCrossFaction = addon:GetOption("UI.Tooltip.ShowCrossFactionCount")
-	
-	if addon:GetOption("UI.Tooltip.ShowGuildBankCount") then
-		for _, realm in pairs(GetRealmsList()) do
-			for guildName, guildKey in pairs(DataStore:GetGuilds(realm)) do
-				local altoGuild = addon:GetGuild(guildName)
-				local bankFaction = DataStore:GetGuildBankFaction(guildKey)
-								
-				-- do not show cross faction counters for guild banks if they were not requested
-				if (showCrossFaction or (not showCrossFaction and (DataStore:GetGuildBankFaction(guildKey) == UnitFactionGroup("player")))) 
-					and (not altoGuild or (altoGuild and not altoGuild.hideInTooltip)) then
-					local guildCount = 0
-					
-					if addon:GetOption("UI.Tooltip.ShowGuildBankCountPerTab") then
-						local tabCounters = {}
-						
-						local tabCount
-						for tabID = 1, 8 do 
-							tabCount = DataStore:GetGuildBankTabItemCount(guildKey, tabID, searchedID)
-							if tabCount and tabCount > 0 then
-								table.insert(tabCounters,  format("%s: %s", colors.white .. DataStore:GetGuildBankTabName(guildKey, tabID), colors.teal..tabCount))
-							end
-						end
-						
-						if #tabCounters > 0 then
-							guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
-							AddCounterLine(colors.green..guildName, format("%s %s(%s%s)", colors.orange .. guildCount, colors.white, table.concat(tabCounters, ","), colors.white))
-						end
-					else
-						guildCount = DataStore:GetGuildBankItemCount(guildKey, searchedID) or 0
-						if guildCount > 0 then
-							AddCounterLine(colors.green..guildName, format("%s(%s: %s%s)", colors.white, GUILD_BANK, colors.teal..guildCount, colors.white))
-						end
-					end
-						
-					if addon:GetOption("UI.Tooltip.IncludeGuildBankInTotal") then
-						count = count + guildCount
-					end
-				end
-			end
-		end
-	end
 
 	return count
 end
