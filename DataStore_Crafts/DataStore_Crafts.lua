@@ -419,7 +419,7 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     
     if (useCraftInstead) then
         profName = GetCraftDisplaySkillLine();
-        -- Ignore Beast Training window, which is programmed as a "craft"
+        -- TODO: Ignore Beast Training window, which is programmed as a "craft"
     else
         profName = GetTradeSkillLine();
     end
@@ -430,11 +430,13 @@ local function ClassicScanProfessionInfo(useCraftInstead)
 	local char = addon.ThisCharacter
     local index = 0
     local mainIndex = false
-    if (profName == "Cooking") then
+    if (profName == L["Cooking"]) then
         index = 3
-    elseif (profName == "Poisons") then
+    elseif (profName == L["Poisons"]) then
         return -- Don't scan Poisons
-    elseif (profName == "First Aid") then    
+    elseif (profName == L["Beast_Training"]) then
+        return
+    elseif (profName == L["First Aid"]) then    
         index = 4
     elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
         index = 1
@@ -443,17 +445,12 @@ local function ClassicScanProfessionInfo(useCraftInstead)
         index = 2
         mainIndex = true
     else
-        print("DataStore_Crafts: one of your professions has been cleared, addon hasn't been programmed to handle this yet")
+        print("DataStore_Crafts: one of your professions has been unlearned; addon hasn't been programmed to handle this yet")
         return
     end
-
---	if char and mainIndex and not index then
---		char["Prof"..mainIndex] = nil			-- profession may have been cleared, nil it
---	end
        
 	if not char or not index then return end
 	                           
-	--local profName, texture, rank, maxRank, _, _, _, _, _, _, currentLevelName = GetProfessionInfo(index);
     local _, rank, maxRank
     if (useCraftInstead) then
         _, rank, maxRank = GetCraftDisplaySkillLine();
@@ -473,14 +470,18 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     ScanTradeSkills(useCraftInstead)
 end
 
-local function ScanArcheologyItems()
-    print("Altoholic: Deprecated function called")
-    return;
-end
-
 -- *** Event Handlers ***
 local function OnPlayerAlive()
---	ScanProfessionLinks()
+    -- Grab the player's fishing skill from the Skills API
+    for i = 1, GetNumSkillLines() do
+        local name, _, _, skillLevel, _, _, maxSkillLevel = GetSkillLineInfo(i)
+        if (name == L["Fishing"]) then
+            if (not addon.ThisCharacter.Professions["Fishing"]) then addon.ThisCharacter.Professions["Fishing"] = {} end
+            addon.ThisCharacter.Professions["Fishing"].Rank = skillLevel
+            addon.ThisCharacter.Professions["Fishing"].Name = name
+            addon.ThisCharacter.Professions["Fishing"].MaxRank = maxSkillLevel
+       end
+    end
 end
 
 local function OnTradeSkillClose()
@@ -579,12 +580,9 @@ end
 
 -- RETURNS: rank, maxRank, spellID
 local function _GetProfessionInfo(profession)
-	-- accepts either a pointer (type == table)to the profession table, as returned by addon:GetProfession()
-	-- or a link (type == string)
+	-- accepts a pointer (type == table)to the profession table, as returned by addon:GetProfession()
 	
 	local rank, maxRank, spellID
-    -- No profession links in Classic, time for a workaround
---	local link
 
     if (not profession) then
         return 0, 0, nil
@@ -593,20 +591,11 @@ local function _GetProfessionInfo(profession)
 	if type(profession) == "table" then
 		rank = profession.Rank
 		maxRank = profession.MaxRank 
-		--link = profession.FullLink
 	elseif type(profession) == "string" then
         print("Error in DataStore_Crafts - professions cannot be linked in classic, so this function should not have been called this way")
-		--link = profession
 	end
     
-   -- if (profession) then
-        spellID = ProfessionSpellID[profession.Name]
-   -- end
-    
---	if link and type(link) ~= "number" then
---		-- _, spellID, rank, maxRank = link:match("trade:(%w+):(%d+):(%d+):(%d+):")
---		_, spellID = link:match("trade:(%w+):(%d+)")		-- Fix 5.4, rank no longer in the profession link
---	end
+    spellID = ProfessionSpellID[profession.Name]
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)
 end
@@ -788,7 +777,7 @@ local function _GetFirstAidRank(character)
 end
 
 local function _GetFishingRank(character)
-	local profession = _GetProfession(character, GetSpellInfo(SPELL_ID_FISHING))
+	local profession = _GetProfession(character, GetSpellInfo("Fishing"))
 	if profession then
 		return _GetProfessionInfo(profession)
 	end
@@ -861,7 +850,7 @@ function addon:OnInitialize()
 end
 
 function addon:OnEnable()
-	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
+	addon:RegisterEvent("PLAYER_ENTERING_WORLD", OnPlayerAlive)
 	addon:RegisterEvent("TRADE_SKILL_SHOW", OnTradeSkillShow)
     addon:RegisterEvent("CRAFT_SHOW", OnCraftShow)
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
@@ -874,7 +863,7 @@ function addon:OnEnable()
 end
 
 function addon:OnDisable()
-	addon:UnregisterEvent("PLAYER_ALIVE")
+	addon:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	addon:UnregisterEvent("TRADE_SKILL_SHOW")
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
