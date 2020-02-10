@@ -214,17 +214,9 @@
 					<KeyValue key="option" value="UI.Tabs.Search.IncludeMailboxItems" />
 				</KeyValues>
 			</CheckButton>
-			<CheckButton parentKey="IncludeGuildBankItems" inherits="AltoToggleableOptionTemplate">
-				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.IncludeMailboxItems" relativePoint="BOTTOM" x="0" y="-10" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="option" value="UI.Tabs.Search.IncludeGuildBankItems" />
-				</KeyValues>
-			</CheckButton>
 			<CheckButton parentKey="IncludeKnownRecipes" inherits="AltoToggleableOptionTemplate">
 				<Anchors> 
-					<Anchor point="TOP" relativeKey="$parent.IncludeGuildBankItems" relativePoint="BOTTOM" x="0" y="-10" />
+					<Anchor point="TOP" relativeKey="$parent.IncludeMailboxItems" relativePoint="BOTTOM" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="option" value="UI.Tabs.Search.IncludeKnownRecipes" />
@@ -324,9 +316,17 @@
 					<KeyValue key="option" value="UI.Tooltip.ShowTotalItemCount" />
 				</KeyValues>
 			</CheckButton>
-			<CheckButton parentKey="ShowKnownRecipes" inherits="AltoToggleableOptionTemplate">
+			<CheckButton parentKey="ShowItemSellPrice" inherits="AltoToggleableOptionTemplate">
 				<Anchors> 
 					<Anchor point="TOPLEFT" relativeKey="$parent.ShowTotalItemCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
+				</Anchors>
+                <KeyValues>
+					<KeyValue key="option" value="UI.Tooltip.ShowSellPrice" />
+				</KeyValues>
+			</CheckButton>
+			<CheckButton parentKey="ShowKnownRecipes" inherits="AltoToggleableOptionTemplate">
+				<Anchors> 
+					<Anchor point="TOPLEFT" relativeKey="$parent.ShowItemSellPrice" relativePoint="BOTTOMLEFT" x="0" y="-10" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="option" value="UI.Tooltip.ShowKnownRecipes" />
@@ -370,30 +370,6 @@
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="option" value="UI.Tooltip.ShowAllAccountsCount" />
-				</KeyValues>
-			</CheckButton>
-			<CheckButton parentKey="ShowGuildBankCount" inherits="AltoToggleableOptionTemplate">
-				<Anchors> 
-					<Anchor point="TOPLEFT" relativeKey="$parent.ShowAllAccountsCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="option" value="UI.Tooltip.ShowGuildBankCount" />
-				</KeyValues>
-			</CheckButton>
-			<CheckButton parentKey="IncludeGuildBankInTotal" inherits="AltoToggleableOptionTemplate">
-				<Anchors> 
-					<Anchor point="TOPLEFT" relativeKey="$parent.ShowGuildBankCount" relativePoint="BOTTOMLEFT" x="0" y="-10" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="option" value="UI.Tooltip.IncludeGuildBankInTotal" />
-				</KeyValues>
-			</CheckButton>
-			<CheckButton parentKey="ShowGuildBankCountPerTab" inherits="AltoToggleableOptionTemplate">
-				<Anchors> 
-					<Anchor point="TOPLEFT" relativeKey="$parent.IncludeGuildBankInTotal" relativePoint="BOTTOMLEFT" x="0" y="-10" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="option" value="UI.Tooltip.ShowGuildBankCountPerTab" />
 				</KeyValues>
 			</CheckButton>
 		</Frames>

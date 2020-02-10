@@ -9,10 +9,38 @@
 		<Layers>
 			<Layer level="OVERLAY">
 				<FontString parentKey="Totals" inherits="GameFontNormal" justifyH="RIGHT">
-					<Size x="400" y="24" />
+					<Size x="60" y="24" />
 					<Anchors>
-						<Anchor point="BOTTOMRIGHT" x="30" y="13" />
+						<Anchor point="BOTTOMRIGHT">
+							<Offset x="-180" y="13" />
+						</Anchor>
 					</Anchors>
+				</FontString>
+                				<FontString parentKey="TotalLv" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="80" y="24" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset x="-100" y="13" />
+						</Anchor>
+					</Anchors>
+				</FontString>
+				<FontString parentKey="TotalGold" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="80" y="24" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset x="-20" y="13" />
+						</Anchor>
+					</Anchors>
+					<Color r="255" g="255" b="255" />
+				</FontString>
+				<FontString parentKey="TotalPlayed" inherits="GameFontNormal" justifyH="RIGHT">
+					<Size x="80" y="24" />
+					<Anchors>
+						<Anchor point="BOTTOMRIGHT">
+							<Offset x="60" y="13" />
+						</Anchor>
+					</Anchors>
+					<Color r="255" g="255" b="255" />
 				</FontString>
 			</Layer>
 		</Layers>
@@ -37,21 +65,6 @@
 					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem3" relativePoint="BOTTOMLEFT" x="0" y="0" />
 				</Anchors>
 			</Button>
-<!--			<Button parentKey="MenuItem5" inherits="AltoTabSummaryMenuItemTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem4" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button>
-			<Button parentKey="MenuItem6" inherits="AltoTabSummaryMenuItemTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem5" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-			</Button> -->
-			<!-- <Button parentKey="MenuItem7" inherits="AltoTabSummaryMenuItemTemplate" id="7"> -->
-				<!-- <Anchors> -->
-					<!-- <Anchor point="TOPLEFT" relativeKey="$parent.MenuItem6" relativePoint="BOTTOMLEFT" x="0" y="0" /> -->
-				<!-- </Anchors> -->
-			<!-- </Button> -->
 			
 			<Button parentKey="RealmsIcon" inherits="AltoTabSummaryIconTemplate" id="1">
 				<Anchors>
@@ -140,7 +153,7 @@
 						Altoholic.Tabs.Summary:AccountSharingButton_OnClick()
 					</OnClick>
 				</Scripts>
-			</Button>  -->
+			</Button>
 			
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>
@@ -184,7 +197,7 @@
 				self.MenuItem3:SetText(SKILLS)
 				self.MenuItem4:SetText(L["Activity"])
 
---				self.RequestSharing:SetText(L["Account Sharing"])
+				self.RequestSharing:SetText(L["Account Sharing"])
 				
 				self.ClassIcon:SetIcon(Altoholic:GetCharacterIcon())
 			</OnLoad>

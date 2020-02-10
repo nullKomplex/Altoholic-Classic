@@ -26,10 +26,9 @@ local AddonDB_Defaults = {
 			['*'] = {				-- ["Account.Realm.Name"]
 				lastUpdate = nil,
 				Quests = {},
-				QuestLinks = {},
 				QuestHeaders = {},
+                QuestTitles = {},
 				QuestTags = {},
-				Emissaries = {},
 				Rewards = {},
 				Money = {},
 				Dailies = {},
@@ -40,32 +39,6 @@ local AddonDB_Defaults = {
 			}
 		}
 	}
-}
-
-local emissaryQuests = {
-	[42420] = true, -- Court of Farondis
-	[42421] = true, -- Nightfallen
-	[42422] = true, -- The Wardens
-	[42233] = true, -- Highmountain Tribes
-	[42234] = true, -- Valarjar
-	[42170] = true, -- Dreamweavers
-	[43179] = true, -- Kirin Tor
-	[48642] = true, -- Argussian Reach
-	[48641] = true, -- Armies of Legionfall
-	[48639] = true, -- Army of the Light
-	
-	-- BfA
-	[50604] = true, -- Tortollan Seekers 
-	[50562] = true, -- Champions of Azeroth
-	[50599] = true, -- Proudmoore Admiralty
-	[50600] = true, -- Order of Embers
-	[50601] = true, -- Storm's Wake
-	[50605] = true, -- Alliance War Effort
-	[50598] = true, -- Zandalari Empire
-	[50603] = true, -- Voldunai
-	[50602] = true, -- Talanji's Expedition
-	[50606] = true, -- Horde War Effort
-	
 }
 
 -- *** Utility functions ***
@@ -157,11 +130,16 @@ end
 
 local function GetQuestTagID(questID, isComplete, frequency)
 
-	local tagID = 1
+	local tagID = GetQuestTagInfo(questID)
 	if tagID then	
 		-- if there is a tagID, process it
 		if tagID == QUEST_TAG_ACCOUNT then
-            return "HORDE"
+			local factionGroup = GetQuestFactionGroup(questID)
+			if factionGroup then
+				return (factionGroup == LE_QUEST_FACTION_HORDE) and "HORDE" or "ALLIANCE"
+			else
+				return QUEST_TAG_ACCOUNT
+			end
 		end
 		return tagID	-- might be raid/dungeon..
 	end
@@ -271,15 +249,14 @@ local function ScanQuests()
 	local headers = char.QuestHeaders
 	local rewards = char.Rewards
 	local tags = char.QuestTags
-	local emissaries = char.Emissaries
+	local titles = char.QuestTitles
 	local money = char.Money
 
 	wipe(quests)
-	wipe(links)
 	wipe(headers)
 	wipe(rewards)
 	wipe(tags)
-	wipe(emissaries)
+	wipe(titles)
 	wipe(money)
 
 	local currentSelection = GetQuestLogSelection()		-- save the currently selected quest
@@ -290,10 +267,11 @@ local function ScanQuests()
 	local lastQuestIndex = 0
 	
 	for i = 1, GetNumQuestLogEntries() do
-		local title, level, questTag, suggestedGroup, isHeader, isCollapsed, isComplete, isDaily, questID = GetQuestLogTitle(i)
+        local title, level, groupSize, isHeader, isCollapsed, isComplete, frequency, questID, startEvent, displayQuestID, 
+				isOnMap, hasLocalPOI, isTask, isBounty, isStory, isHidden = GetQuestLogTitle(i)
         local groupSize = 1
         if (questTag ~= nil) then
-            local groupSize = 5
+            groupSize = 5
         end
         
         
@@ -324,14 +302,8 @@ local function ScanQuests()
 			lastQuestIndex = lastQuestIndex + 1
 			
 			tags[lastQuestIndex] = GetQuestTagID(questID, isComplete, frequency)
-			links[lastQuestIndex] = nil
+			titles[lastQuestIndex] = title
 			money[lastQuestIndex] = GetQuestLogRewardMoney()
-
-			-- is the quest an emissary quest ?
-			if emissaryQuests[questID] then
-				local objective, _, _, numFulfilled, numRequired = GetQuestObjectiveInfo(questID, 1, false)
-				emissaries[questID] = format("%d|%d|%d|%s", numFulfilled, numRequired, C_TaskQuest.GetQuestTimeLeftMinutes(questID), objective or "")
-			end
 
 			wipe(rewardsCache)
 			ScanChoices(rewardsCache)
@@ -429,9 +401,8 @@ local function _GetQuestLogInfo(character, index)
 	local groupName = character.QuestHeaders[headerIndex]		-- This is most often the zone name, or the profession name
 	
 	local tag = character.QuestTags[index]
-	local link = nil--character.QuestLinks[index]
-	local questID = nil--link:match("quest:(%d+)")
-	local questName = nil--link:match("%[(.+)%]")
+	local questID = nil
+	local questName = character.QuestTitles[index]
 	
 	return questName, questID, link, groupName, level, groupSize, tag, isComplete, isDaily, isTask, isBounty, isStory, isHidden, isSolo
 end
@@ -518,34 +489,9 @@ local function _IsQuestCompletedBy(character, questID)
 	end
 end
 
-local function _GetEmissaryQuests()
-	return emissaryQuests
-end
-
-local function _GetEmissaryQuestInfo(character, questID)
-	local quest = character.Emissaries[questID]
-	if not quest then return end
-
-	local numFulfilled, numRequired, timeLeft, objective = strsplit("|", quest)
-
-	numFulfilled = tonumber(numFulfilled) or 0
-	numRequired = tonumber(numRequired) or 0
-	timeLeft = (tonumber(timeLeft) or 0) * 60		-- we want the time left to be in seconds
-	
-	if timeLeft > 0 then
-		local secondsSinceLastUpdate = time() - character.lastUpdate
-		if secondsSinceLastUpdate > timeLeft then		-- if the info has expired ..
-			character.Emissaries[questID] = nil			-- .. clear the entry
-			return
-		end
-		
-		timeLeft = timeLeft - secondsSinceLastUpdate
-	end
-
-	return numFulfilled, numRequired, timeLeft, objective
-end
-
 local function _IsCharacterOnQuest(character, questID)
+	-- TODO fix for classic
+
 	for index, link in pairs(character.QuestLinks) do
 		local id = link:match("quest:(%d+)")
 		if questID == tonumber(id) then
@@ -608,8 +554,6 @@ local PublicMethods = {
 	GetDailiesHistory = _GetDailiesHistory,
 	GetDailiesHistorySize = _GetDailiesHistorySize,
 	GetDailiesHistoryInfo = _GetDailiesHistoryInfo,
-	GetEmissaryQuests = _GetEmissaryQuests,
-	GetEmissaryQuestInfo = _GetEmissaryQuestInfo,
 	IsCharacterOnQuest = _IsCharacterOnQuest,
 	GetCharactersOnQuest = _GetCharactersOnQuest,
 	IterateQuests = _IterateQuests,
@@ -631,7 +575,6 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetDailiesHistory")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistorySize")
 	DataStore:SetCharacterBasedMethod("GetDailiesHistoryInfo")
-	DataStore:SetCharacterBasedMethod("GetEmissaryQuestInfo")
 	DataStore:SetCharacterBasedMethod("IsCharacterOnQuest")
 	DataStore:SetCharacterBasedMethod("IterateQuests")
 end
@@ -686,13 +629,6 @@ hooksecurefunc("GetQuestReward", function(choiceIndex)
 
 	-- mark the current quest ID as completed
 	history[index] = bOr((history[index] or 0), 2^bitPos)	-- read: value = SetBit(value, bitPosition)
-
-	-- track daily quests turn-ins
---	if QuestIsDaily() or emissaryQuests[questID] then
---		-- I could not find a function to test if a quest is emissary, so their id's are tracked manually
---		table.insert(addon.ThisCharacter.Dailies, { title = GetTitleText(), id = questID, timestamp = time() })
---	end
---	-- TODO: there's also QuestIsWeekly() which should probably also be tracked
 
 	addon:SendMessage("DATASTORE_QUEST_TURNED_IN", questID)		-- trigger the DS event
 end)

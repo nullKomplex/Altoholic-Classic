@@ -4,8 +4,8 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 
 local addon = _G[addonName]
 
-addon.Version = "v8.2.001"
-addon.VersionNum = 802001
+addon.Version = "v1.13.009"
+addon.VersionNum = 113009
 
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local commPrefix = addonName
@@ -79,7 +79,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Summary.CurrentFactions"] = 3,							-- 1 = Alliance, 2 = Horde, 3 = Both
 			["UI.Tabs.Summary.CurrentLevels"] = 1,								-- 1 = All
 			["UI.Tabs.Summary.CurrentLevelsMin"] = 1,							
-			["UI.Tabs.Summary.CurrentLevelsMax"] = 120,					
+			["UI.Tabs.Summary.CurrentLevelsMax"] = 60,					
 			["UI.Tabs.Summary.CurrentClasses"] = 0,							-- 0 = All
 			["UI.Tabs.Summary.CurrentTradeSkill"] = 0,						-- 0 = All
 			["UI.Tabs.Summary.SortAscending"] = true,							-- ascending or descending sort order
@@ -92,14 +92,11 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Characters.ViewBagsAllInOne"] = false,
 			["UI.Tabs.Characters.ViewBagsRarity"] = 0,						-- rarity level of items (not a boolean !)
 			["UI.Tabs.Characters.SortAscending"] = true,						-- ascending or descending sort order
-			["UI.Tabs.Characters.ViewLearnedRecipes"] = true,				-- View learned recipes ?
-			["UI.Tabs.Characters.ViewUnlearnedRecipes"] = false,			-- View unlearned recipes ?
 						
 			-- ** Search tab options **
 			["UI.Tabs.Search.ItemInfoAutoQuery"] = false,
 			["UI.Tabs.Search.IncludeNoMinLevel"] = true,				-- include items with no minimum level
 			["UI.Tabs.Search.IncludeMailboxItems"] = true,
-			["UI.Tabs.Search.IncludeGuildBankItems"] = true,
 			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
 			["UI.Tabs.Search.SortAscending"] = true,							-- ascending or descending sort order
 			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
@@ -113,16 +110,11 @@ local AddonDB_Defaults = {
 			-- ** Grids tab options **
 			["UI.Tabs.Grids.Reputations.CurrentXPack"] = 1,					-- Current expansion pack 
 			["UI.Tabs.Grids.Reputations.CurrentFactionGroup"] = 1,		-- Current faction group in that xpack
-			["UI.Tabs.Grids.Currencies.CurrentTokenType"] = nil,			-- Current token type (default to nil = all-in-one)
-			["UI.Tabs.Grids.Companions.CurrentXPack"] = 1,					-- Current expansion pack 
-			["UI.Tabs.Grids.Mounts.CurrentFaction"] = 1,						-- Current faction 
+			["UI.Tabs.Grids.Currencies.CurrentTokenType"] = nil,			-- Current token type (default to nil = all-in-one)  
 			["UI.Tabs.Grids.Tradeskills.CurrentXPack"] = 1,					-- Current expansion pack 
 			["UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"] = 1,			-- Current tradeskill index
 			["UI.Tabs.Grids.Dungeons.CurrentXPack"] = 1,						-- Current expansion pack 
-			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index
-			["UI.Tabs.Grids.Sets.IncludePVE"] = true,							-- Include PVE Sets
-			["UI.Tabs.Grids.Sets.IncludePVP"] = true,							-- Include PVP Sets
-			["UI.Tabs.Grids.Sets.CurrentXPack"] = 1,							-- Current expansion pack 
+			["UI.Tabs.Grids.Dungeons.CurrentRaids"] = 1,						-- Current raid index 
 
 			-- ** Tooltip options **
 			["UI.Tooltip.ShowItemSource"] = true,
@@ -135,8 +127,7 @@ local AddonDB_Defaults = {
 			["UI.Tooltip.ShowCrossFactionCount"] = true,			-- display counters for both factions on a pve server
 			["UI.Tooltip.ShowMergedRealmsCount"] = true,			-- display counters for characters on connected realms
 			["UI.Tooltip.ShowAllAccountsCount"] = true,			-- display counters for all accounts on the same realm
-			["UI.Tooltip.ShowGuildBankCount"] = true,				-- display guild bank counters
-			["UI.Tooltip.IncludeGuildBankInTotal"] = true,		-- total count = alts + guildbank (1) or alts only (0)
+            ["UI.Tooltip.ShowSellPrice"] = true,					-- Sell price per unit
 			
 			-- ** Mail options **
 			["UI.Mail.GuildMailWarning"] = true,					-- be informed when a guildie sends a mail to one of my alts
@@ -316,14 +307,30 @@ function addon:ChatCommand(input)
 	end
 end
 
+local SPELL_ID_ALCHEMY = 2259
+local SPELL_ID_BLACKSMITHING = 3100
+local SPELL_ID_ENCHANTING = 7411
+local SPELL_ID_ENGINEERING = 4036
+local SPELL_ID_LEATHERWORKING = 2108
+
+local SPELL_ID_TAILORING = 3908
+local SPELL_ID_SKINNING = 8613
+local SPELL_ID_MINING = 2575
+local SPELL_ID_HERBALISM = 2366
+-- local SPELL_ID_SMELTING = 2656
+
+local SPELL_ID_COOKING = 2550
+local SPELL_ID_FIRSTAID = 3273
+local SPELL_ID_FISHING = 7733
+
 addon.TradeSkills = {
 	Recipes = {},
 	-- spell IDs in alphabetical order (english), primary then secondary
-	spellIDs = { 2259, 3100, 7411, 4036, 45357, 25229, 2108, 2656, 3908, 2550 },
+    spellIDs = { 2259, 3100, 7411, 4036, 2108, 3908, 8613, 2575, 2366, 2550, 3273, 7733 },
 	firstSecondarySkillIndex = 10, -- index of the first secondary profession in the table
 	
-	AccountSummaryFiltersSpellIDs = { 2259, 3100, 7411, 4036, 2366, 45357, 25229, 2108, 2575, 8613, 3908, 2550, 18248, 78670 },
-	AccountSummaryFirstSecondarySkillIndex = 12, -- index of the first secondary profession in the table
+	AccountSummaryFiltersSpellIDs = { 2259, 3100, 7411, 4036, 2108, 3908, 8613, 2575, 2366, 2550, 3273, 7733 },
+	AccountSummaryFirstSecondarySkillIndex = 10, -- index of the first secondary profession in the table
 		
 	Names = {
 		ALCHEMY = GetSpellInfo(2259),
@@ -331,12 +338,12 @@ addon.TradeSkills = {
 		COOKING = GetSpellInfo(2550),
 		ENCHANTING = GetSpellInfo(7411),
 		ENGINEERING = GetSpellInfo(4036),
+        FIRSTAID = GetSpellInfo(3273),
 		FISHING = GetSpellInfo(18248),
 		HERBALISM = GetSpellInfo(2366),
 		LEATHERWORKING = GetSpellInfo(2108),
 		MINING = GetSpellInfo(2575),
 		SKINNING = GetSpellInfo(8613),
-		SMELTING = GetSpellInfo(2656),
 		TAILORING = GetSpellInfo(3908),
 	},
 }
@@ -347,8 +354,6 @@ local tabList = {
 	"Characters",
 	"Search",
 	"Guild",
-	"Achievements",
-	"Agenda",
 	"Grids",
 }
 

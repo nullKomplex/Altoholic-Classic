@@ -180,15 +180,12 @@ function ns:UpdateAuctions()
 			
 			_G[ entry..i.."Price" ]:SetText(addon:GetMoneyString(startPrice) .. "\n"  
 					.. colors.green .. BUYOUT .. ": " ..  addon:GetMoneyString(buyoutPrice))
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
-			else
-				_G[ entry..i.."ItemCount" ]:Hide()
-			end
-
-			_G[ entry..i.."Item" ]:SetID(index)
+                    
+            local itemButton = _G[ entry..i.."Item" ]
+			itemButton:SetIcon(GetItemIcon(itemID))			
+			itemButton:SetCount(count)
+			itemButton:SetID(index)
+                    
 			_G[ entry..i ]:Show()
 		else
 			_G[ entry..i ]:Hide()
@@ -248,15 +245,12 @@ function ns:UpdateBids()
 			
 			_G[ entry..i.."Price" ]:SetText(colors.orange .. CURRENT_BID .. ": " .. addon:GetMoneyString(bidPrice) .. "\n"  
 					.. colors.green .. BUYOUT .. ": " ..  addon:GetMoneyString(buyoutPrice))
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(GetItemIcon(itemID));
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
-			else
-				_G[ entry..i.."ItemCount" ]:Hide()
-			end
-
-			_G[ entry..i.."Item" ]:SetID(index)
+                    
+			local itemButton = _G[ entry..i.."Item" ]
+			itemButton:SetIcon(GetItemIcon(itemID))			
+			itemButton:SetCount(count)
+			itemButton:SetID(index)
+            
 			_G[ entry..i ]:Show()
 		else
 			_G[ entry..i ]:Hide()

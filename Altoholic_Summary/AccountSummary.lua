@@ -9,7 +9,6 @@ local MODE_SUMMARY = 1
 local MODE_BAGS = 2
 local MODE_SKILLS = 3
 local MODE_ACTIVITY = 4
-local MODE_CURRENCIES = 5
 
 local SKILL_CAP = 300
 
@@ -859,13 +858,13 @@ columns["BankSlots"] = {
 			local _, link, size, free, bagType = DataStore:GetContainerInfo(character, 100)
 			tt:AddDoubleLine(format("%s[%s]", colors.white, L["Bank"]), FormatBagSlots(size, free))
 				
---[[			for i = 5, 11 do
+			for i = 5, 11 do
 				_, link, size, free, bagType = DataStore:GetContainerInfo(character, i)
 				
 				if size ~= 0 then
 					tt:AddDoubleLine(FormatBagType(link, bagType), FormatBagSlots(size, free))
 				end
-			end  ]]--
+			end  
 			tt:Show()
 		end,
 	GetTotal = function(line) return format("%s%s |r%s", colors.white, Characters:GetField(line, "bankSlots"), L["slots"]) end,
@@ -916,29 +915,6 @@ columns["FreeBankSlots"] = {
 	GetTotal = function(line) return format("%s%s", colors.white, Characters:GetField(line, "freeBankSlots")) end,
 }
 
-columns["FreeReagentBankSlots"] = {	-- TO DO 
-	-- Header
-	headerWidth = 50,
-	headerLabel = LASTONLINE,
-	-- headerOnClick = function(frame) 
-		-- SortView("FreeReagentBankSlots") 
-	-- end,
-	--headerSort = DataStore.xxx,
-	
-	-- Content
-	Width = 50,
-	JustifyH = "CENTER",
-	GetText = function(character)
-			if not DataStore:GetModuleLastUpdateByKey("DataStore_Containers", character) then
-				return 0
-			end
-			
-			-- TO DO : problem to workaround GetContainerNumFreeSlots returns 0 when the bag (-3) is scanned when not at the bank..
-			
-			return 0
-		end,
-}
-
 -- ** Skills **
 columns["Prof1"] = {
 	-- Header
@@ -957,7 +933,6 @@ columns["Prof1"] = {
 			local rank, _, _, name = DataStore:GetProfession1(character)
 			local spellID = DataStore:GetProfessionSpellID(name)
 			local icon = spellID and format(TEXTURE_FONT, addon:GetSpellIcon(spellID), 18, 18) .. " " or ""
-			rank = rank or 0
 			return format("%s%s%s", icon, GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
@@ -989,7 +964,6 @@ columns["Prof2"] = {
 			local rank, _, _, name = DataStore:GetProfession2(character)
 			local spellID = DataStore:GetProfessionSpellID(name)
 			local icon = spellID and format(TEXTURE_FONT, addon:GetSpellIcon(spellID), 18, 18) .. " " or ""
-			rank = rank or 0
 			return format("%s%s%s", icon, GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
@@ -1007,7 +981,7 @@ columns["Prof2"] = {
 columns["ProfCooking"] = {
 	-- Header
 	headerWidth = 60,
-	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(1), 18, 18),
+	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(2550), 18, 18),
 	tooltipTitle = GetSpellInfo(2550),
 	tooltipSubTitle = nil,
 	headerOnEnter = TradeskillHeader_OnEnter,
@@ -1019,7 +993,6 @@ columns["ProfCooking"] = {
 	JustifyH = "CENTER",
 	GetText = function(character)
 			local rank = DataStore:GetCookingRank(character)
-            rank = rank or 0;
 			return format("%s%s", GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
@@ -1030,10 +1003,35 @@ columns["ProfCooking"] = {
 		end,
 }
 
+columns["ProfFirstAid"] = {
+	-- Header
+	headerWidth = 60,
+	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(3273), 18, 18),
+	tooltipTitle = GetSpellInfo(3273),
+	tooltipSubTitle = nil,
+	headerOnEnter = TradeskillHeader_OnEnter,
+	headerOnClick = function() SortView("ProfFirstAid") end,
+	headerSort = DataStore.GetFirstAidRank,
+	
+	-- Content
+	Width = 60,
+	JustifyH = "CENTER",
+	GetText = function(character)
+			local rank = DataStore:GetFirstAidRank(character)
+			return format("%s%s", GetSkillRankColor(rank), rank)
+		end,
+	OnEnter = function(frame)
+			Tradeskill_OnEnter(frame, GetSpellInfo(3273), true)
+		end,
+	OnClick = function(frame, button)
+			Tradeskill_OnClick(frame, GetSpellInfo(3273))
+		end,
+}
+
 columns["ProfFishing"] = {
 	-- Header
 	headerWidth = 60,
-	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(1), 18, 18),
+	headerLabel = "   " .. format(TEXTURE_FONT, addon:GetSpellIcon(7733), 18, 18),
 	tooltipTitle = GetSpellInfo(18248),
 	tooltipSubTitle = nil,
 	headerOnEnter = TradeskillHeader_OnEnter,
@@ -1045,11 +1043,10 @@ columns["ProfFishing"] = {
 	JustifyH = "CENTER",
 	GetText = function(character)
 			local rank = DataStore:GetFishingRank(character)
-            rank = rank or 0
 			return format("%s%s", GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
-			Tradeskill_OnEnter(frame, GetSpellInfo(18248), true)
+			Tradeskill_OnEnter(frame, GetSpellInfo(7733), true)
 		end,
 }
 
@@ -1330,7 +1327,7 @@ end
 local modes = {
 	[MODE_SUMMARY] = { "Name", "Level", "RestXP", "Money", "Played", "AiL", "LastOnline" },
 	[MODE_BAGS] = { "Name", "Level", "BagSlots", "FreeBagSlots", "BankSlots", "FreeBankSlots" },
-	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFishing" },
+	[MODE_SKILLS] = { "Name", "Level", "Prof1", "Prof2", "ProfCooking", "ProfFirstAid", "ProfFishing" },
 	[MODE_ACTIVITY] = { "Name", "Level", "Mails", "LastMailCheck", "Auctions", "Bids", "AHLastVisit" },
 }
 
@@ -1445,5 +1442,8 @@ function addon:AiLTooltip()
 	local tt = AltoTooltip
 	
 	tt:AddLine(" ")
-	tt:AddDoubleLine(format("%s%s", colors.teal, EXPANSION_NAME0), FormatAiL("1-62"))
+	tt:AddDoubleLine(format("%sTier 0", colors.teal), FormatAiL("58-63"))
+	tt:AddDoubleLine(format("%sTier 1", colors.teal), FormatAiL("66"))
+	tt:AddDoubleLine(format("%sTier 2", colors.teal), FormatAiL("76"))
+	tt:AddDoubleLine(format("%sTier 3", colors.teal), FormatAiL("86-92"))
 end

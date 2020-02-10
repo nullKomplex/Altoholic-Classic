@@ -118,15 +118,12 @@ function ns:Update()
 			local _, seconds = DataStore:GetMailExpiry(character, index)
 			_G[ entry..i.."Expiry" ]:SetText(format("%s:\n%s", msg, colors.white .. SecondsToTime(seconds)))
 			
-			_G[ entry..i.."ItemIconTexture" ]:SetTexture(icon);
-			if count and count > 1 then
-				_G[ entry..i.."ItemCount" ]:SetText(count)
-				_G[ entry..i.."ItemCount" ]:Show()
-			else
-				_G[ entry..i.."ItemCount" ]:Hide()
-			end
+			local itemButton = _G[ entry..i.."Item" ]
+			itemButton:SetIcon(icon)			
+			itemButton:SetCount(count)
+            
 			-- trick: pass the index of the current item in the results table, required for the tooltip
-			_G[ entry..i.."Item" ]:SetID(index)
+			itemButton:SetID(index)
 			_G[ entry..i ]:Show()
 		else
 			_G[ entry..i ]:Hide()

@@ -240,7 +240,6 @@ function addon:SetupOptions()
 	
 	f.IncludeNoMinLevel.Text:SetText(L["Include items without level requirement"])
 	f.IncludeMailboxItems.Text:SetText(L["Include mailboxes"])
-	f.IncludeGuildBankItems.Text:SetText(L["Include guild bank(s)"])
 	f.IncludeKnownRecipes.Text:SetText(L["Include known recipes"])
 	L["AutoQuery server |cFFFF0000(disconnection risk)"] = nil
 	L["Sort loots in descending order"] = nil
@@ -312,9 +311,6 @@ function addon:SetupOptions()
 	f.ShowCrossFactionCount.Text:SetText(L["Show counters for both factions"])
 	f.ShowMergedRealmsCount.Text:SetText(L["Show counters for connected realms"])
 	f.ShowAllAccountsCount.Text:SetText(L["Show counters for all accounts"])
-	f.ShowGuildBankCount.Text:SetText(L["Show guild bank count"])
-	f.IncludeGuildBankInTotal.Text:SetText(L["Include guild bank count in the total count"])
-	f.ShowGuildBankCountPerTab.Text:SetText(L["Detailed guild bank count"])
 	L["Show item source"] = nil
 	L["Show item count per character"] = nil
 	L["Show item count without details"] = nil
@@ -374,7 +370,6 @@ function addon:RestoreOptionsToUI()
 	f.ItemInfoAutoQuery:SetChecked(O["UI.Tabs.Search.ItemInfoAutoQuery"])
 	f.IncludeNoMinLevel:SetChecked(O["UI.Tabs.Search.IncludeNoMinLevel"])
 	f.IncludeMailboxItems:SetChecked(O["UI.Tabs.Search.IncludeMailboxItems"])
-	f.IncludeGuildBankItems:SetChecked(O["UI.Tabs.Search.IncludeGuildBankItems"])
 	f.IncludeKnownRecipes:SetChecked(O["UI.Tabs.Search.IncludeKnownRecipes"])
 
 	AltoholicSearchOptionsLootInfo:SetText(colors.green .. O.TotalLoots .. "|r " .. L["Loots"] .. " / " .. colors.green .. O.UnknownLoots .. "|r " .. L["Unknown"])
@@ -396,15 +391,13 @@ function addon:RestoreOptionsToUI()
 	f.ShowItemSource:SetChecked(O["UI.Tooltip.ShowItemSource"])
 	f.ShowItemCount:SetChecked(O["UI.Tooltip.ShowItemCount"])
 	f.ShowTotalItemCount:SetChecked(O["UI.Tooltip.ShowTotalItemCount"])
+    f.ShowItemSellPrice.Text:SetText("Show item sell price")
 	f.ShowKnownRecipes:SetChecked(O["UI.Tooltip.ShowKnownRecipes"])
 	f.ShowItemID:SetChecked(O["UI.Tooltip.ShowItemID"])
 	f.ShowGatheringNodesCount:SetChecked(O["UI.Tooltip.ShowGatheringNodesCount"])
 	f.ShowCrossFactionCount:SetChecked(O["UI.Tooltip.ShowCrossFactionCount"])
 	f.ShowMergedRealmsCount:SetChecked(O["UI.Tooltip.ShowMergedRealmsCount"])
 	f.ShowAllAccountsCount:SetChecked(O["UI.Tooltip.ShowAllAccountsCount"])
-	f.ShowGuildBankCount:SetChecked(O["UI.Tooltip.ShowGuildBankCount"])
-	f.IncludeGuildBankInTotal:SetChecked(O["UI.Tooltip.IncludeGuildBankInTotal"])
-	f.ShowGuildBankCountPerTab:SetChecked(O["UI.Tooltip.ShowGuildBankCountPerTab"])
 	
 	f = AltoholicCalendarOptions
 	f.WeekStartsOnMonday:SetChecked(O["UI.Calendar.WeekStartsOnMonday"])

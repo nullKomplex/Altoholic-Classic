@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 11303
 ## Title: DataStore_Inventory
 ## Notes: Stores information about character inventory
 ## Author: Thaoky (EU-Marécages de Zangar)

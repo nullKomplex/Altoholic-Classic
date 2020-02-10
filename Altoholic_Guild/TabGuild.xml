@@ -35,14 +35,6 @@
 					<KeyValue key="panel" value="Members" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="MenuItem2" inherits="AltoGuildMenuItemTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeKey="$parent.MenuItem1" relativePoint="BOTTOMLEFT" x="0" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="panel" value="Bank" />
-				</KeyValues>
-			</Button>
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>
 					<KeyValue key="numButtons" value="5" type="number" />

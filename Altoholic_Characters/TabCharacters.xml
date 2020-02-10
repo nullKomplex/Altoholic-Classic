@@ -95,57 +95,6 @@
 			</Frame>
 	
 			<Frame parentKey="ContextualMenu" inherits="AltoContextualMenuTemplate" />
-	
-			<!-- Left Menu -->
-			<!--
-			Future menu with character icons on the left
-			
-			<Button name="$parent_Test1" inherits="AltoMenuNamedIconTemplate" id="1">
-				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset x="30" y="-165" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_Test2" inherits="AltoMenuNamedIconTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test1" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_Test3" inherits="AltoMenuNamedIconTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test2" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_Test4" inherits="AltoMenuNamedIconTemplate" id="4">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test3" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_Test5" inherits="AltoMenuNamedIconTemplate" id="5">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test4" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_Test6" inherits="AltoMenuNamedIconTemplate" id="6">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_Test5" relativePoint="BOTTOMLEFT">
-						<Offset x="0" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			-->
-		
-
-			
 			<Frame parentKey="SortButtons" inherits="AltoSortButtonsContainerTemplate">
 				<KeyValues>
 					<KeyValue key="numButtons" value="4" type="number" />

@@ -24,7 +24,6 @@ local function InitLocalization()
 
 	AltoholicFrameTab1:SetText(L["Summary"])
 	AltoholicFrameTab2:SetText(L["Characters"])
---	AltoholicFrameTab6:SetText(L["Agenda"])
 	AltoholicFrameTab5:SetText(L["Grids"])
 	
 	AltoAccountSharingName:SetText(L["Account Name"])
@@ -329,7 +328,7 @@ function addon:OnEnable()
 	Orig_MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfo
 	MerchantFrame_UpdateMerchantInfo = MerchantFrame_UpdateMerchantInfoHook
 	
-	AltoholicFrameName:SetText(format("Altoholic Classic %s%s", colors.white, addon.Version))
+	AltoholicFrameName:SetText(format("Altoholic Classic %s%s by %sThaoky", colors.white, addon.Version, colors.classMage))
 
 	local realm = GetRealmName()
 	local player = UnitName("player")
@@ -506,9 +505,6 @@ function addon:GetIDFromLink(link)
 end
 
 function addon:GetItemNameFromRecipeLink(link)
-	-- returns nil if recipe id is not in the DB, returns the spellID otherwise
-	--local recipeID = addon:GetIDFromLink(link)
-	--return LCI:GetRecipeLearnedSpell(recipeID)
     local isRecipe, craftName = string.match(GetItemInfo(link), "(%a+)\:%s(.+)")
     if (isRecipe ~= "Recipe") then return nil end
     return craftName
@@ -521,6 +517,7 @@ function addon:GetMoneyString(copper, color, noTexture)
 
 	local gold = floor( copper / 10000 );
 	copper = mod(copper, 10000)
+    
 	local silver = floor( copper / 100 );
 	copper = mod(copper, 100)
 	
@@ -534,6 +531,38 @@ function addon:GetMoneyString(copper, color, noTexture)
 		gold = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
 	end
 	return format("%s %s %s", gold, silver, copper)
+end
+
+function addon:GetMoneyStringShort(copper, color, noTexture)
+	-- the "short" version print only value that are > 0
+	copper = copper or 0
+	color = color or colors.gold
+
+	local gold = floor(copper / 10000)
+	copper = mod(copper, 10000)
+	
+	local silver = floor(copper / 100)
+	copper = mod(copper, 100)
+	
+	local goldText, silverText, copperText
+	
+	if noTexture then				-- use noTexture for places where the texture does not fit too well,  ex: tooltips
+		copperText = format("%s%s%s%s", color, copper, "|cFFEDA55F", COPPER_AMOUNT_SYMBOL)
+		silverText = format("%s%s%s%s", color, silver, "|cFFC7C7CF", SILVER_AMOUNT_SYMBOL)
+		goldText = format("%s%s%s%s", color, gold, colors.gold, GOLD_AMOUNT_SYMBOL)
+	else
+		copperText = color..format(COPPER_AMOUNT_TEXTURE, copper, 13, 13)
+		silverText = color..format(SILVER_AMOUNT_TEXTURE, silver, 13, 13)
+		goldText = color..format(GOLD_AMOUNT_TEXTURE_STRING, BreakUpLargeNumbers(gold), 13, 13)
+	end
+	
+	if gold > 0 then
+		return format("%s %s %s", goldText, silverText, copperText)
+	elseif silver > 0 then
+		return format("%s %s", silverText, copperText)
+	else
+		return format("%s", copperText)
+	end
 end
 
 -- copied to formatter service

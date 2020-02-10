@@ -82,10 +82,6 @@ local function OnPlayerGuildUpdate()
 	end
 end
 
-local function ScanXPDisabled()
-	addon.ThisCharacter.isXPDisabled = false
-end
-
 local function OnPlayerUpdateResting()
 	addon.ThisCharacter.isResting = IsResting()
 end
@@ -118,7 +114,6 @@ local function OnPlayerAlive()
 	OnPlayerXPUpdate()
 	OnPlayerUpdateResting()
 	OnPlayerGuildUpdate()
-	ScanXPDisabled()
 end
 
 local function OnPlayerLogout()
@@ -376,8 +371,6 @@ function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_MONEY", OnPlayerMoney)
 	addon:RegisterEvent("PLAYER_XP_UPDATE", OnPlayerXPUpdate)
 	addon:RegisterEvent("PLAYER_UPDATE_RESTING", OnPlayerUpdateResting)
-	addon:RegisterEvent("ENABLE_XP_GAIN", ScanXPDisabled)
-	addon:RegisterEvent("DISABLE_XP_GAIN", ScanXPDisabled)
 	addon:RegisterEvent("PLAYER_GUILD_UPDATE", OnPlayerGuildUpdate)				-- for gkick, gquit, etc..
 	addon:RegisterEvent("ZONE_CHANGED", ScanPlayerLocation)
 	addon:RegisterEvent("ZONE_CHANGED_NEW_AREA", ScanPlayerLocation)

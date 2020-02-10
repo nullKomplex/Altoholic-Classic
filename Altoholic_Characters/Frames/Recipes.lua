@@ -32,28 +32,18 @@ local currentSearch = ""
 
 -- *** Utility functions ***
 
-local function SetStatus(character, professionName, mainCategory, subCategory, numRecipes)
+local function SetStatus(character, professionName, mainCategory, numRecipes)
 	local profession = DataStore:GetProfession(character, professionName)
 	local allCategories = (mainCategory == 0)
-	local allSubCategories = (subCategory == 0)
 	
 	local text = ""
 	
 	if not allCategories then
 		local categoryName = select(2, DataStore:GetRecipeCategoryInfo(profession, mainCategory))
-	
-		if not allSubCategories then
-			local subCategoryName = select(2, DataStore:GetRecipeSubCategoryInfo(profession, mainCategory, subCategory))
-			text = format("%s / %s / %s", professionName, categoryName, subCategoryName)
-		else
-			text = format("%s / %s", professionName, categoryName)
-		end
-	elseif allSubCategories then
-		text = professionName		-- full list, just display "Tailoring"
+        text = format("%s / %s", professionName, categoryName)
 	else
-		-- should never get here
-		text = "Recipes.lua : error in SetStatus()"
-	end
+		text = professionName		-- full list, just display "Tailoring"
+    end
 
 	local status = format("%s|r / %s (%d %s)", DataStore:GetColoredCharacterName(character), text, numRecipes, TRADESKILL_SERVICE_LEARN)
 	AltoholicTabCharacters.Status:SetText(status)
@@ -106,18 +96,13 @@ end
 local function GetRecipeList(character, professionName, mainCategory, subCategory)
 	local list = {}
 	
-	local viewLearned = addon:GetOption("UI.Tabs.Characters.ViewLearnedRecipes")
-	local viewUnlearned = addon:GetOption("UI.Tabs.Characters.ViewUnlearnedRecipes")
 	local profession = DataStore:GetProfession(character, professionName)
 	
-	DataStore:IterateRecipes(profession, mainCategory, subCategory, function(recipeData) 
+	DataStore:IterateRecipes(profession, mainCategory, 0, function(recipeData) 
 		local color, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
 		 
-		-- filter by learned / unlearned ..
-		if (isLearned and viewLearned) or (not isLearned and viewUnlearned) then
-			if RecipePassesColorFilter(color) and RecipePassesSlotFilter(recipeID) and RecipePassesSearchFilter(recipeID) then
-				table.insert(list, recipeData)
-			end
+		if RecipePassesColorFilter(color) and RecipePassesSlotFilter(recipeID) and RecipePassesSearchFilter(recipeID) then
+			table.insert(list, recipeData)
 		end
 	end)
 	
@@ -139,9 +124,9 @@ addon:Controller("AltoholicUI.Recipes", {
 
 	Update = function(frame)
 		local character = addon.Tabs.Characters:GetAltKey()
-		local recipeList = GetRecipeList(character, currentProfession, mainCategory, subCategory)
+		local recipeList = GetRecipeList(character, currentProfession, mainCategory)
 		
-		SetStatus(character, currentProfession, mainCategory, subCategory, #recipeList)
+		SetStatus(character, currentProfession, mainCategory, #recipeList)
 	
 		local scrollFrame = frame.ScrollFrame
 		local numRows = scrollFrame.numRows

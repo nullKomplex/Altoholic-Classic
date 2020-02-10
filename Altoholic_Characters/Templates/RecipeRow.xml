@@ -49,18 +49,7 @@
 					<Anchors>
 						<Anchor point="LEFT" x="0" y="0" />
 					</Anchors>
-				</ButtonText>
-				<Scripts>
-					<OnEnter>
-						self:GetParent():RecipeLink_OnEnter()
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide()
-					</OnLeave>
-					<OnClick>
-						self:GetParent():RecipeLink_OnClick(button)
-					</OnClick>
-				</Scripts>		
+				</ButtonText>	
 				<NormalFont style="GameFontNormalLeft"/>
 			</Button>
 			<Frame parentKey="StarsFrame">

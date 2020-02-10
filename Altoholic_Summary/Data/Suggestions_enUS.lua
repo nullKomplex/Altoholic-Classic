@@ -4,8 +4,6 @@ local addon = _G[addonName]
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 local TS = addon.TradeSkills.Names
 
---for k,v in pairs(TS) do print(k.." "..v) end  --TEST
-
 -- temporary test, until all locales are done for the suggestions, test the ones that are done in order to use them instead of enUS, this test will be replaced later on.
 if (GetLocale() == "frFR") or
     (GetLocale() == "ruRU") or
@@ -14,12 +12,6 @@ if (GetLocale() == "frFR") or
 	(GetLocale() == "zhCN") or
 	(GetLocale() == "zhTW") then return end				-- exit to use zhCN, zhTW or frFR instead of enUS
 
-local continents = { 		-- this gets localized names, also avoids hardcoding them.
-	[1] = 1414,
-	[2] = C_Map.GetMapInfo(1414).name,
-	[3] = 1415,
-	[4] = C_Map.GetMapInfo(1415).name,
-};
 -- This table contains a list of suggestions to get to the next level of reputation, craft or skill
 addon.Suggestions = {
 
@@ -46,21 +38,6 @@ addon.Suggestions = {
 		{ 275, "Up to 275: Runecloth Belt" },
 		{ 280, "Up to 280: Runecloth Bag" },
 		{ 300, "Up to 300: Runecloth Gloves" },
-		{ 325, "Up to 325: Bolts of Netherweave\n|cFFFFD700Don't sell them, you'll need them later" },
-		{ 340, "Up to 340: Bolts of Imbued Netherweave\n|cFFFFD700Don't sell them, you'll need them later" },
-		{ 350, "Up to 350: Netherweave Boots\n|cFFFFD700Disenchant them for Arcane Dust" },
-		{ 375, "Up to 375: Bolts of Frostweave" },
-		{ 380, "Up to 380: Frostwoven Boots" },
-		{ 395, "Up to 395: Frostwoven Cowl" },
-		{ 405, "Up to 405: Duskweave Cowl" },
-		{ 410, "Up to 410: Duskweave Wristwraps" },
-		{ 415, "Up to 415: Duskweave Gloves" },
-		{ 425, "Up to 425: Frostweave Bags" },
-		{ 450, "Up to 450: Bolts of Ebonweave Silk" },
-		{ 475, "Up to 475: Whatever earns a skill-up" },
-		{ 500, "Up to 500: Master's Spellthread, and other low-mats recipes" },
-		{ 515, "Up to 515: Swordguard Embroidary" },
-		{ 525, "Up to 525: Dreams and whatever earns a skill-up." },
 	},
 	[TS.LEATHERWORKING] = {
 		{ 35, "Up to 35: Light Armour Kit" },
@@ -82,20 +59,6 @@ addon.Suggestions = {
 		{ 270, "Up to 270: Wicked Leather Gauntlets" },
 		{ 285, "Up to 285: Wicked Leather Bracers" },
 		{ 300, "Up to 300: Wicked Leather Headband" },
-		{ 310, "Up to 310: Knothide Leather" },
-		{ 320, "Up to 320: Wild Draenish Gloves" },
-		{ 325, "Up to 325: Thick Draenic Boots" },
-		{ 335, "Up to 335: Heavy Knothide Leather\n|cFFFFD700Don't sell them, you'll need them later" },
-		{ 340, "Up to 340: Thick Draenic Vest" },
-		{ 350, "Up to 350: Felscale Breastplate" },
-		{ 375, "Up to 375: Borean Armor Kit" },
-		{ 385, "Up to 385: Arctic Boots" },
-		{ 395, "Up to 395: Arctic Belt" },
-		{ 400, "Up to 400: Arctic Wristguards" },
-		{ 405, "Up to 405: Nerubian Leg Armor" },
-		{ 410, "Up to 410: Any Dark Chestpiece or Leggings" },
-		{ 425, "Up to 425: Any Fur Lining\nTradeskill bags" },
-		{ 450, "Up to 450: Whatever makes you earn a point,\ndepending on your needs" },
 	},
 	[TS.ENGINEERING] = {
 		{ 40, "Up to 40: Rough Blasting Powder" },
@@ -122,14 +85,6 @@ addon.Suggestions = {
 		{ 260, "Up to 260: Dense Blasting Powder" },
 		{ 290, "Up to 290: Thorium Widget" },
 		{ 300, "Up to 300: Thorium Tubes\nor Thorium Shells (cheaper)" },
-		{ 310, "Up to 310: Fel Iron Casing,\nHandful of Fel Iron Bolts,\n and Elemental Blasting Powder\nKeep them all for future crafts" },
-		{ 320, "Up to 320: Fel Iron Bomb" },
-		{ 335, "Up to 335: Fel Iron Musket" },
-		{ 350, "Up to 350: White Smoke Flare" },
-		{ 375, "Up to 375: Cobalt Frag Bomb" },
-		{ 430, "Up to 430: Mana & Healing Injector Kit\nYou'll need them on the long run" },
-		{ 435, "Up to 435: Mana Injector Kit" },
-		{ 450, "Up to 450: Whatever makes you earn a point,\ndepending on your needs" },
 	},
 	[TS.ENCHANTING] = {
 		{ 2, "Up to 2: Runed Copper Rod" },
@@ -156,26 +111,6 @@ addon.Suggestions = {
 		{ 290, "Up to 290: Enchant Shield - Greater Stamina\nor Enchant Boots: Greater Stamina" },
 		{ 291, "Craft one Runed Arcanite Rod" },
 		{ 300, "Up to 300: Enchant Cloak - Superior Defense" },
-		{ 301, "Craft one Runed Fel Iron Rod" },
-		{ 305, "Up to 305: Enchant Cloak - Superior Defense" },
-		{ 315, "Up to 315: Enchant Bracers - Assault" },
-		{ 325, "Up to 325: Enchant Cloak - Major Armor\nor Enchant Gloves - Assault" },
-		{ 335, "Up to 335: Enchant Chest - Major Spirit" },
-		{ 340, "Up to 340: Enchant Shield - Major Stamina" },
-		{ 345, "Up to 345: Superior Wizard Oil\nDo this up to 350 if you have the mats" },
-		{ 350, "Up to 350: Enchant Gloves - Major Strength" },
-		{ 351, "Craft one Runed Adamantite Rod" },
-		{ 360, "Up to 360: Enchant Gloves - Major Strength" },
-		{ 370, "Up to 370: Enchant Gloves - Spell Strike\nRequires Revered with Cenarion Expedition" },
-		{ 375, "Up to 375: Enchant Ring - Healing Power\nRequires Revered with The Sha'tar" },
-		{ 376, "Craft one Runed Eternium Rod" },
-		{ 380, "Up to 380: Enchant Chest - Super Stats" },
-		{ 390, "Up to 390: Enchant Weapon - Greater Potency" },
-		{ 425, "Up to 425: Craft one Runed Titanium Rod" },
-		{ 450, "Up to 450: Whatever earns a skill-up" },
-		{ 475, "Up to 475: Disenenchant all greens" },
-		{ 515, "Craft one Runed Elementium Rod" },
-		{ 525, "Up to 525: Trade in Shards for Recipes" },
 	},
 	[TS.BLACKSMITHING] = {	
 		{ 25, "Up to 25: Rough Sharpening Stones" },
@@ -198,29 +133,6 @@ addon.Suggestions = {
 		{ 270, "Up to 270: Thorium Belt or Bracers (cheaper)\nEarthforged Leggings (Armorsmith)\nLight Earthforged Blade (Swordsmith)\nLight Emberforged Hammer (Hammersmith)\nLight Skyforged Axe (Axesmith)" },
 		{ 295, "Up to 295: Imperial Plate Bracers" },
 		{ 300, "Up to 300: Imperial Plate Boots" },
-		{ 305, "Up to 305: Fel Weightstone" },
-		{ 320, "Up to 320: Fel Iron Plate Belt" },
-		{ 325, "Up to 325: Fel Iron Plate Boots" },
-		{ 330, "Up to 330: Lesser Rune of Warding" },
-		{ 335, "Up to 335: Fel Iron Breastplate" },
-		{ 340, "Up to 340: Adamantite Cleaver\nSold in Shattrah, Silvermoon, Exodar" },
-		{ 345, "Up to 345: Lesser Rune of Shielding\nSold in Wildhammer Stronghold and Thrallmar" },
-		{ 350, "Up to 350: Adamantite Cleaver" },
-		{ 360, "Up to 360: Adamantite Weightstone\nRequires Cenarion Expedition - Honored" },
-		{ 370, "Up to 370: Felsteel Gloves (Auchenai Crypts)\nFlamebane Gloves (Aldor - Honored)\nEnchanted Adamantite Belt (Scryer - Friendly)" },
-		{ 375, "Up to 375: Felsteel Gloves (Auchenai Crypts)\nFlamebane Breastplate (Aldor - Revered)\nEnchanted Adamantite Belt (Scryer - Friendly)" },
-		{ 385, "Up to 385: Cobalt Gauntlets" },
-		{ 393, "Up to 393: Spiked Cobalt Shoulders\nor Chestpiece" },
-		{ 395, "Up to 395: Spiked Cobalt Gauntlets" },
-		{ 400, "Up to 400: Spiked Cobalt Belt" },
-		{ 410, "Up to 410: Spiked Cobalt Bracers" },
-		{ 415, "Up to 415: Tempered Saronite Shoulders" },
-		{ 420, "Up to 420: Tempered Saronite Bracers" },
-		{ 430, "Up to 430: Daunting Handguards" },
-		{ 445, "Up to 445: Daunting Legplates" },
-		{ 450, "Up to 450: Any Epic" },
-		{ 500, "Up to 500: Any skill-up will do" },
-		{ 525, "Up to 525: Farm Ore for Recipes in Twilight Highlands" },
 	},
 	[TS.ALCHEMY] = {	
 		{ 60, "Up to 60: Minor Healing Potion" },
@@ -235,9 +147,6 @@ addon.Suggestions = {
 		{ 265, "Up to 265: Elixir of Greater Agility" },
 		{ 285, "Up to 285: Superior Mana Potion" },
 		{ 300, "Up to 300: Major Healing Potion" },
-		{ 315, "Up to 315: Volatile Healing Potion\nor Major Mana Potion" },
-		{ 350, "Up to 350: Mad Alchemists's Potion\nTurns yellow at 335, but cheap to make" },
-		{ 375, "Up to 375: Major Dreamless Sleep Potion\nSold in Allerian Stronghold (A)\nor Thunderlord Stronghold (H)" },
 	},
 	[L["Mining"]] = {
 		{ 65, "Up to 65: Mine Copper\nAvailable in all starting zones" },
@@ -245,13 +154,6 @@ addon.Suggestions = {
 		{ 175, "Up to 175: Mine Iron and Gold\nDesolace, Ashenvale, Badlands, Arathi Highlands,\nAlterac Mountains, Stranglethorn Vale, Swamp of Sorrows" },
 		{ 250, "Up to 250: Mine Mithril and Truesilver\nBlasted Lands, Searing Gorge, Badlands, The Hinterlands,\nWestern Plaguelands, Azshara, Winterspring, Felwood, Stonetalon Mountains, Tanaris" },
 		{ 275, "Up to 275: Mine Thorium \nUn’goro Crater, Azshara, Winterspring, Blasted Lands\nSearing Gorge, Burning Steppes, Eastern Plaguelands, Western Plaguelands" },
-		{ 330, "Up to 330: Mine Fel Iron\nHellfire Peninsula, Zangarmarsh" },
-		{ 375, "Up to 375: Mine Fel Iron and Adamantite\nTerrokar Forest, Nagrand\nBasically everywhere in Outland" },
-		{ 400, "Up to 400: Mine Cobalt" },
-		{ 425, "Up to 450: Mine Saronite" },
-		{ 475, "Up to 475: Mine Obsidium" },
-		{ 500, "Up to 500: Mine Elementium" },
-		{ 525, "Up to 525: Smelt Hardened Elementium and Mine Pyrite" },
 	},
 	[L["Herbalism"]] = {
 		{ 50, "Up to 50: Collect Silverleaf and Peacebloom\nAvailable in all starting zones" },
@@ -267,83 +169,9 @@ addon.Suggestions = {
 		{ 270, "Up to 270: Collect Gromsblood\nFelwood, Blasted Lands,\nMannoroc Coven in Desolace" },
 		{ 285, "Up to 285: Collect Dreamfoil\nUn'goro Crater, Azshara" },
 		{ 300, "Up to 300: Collect Plagueblooms\nEastern & Western Plaguelands, Felwood\nor Icecaps in Winterspring" },
-		{ 330, "Up to 330: Collect Felweed\nHellfire Peninsula, Zangarmarsh" },
-		{ 375, "Up to 375: Any flower available in Outland\nFocus on Zangarmarsh & Terrokar Forest" },
 	},
 	[L["Skinning"]] = {
-		{ 525, "Up to 525: Divide your current skill level by 5,\nand skin mobs of that level" },
-	},
-
-	-- source: http://www.elsprofessions.com/inscription/leveling.html
-	[L["Inscription"]] = {
-		{ 18, "Up to 18: Ivory Ink" },
-		{ 35, "Up to 35: Scroll of Intellect, Spirit or Stamina" },
-		{ 50, "Up to 50: Moonglow Ink\nSave if for Minor Inscription Research" },
-		{ 75, "Up to 75: Scroll of Recall, Armor Vellum" },
-		{ 79, "Up to 79: Midnight Ink" },
-		{ 80, "Up to 80: Minor Inscription Research" },
-		{ 85, "Up to 85: Glyph of Backstab, Frost Nova\nRejuvenation, ..." },
-		{ 87, "Up to 87: Hunter's Ink" },
-		{ 90, "Up to 90: Glyph of Corruption, Flame Shock\nRapid Charge, Wrath" },
-		{ 100, "Up to 100: Glyph of Ice Armor, Maul\nSerpent Sting" },
-		{ 104, "Up to 104: Lion's Ink" },
-		{ 105, "Up to 105: Glyph of Arcane Shot, Arcane Explosion" },
-		{ 110, "Up to 110: Glyph of Eviscerate, Holy Light, Fade" },
-		{ 115, "Up to 115: Glyph of Fire Nova Totem\nHealth Funel, Rending" },
-		{ 120, "Up to 120: Glyph of Arcane Missiles, Healing Touch" },
-		{ 125, "Up to 125: Glyph of Expose Armor\nFlash Heal, Judgment" },
-		{ 130, "Up to 130: Dawnstar Ink" },
-		{ 135, "Up to 135: Glyph of Blink\nImmolation, Moonfire" },
-		{ 140, "Up to 140: Glyph of Lay on Hands\nGarrote, Inner Fire" },
-		{ 142, "Up to 142: Glyph of Sunder Armor\nImp, Lightning Bolt" },
-		{ 150, "Up to 150: Strange Tarot" },
-		{ 155, "Up to 155: Jadefire Ink" },
-		{ 160, "Up to 160: Scroll of Stamina III" },
-		{ 165, "Up to 165: Glyph of Gouge, Renew" },
-		{ 170, "Up to 170: Glyph of Shadow Bolt\nStrength of Earth Totem" },
-		{ 175, "Up to 175: Glyph of Overpower" },
-		{ 177, "Up to 177: Royal Ink" },
-		{ 183, "Up to 183: Scroll of Agility III" },
-		{ 185, "Up to 185: Glyph of Cleansing\nShadow Word: Pain" },
-		{ 190, "Up to 190: Glyph of Insect Swarm\nFrost Shock, Sap" },
-		{ 192, "Up to 192: Glyph of Revenge\nVoidwalker" },
-		{ 200, "Up to 200: Arcane Tarot" },
-		{ 204, "Up to 204: Celestial Ink" },
-		{ 210, "Up to 210: Armor Vellum II" },
-		{ 215, "Up to 215: Glyph of Smite, Sinister Strike" },
-		{ 220, "Up to 220: Glyph of Searing Pain\nHealing Stream Totem" },
-		{ 225, "Up to 225: Glyph of Starfire\nBarbaric Insults" },
-		{ 227, "Up to 227: Fiery Ink" },
-		{ 230, "Up to 230: Scroll of Agility IV" },
-		{ 235, "Up to 235: Glyph of Dispel Magic" },
-		{ 250, "Up to 250: Weapon Vellum II" },
-		{ 255, "Up to 255: Scroll of Stamina V" },
-		{ 260, "Up to 260: Scroll of Spirit V" },
-		{ 265, "Up to 265: Glyph of Freezing Trap, Shred" },
-		{ 270, "Up to 270: Glyph of Exorcism, Bone Shield" },
-		{ 275, "Up to 275: Glyph of Fear Ward, Frost Strike" },
-		{ 285, "Up to 285: Ink of the Sky" },
-		{ 295, "Up to 295: Glyph of Execution\nSprint, Death Grip" },
-		{ 300, "Up to 300: Scroll of Spirit VI" },
-		{ 304, "Up to 304: Ethereal Ink" },
-		{ 305, "Up to 305: Glyph of Plague Strike\nEarthliving Weapon, Flash of Light" },
-		{ 310, "Up to 310: Glyph of Feint" },
-		{ 315, "Up to 315: Glyph of Rake, Rune Tap" },
-		{ 320, "Up to 320: Glyph of Holy Nova, Rapid Fire" },
-		{ 325, "Up to 325: Glyph of Blood Strike, Sweeping Strikes" },
-		{ 327, "Up to 327: Darkflame Ink" },
-		{ 330, "Up to 330: Glyph of Mage Armor, Succubus" },
-		{ 335, "Up to 335: Glyph of Scourge Strike, Windfury Weapon" },
-		{ 340, "Up to 340: Glyph of Arcane Power, Seal of Command" },
-		{ 345, "Up to 345: Glyph of Ambush, Death Strike" },
-		{ 350, "Up to 350: Glyph of Whirlwind" },
-		{ 360, "Up to 360: Glyph of Mind Flay, Banish" },
-		{ 365, "Up to 365: Scroll of Intellect VII" },
-		{ 370, "Up to 370: Scroll of Strength VII" },
-		{ 375, "Up to 375: Scroll of Agility VII" },
-		{ 380, "Up to 380: Glyph of Focus, Strangulate" },
-		{ 400, "Up to 400: Northrend Inscription Research" },
-		{ 450, "Up to 450: Rare Darkmoon Cards" },
+		{ 525, "Up to 300: Divide your current skill level by 5,\nand skin mobs of that level" },
 	},
 
 	[L["Lockpicking"]] = {
@@ -354,10 +182,6 @@ addon.Suggestions = {
 		{ 225, "Up to 225: Up to Level 45" },
 		{ 275, "Up to 275: Up to Level 55" },
 		{ 300, "Up to 300: Up to Level 60" },
-		{ 325, "Up to 325: Up to Level 65" },
-		{ 375, "Up to 375: Up to Level 70" },
-		{ 400, "Up to 400: Up to Level 80" },
-		{ 425, "Up to 425: Up to Level 85" },
 	},
 	
 	-- ** Secondary professions **
@@ -372,14 +196,6 @@ addon.Suggestions = {
 		{ 275, "Up to 275: Monster Omelet\nor Tender Wolf Steaks" },
 		{ 285, "Up to 285: Runn Tum Tuber Surprise\nDire Maul (Pusillin)" },
 		{ 300, "Up to 300: Smoked Desert Dumplings\nQuest in Silithus" },
-		{ 325, "Up to 325: Ravager Dogs, Buzzard Bites" },
-		{ 350, "Up to 350: Roasted Clefthoof\nWarp Burger, Talbuk Steak" },
-		{ 375, "Up to 375: Crunchy Serpent\nMok'nathal Treats" },
-		{ 400, "Up to 400: Any Trainer-learned Cooking Recipes" },
-		{ 415, "Up to 415: Darkbrew Lager" },
-		{ 425, "Up to 425: Blackened Surprise" },
-		{ 450, "Up to 450: Dalaran Cooking Dailies" },
-		{ 525, "Up to 525: Stormwind & Orgrimmar Cooking Dailies" },
 	},	
 	-- source: http://www.wowguideonline.com/fishing.html
 	[TS.FISHING] = {
@@ -390,98 +206,29 @@ addon.Suggestions = {
 		{ 250, "Up to 250: Hinterlands, Tanaris\n\n|cFFFFFFFFFishing quest in Dustwallow Marsh\n|cFFFFD700Savage Coast Blue Sailfin (Stranglethorn Vale)\nFeralas Ahi (Verdantis River, Feralas)\nSer'theris Striker (Northern Sartheris Strand, Desolace)\nMisty Reed Mahi Mahi (Swamp of Sorrows coastline)" },
 		{ 260, "Up to 260: Felwood" },
 		{ 300, "Up to 300: Azshara" },
-		{ 330, "Up to 330: Eastern Zangarmarsh" },
-		{ 345, "Up to 345: Western Zangarmarsh" },
-		{ 360, "Up to 360: Terrokar Forest" },
-		{ 375, "Up to 375: Terrokar Forest, in altitude\nFlying mount required" },
-		{ 400, "Up to 400: Borean Tundra" },
-		{ 450, "Up to 450: Dalaran Fishing Coins; Any Northrend Area" },
-		{ 525, "Up to 525: Any Cataclysm Zone\nStormwind & Orgrimmar Fishing Dailies" },
 	},
 
 
 	-- suggested leveling zones, as defined by recommended quest levels. map id's : http://wowpedia.org/MapID
-    
-    -- CLASSIC CHANGE: just changing this all to nonsense
-	["Leveling"] = {
-		{ 10, "Up to 10: Any starting zone" },
-		{ 15, "Up to 15: " .. C_Map.GetMapInfo(947).name},
-		{ 16, "Up to 16: " .. C_Map.GetMapInfo(947).name},
-		{ 20, "Up to 20: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name
-							.. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name
-							.. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 25, "Up to 25: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name 
-							.. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 30, "Up to 30: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 35, "Up to 35: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name
-							.. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 40, "Up to 40: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 45, "Up to 45: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 48, "Up to 48: " .. C_Map.GetMapInfo(947).name},
-		{ 50, "Up to 50: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 52, "Up to 52: " .. C_Map.GetMapInfo(947).name},
-		{ 54, "Up to 54: " .. C_Map.GetMapInfo(947).name},
-		{ 55, "Up to 55: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 58, "Up to 58: " .. C_Map.GetMapInfo(947).name},
-		{ 60, "Up to 60: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		
-		-- Outland
-		-- 465 Hellfire Peninsula 
-		-- 467 Zangarmarsh 
-		-- 478 Terokkar Forest 
-		-- 477 Nagrand 
-		-- 475 Blade's Edge Mountains 
-		-- 479 Netherstorm 
-		-- 473 Shadowmoon Valley 
-		
-		{ 63, "Up to 63: " .. C_Map.GetMapInfo(947).name},
-		{ 64, "Up to 64: " .. C_Map.GetMapInfo(947).name},
-		{ 65, "Up to 65: " .. C_Map.GetMapInfo(947).name},
-		{ 67, "Up to 67: " .. C_Map.GetMapInfo(947).name},
-		{ 68, "Up to 68: " .. C_Map.GetMapInfo(947).name},
-		{ 70, "Up to 70: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-
-		-- Northrend
-		-- 491 Howling Fjord 
-		-- 486 Borean Tundra 
-		-- 488 Dragonblight 
-		-- 490 Grizzly Hills 
-		-- 496 Zul'Drak 
-		-- 493 Sholazar Basin 
-		-- 510 Crystalsong Forest 
-		-- 495 The Storm Peaks 
-		-- 492 Icecrown 
-		
-		{ 72, "Up to 72: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 75, "Up to 75: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 76, "Up to 76: " .. C_Map.GetMapInfo(947).name},
-		{ 78, "Up to 78: " .. C_Map.GetMapInfo(947).name},
-		{ 80, "Up to 80: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		
-		-- Cataclysm
-		-- 606 Mount Hyjal 
-		-- 613 Vashj'ir 
-		-- 640 Deepholm 
-		-- 720 Uldum 
-		-- 700 Twilight Highlands 
-		
-		{ 82, "Up to 82: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 83, "Up to 83: " .. C_Map.GetMapInfo(947).name},
-		{ 84, "Up to 84: " .. C_Map.GetMapInfo(947).name},
-		{ 85, "Up to 85: " .. C_Map.GetMapInfo(947).name},
-
-		-- Pandaria
-		-- 806 The Jade Forest 
-		-- 807 Valley of the Four Winds 
-		-- 857 Krasarang Wilds 
-		-- 809 Kun-Lai Summit 
-		-- 810 Townlong Steppes 
-		-- 858 Dread Wastes 
-		
-		{ 86, "Up to 86: " .. C_Map.GetMapInfo(947).name},
-		{ 87, "Up to 87: " .. C_Map.GetMapInfo(947).name .. "\n" .. C_Map.GetMapInfo(947).name},
-		{ 88, "Up to 88: " .. C_Map.GetMapInfo(947).name},
-		{ 89, "Up to 89: " .. C_Map.GetMapInfo(947).name},
-		{ 90, "Up to 90: " .. C_Map.GetMapInfo(947).name},
-	},
+	-- ["Leveling"] = {
+		-- { 10, "Up to 10: Any starting zone" },
+		-- { 15, "Up to 15: " .. C_Map.GetMapInfo(39).name},
+		-- { 16, "Up to 16: " .. C_Map.GetMapInfo(684).name},
+		-- { 20, "Up to 20: " .. C_Map.GetMapInfo(181).name .. "\n" .. C_Map.GetMapInfo(35).name .. "\n" .. C_Map.GetMapInfo(476).name
+							-- .. "\n" .. C_Map.GetMapInfo(42).name .. "\n" .. C_Map.GetMapInfo(21).name .. "\n" .. C_Map.GetMapInfo(11).name
+							-- .. "\n" .. C_Map.GetMapInfo(463).name .. "\n" .. C_Map.GetMapInfo(36).name},
+		-- { 25, "Up to 25: " .. C_Map.GetMapInfo(34).name .. "\n" .. C_Map.GetMapInfo(40).name .. "\n" .. C_Map.GetMapInfo(43).name 
+							-- .. "\n" .. C_Map.GetMapInfo(24).name},
+		-- { 30, "Up to 30: " .. C_Map.GetMapInfo(16).name .. "\n" .. C_Map.GetMapInfo(37).name .. "\n" .. C_Map.GetMapInfo(81).name},
+		-- { 35, "Up to 35: " .. C_Map.GetMapInfo(673).name .. "\n" .. C_Map.GetMapInfo(101).name .. "\n" .. C_Map.GetMapInfo(26).name
+							-- .. "\n" .. C_Map.GetMapInfo(607).name},
+		-- { 40, "Up to 40: " .. C_Map.GetMapInfo(141).name .. "\n" .. C_Map.GetMapInfo(121).name .. "\n" .. C_Map.GetMapInfo(22).name},
+		-- { 45, "Up to 45: " .. C_Map.GetMapInfo(23).name .. "\n" .. C_Map.GetMapInfo(61).name},
+		-- { 48, "Up to 48: " .. C_Map.GetMapInfo(17).name},
+		-- { 50, "Up to 50: " .. C_Map.GetMapInfo(161).name .. "\n" .. C_Map.GetMapInfo(182).name .. "\n" .. C_Map.GetMapInfo(28).name},
+		-- { 52, "Up to 52: " .. C_Map.GetMapInfo(29).name},
+		-- { 54, "Up to 54: " .. C_Map.GetMapInfo(38).name},
+		-- { 55, "Up to 55: " .. C_Map.GetMapInfo(201).name .. "\n" .. C_Map.GetMapInfo(281).name},
+		-- { 58, "Up to 58: " .. C_Map.GetMapInfo(19).name},
+		-- { 60, "Up to 60: " .. C_Map.GetMapInfo(32).name .. "\n" .. C_Map.GetMapInfo(241).name .. "\n" .. C_Map.GetMapInfo(261).name},
 }

@@ -1,12 +1,9 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
 	<Script file="Grid_Equipment.lua"></Script>
 	<Script file="Grid_Reputations.lua"></Script>
-	<Script file="Grid_Currencies.lua"></Script>
-	<Script file="Grid_Mounts.lua"></Script>
 	<Script file="Grid_Tradeskills.lua"></Script>
 	<Script file="Grid_Dailies.lua"></Script>
 	<Script file="Grid_Dungeons.lua"></Script>
-	<Script file="Grid_Sets.lua"></Script>
 	
 	<Frame name="AltoholicFrameGrids" parent="AltoholicTabGrids" hidden="true">
 		<Size x="615" y="306" />

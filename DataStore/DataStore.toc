@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 11303
 ## Title: DataStore by |cFF69CCF0Thaoky|r
 ## Notes: Main DataStore Module
 ## Author: Thaoky (EU-Marécages de Zangar)

@@ -1,5 +1,5 @@
 ## Interface: 11303
-## Title: Altoholic by |cFF69CCF0Thaoky|r - Classic fork by Teelo
+## Title: Altoholic Classic by |cFF69CCF0Thaoky|r - Fork by Teelo
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 
 ## Notes: Provides information about your alts
@@ -9,7 +9,7 @@
 ## Notes-koKR: 부캐들(alts)의 정보들을 제공해 줍니다.
 
 ## Author: Thaoky (EU-Marécages de Zangar)
-## Version: Classic v1.13.2-008
+## Version: Classic v1.13.2-009
 ## X-Category: Inventory, Tradeskill, Mail
 ## X-Localizations: enUS, frFR, zhCN, zhTW, deDE, koKR, esES, esMX, ruRU
 ## X-Website: http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx

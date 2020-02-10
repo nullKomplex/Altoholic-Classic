@@ -17,18 +17,7 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
-local commPrefix = "DS_Cont"		-- let's keep it a bit shorter than the addon name, this goes on a comm channel, a byte is a byte ffs :p
 local MAIN_BANK_SLOTS = 100		-- bag id of the 28 main bank slots
-
-local guildMembers = {} 	-- hash table containing guild member info (tab timestamps)
-
--- Message types
-local MSG_SEND_BANK_TIMESTAMPS				= 1	-- broacast at login
-local MSG_BANK_TIMESTAMPS_REPLY				= 2	-- reply to someone else's login
-local MSG_BANKTAB_REQUEST						= 3	-- request bank tab data ..
-local MSG_BANKTAB_REQUEST_ACK					= 4	-- .. ack the request, tell the requester to wait
-local MSG_BANKTAB_REQUEST_REJECTED			= 5	-- .. refuse the request
-local MSG_BANKTAB_TRANSFER						= 6	-- .. or send the data
 
 local AddonDB_Defaults = {
 	global = {
@@ -131,60 +120,6 @@ local function UpdateDB()
 end
 
 -- *** Utility functions ***
-local function GetThisGuild()
-	local key = DataStore:GetThisGuildKey()
-	return key and addon.db.global.Guilds[key] 
-end
-
-local function GetBankTimestamps(guild)
-	-- returns a | delimited string containing the list of alts in the same guild
-	guild = guild or GetGuildInfo("player")
-	if not guild then	return end
-		
-	local thisGuild = GetThisGuild()
-	if not thisGuild then return end
-	
-	local out = {}
-	for tabID, tab in pairs(thisGuild.Tabs) do
-		if tab.name then
-			table.insert(out, format("%d:%s:%d:%d:%d", tabID, tab.name, tab.ClientTime, tab.ServerHour, tab.ServerMinute))
-		end
-	end
-	
-	return table.concat(out, "|")
-end
-
-local function SaveBankTimestamps(sender, timestamps)
-	if not timestamps or strlen(timestamps) == 0 then return end	-- sender has no tabs
-	
-	guildMembers[sender] = guildMembers[sender] or {}
-	wipe(guildMembers[sender])
-
-	for _, v in pairs( { strsplit("|", timestamps) }) do	
-		local id, name, clientTime, serverHour, serverMinute = strsplit(":", v)
-
-		-- ex: guildMembers["Thaoky"]["RaidFood"] = {	clientTime = 123, serverHour = ... }
-		guildMembers[sender][name] = {}
-		local tab = guildMembers[sender][name]
-		tab.id = tonumber(id)
-		tab.clientTime = tonumber(clientTime)
-		tab.serverHour = tonumber(serverHour)
-		tab.serverMinute = tonumber(serverMinute)
-	end
-	addon:SendMessage("DATASTORE_GUILD_BANKTABS_UPDATED", sender)
-end
-
-local function GuildBroadcast(messageType, ...)
-	local serializedData = addon:Serialize(messageType, ...)
-	addon:SendCommMessage(commPrefix, serializedData, "GUILD")
-end
-
-local function GuildWhisper(player, messageType, ...)
-	if DataStore:IsGuildMemberOnline(player) then
-		local serializedData = addon:Serialize(messageType, ...)
-		addon:SendCommMessage(commPrefix, serializedData, "WHISPER", player)
-	end
-end
 
 local function IsEnchanted(link)
 	if not link then return end
@@ -197,7 +132,6 @@ end
 
 local BAGS			= 1		-- All bags, 0 to 11, and keyring ( id -2 )
 local BANK			= 2		-- 28 main slots
-local GUILDBANK	= 3		-- 98 main slots
 
 local ContainerTypes = {
 	[BAGS] = {
@@ -241,41 +175,14 @@ local ContainerTypes = {
 				return startTime, duration, isEnabled
 			end,
 	},
-	[GUILDBANK] = {
-		GetSize = function(self)
-				return MAX_GUILDBANK_SLOTS_PER_TAB or 98		-- hardcoded in case the constant is not set
-			end,
-		GetFreeSlots = function(self)
-				return nil, nil
-			end,
-		GetLink = function(self, slotID, tabID)
-				return GetGuildBankItemLink(tabID, slotID)
-			end,
-		GetCount = function(self, slotID, tabID)
-				local _, count = GetGuildBankItemInfo(tabID, slotID)
-				return count
-			end,
-		GetCooldown = function(self, slotID)
-				return nil
-			end,
-	}
 }
 
 -- *** Scanning functions ***
 local function ScanContainer(bagID, containerType)
 	local Container = ContainerTypes[containerType]
 	
-	local bag
-	if containerType == GUILDBANK then
-		local thisGuild = GetThisGuild()
-		if not thisGuild then return end
-	
-		bag = thisGuild.Tabs[bagID]	-- bag is actually the current tab
-	else
-		bag = addon.ThisCharacter.Containers["Bag" .. bagID]
-		wipe(bag.cooldowns)		-- does not exist for a guild bank
-	end
-
+	local bag = addon.ThisCharacter.Containers["Bag" .. bagID]
+	wipe(bag.cooldowns)		-- does not exist for a guild bank
 	wipe(bag.ids)				-- clean existing bag data
 	wipe(bag.counts)
 	wipe(bag.links)
@@ -296,16 +203,6 @@ local function ScanContainer(bagID, containerType)
 		link = Container:GetLink(slotID, bagID)
 		if link then
 			bag.ids[index] = tonumber(link:match("item:(%d+)"))
-
-			if link:match("|Hkeystone:") then
-				-- mythic keystones are actually all using the same item id
-				bag.ids[index] = 138019
-
-			elseif link:match("|Hbattlepet:") then
-				-- special treatment for battle pets, save texture id instead of item id..
-				-- texture, itemCount, locked, quality, readable, _, _, isFiltered, noValue, itemID = GetContainerItemInfo(id, itemButton:GetID());
-				bag.ids[index] = GetContainerItemInfo(bagID, slotID)
-			end
 			
 			if IsEnchanted(link) then
 				bag.links[index] = link
@@ -360,27 +257,6 @@ local function ScanBankSlotsInfo()
 	char.numFreeBankSlots = numFreeBankSlots
 end
 
-local function ScanGuildBankInfo()
-	-- only the current tab can be updated
-	local thisGuild = GetThisGuild()
-	if not thisGuild then return end
-	
-	local tabID = GetCurrentGuildBankTab()
-	local t = thisGuild.Tabs[tabID]	-- t = current tab
-
-	t.name, t.icon = GetGuildBankTabInfo(tabID)
-	t.visitedBy = UnitName("player")
-	t.ClientTime = time()
-	if GetLocale() == "enUS" then				-- adjust this test if there's demand
-		t.ClientDate = date("%m/%d/%Y")
-	else
-		t.ClientDate = date("%d/%m/%Y")
-	end
-	t.ClientHour = tonumber(date("%H"))
-	t.ClientMinute = tonumber(date("%M"))
-	t.ServerHour, t.ServerMinute = GetGameTime()
-end
-
 local function ScanBag(bagID)
 	if bagID < 0 then return end
 
@@ -433,10 +309,6 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	end
 end
 
-local function OnPlayerReagentBankSlotsChanged(event)
-	ScanReagentBank()
-end
-
 local function OnBankFrameOpened()
 	addon.isBankOpen = true
 	for bagID = NUM_BAG_SLOTS + 1, NUM_BAG_SLOTS + NUM_BANKBAGSLOTS do		-- 5 to 11
@@ -446,33 +318,6 @@ local function OnBankFrameOpened()
 	ScanBankSlotsInfo()
 	addon:RegisterEvent("BANKFRAME_CLOSED", OnBankFrameClosed)
 	addon:RegisterEvent("PLAYERBANKSLOTS_CHANGED", OnPlayerBankSlotsChanged)
-end
-
-local function OnGuildBankFrameClosed()
-	--addon:UnregisterEvent("GUILDBANKFRAME_CLOSED")
-	--addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
-	--addon:UnregisterEvent("GUILDBANKBAGSLOTS_CHANGED")
-	
-	local guildName = GetGuildInfo("player")
-	if guildName then
-		GuildBroadcast(MSG_SEND_BANK_TIMESTAMPS, GetBankTimestamps(guildName))
-	end
-end
-
-local function OnGuildBankBagSlotsChanged()
-	--ScanContainer(GetCurrentGuildBankTab(), GUILDBANK)
-	--ScanGuildBankInfo()
-end
-
-local function OnGuildBankFrameOpened()
-	--addon:RegisterEvent("GUILDBANKFRAME_CLOSED", OnGuildBankFrameClosed)
-	--addon:RegisterEvent("GUILDBANKBAGSLOTS_CHANGED", OnGuildBankBagSlotsChanged)
-	
-	local thisGuild = GetThisGuild()
-	if thisGuild then
-		thisGuild.money = GetGuildBankMoney()
-		thisGuild.faction = UnitFactionGroup("player")
-	end
 end
 
 local function OnAuctionMultiSellStart()
@@ -536,7 +381,6 @@ local function _GetContainerInfo(character, containerID)
 	
 	if containerID == MAIN_BANK_SLOTS then	-- main bank slots
 		icon = "Interface\\Icons\\inv_misc_enggizmos_17"
-		size = 80
 	end
 	
 	return icon, bag.link, size, bag.freeslots, BagTypeStrings[bag.bagtype]
@@ -572,14 +416,8 @@ local function _GetSlotInfo(bag, slotID)
 	assert(type(slotID) == "number")
 
 	local link = bag.links[slotID]
-	local isBattlePet
 	
-	if link then
-		isBattlePet = link:match("|Hbattlepet:")
-	end
-	
-	-- return itemID, itemLink, itemCount, isBattlePet
-	return bag.ids[slotID], link, bag.counts[slotID] or 1, isBattlePet
+	return bag.ids[slotID], link, bag.counts[slotID] or 1
 end
 
 local function _GetContainerCooldownInfo(bag, slotID)
@@ -645,106 +483,6 @@ local function _GetNumFreeBankSlots(character)
 	return character.numFreeBankSlots
 end
 
--- local function _DeleteGuild(name, realm, account)
-	-- realm = realm or GetRealmName()
-	-- account = account or THIS_ACCOUNT
-	
-	-- local key = format("%s.%s.%s", account, realm, name)
-	-- addon.db.global.Guilds[key] = nil
--- end
-
-local function _GetGuildBankItemCount(guild, searchedID)
-	local count = 0
-	for _, container in pairs(guild.Tabs) do
-	   for slotID, id in pairs(container.ids) do
-	      if (id == searchedID) then
-	         count = count + (container.counts[slotID] or 1)
-	      end
-	   end
-	end
-	return count
-end
-	
-local function _GetGuildBankTab(guild, tabID)
-	return guild.Tabs[tabID]
-end
-	
-local function _GetGuildBankTabName(guild, tabID)
-	return guild.Tabs[tabID].name
-end
-
-local function _GetGuildBankTabIcon(guild, tabID)
-	return guild.Tabs[tabID].icon
-end
-
-local function _GetGuildBankTabItemCount(guild, tabID, searchedID)
-	local count = 0
-	local container = guild.Tabs[tabID]
-	
-	for slotID, id in pairs(container.ids) do
-		if (id == searchedID) then
-			count = count + (container.counts[slotID] or 1)
-		end
-	end
-	return count
-end
-
-local function _GetGuildBankTabLastUpdate(guild, tabID)
-	return guild.Tabs[tabID].ClientTime
-end
-
-local function _GetGuildBankMoney(guild)
-	return guild.money
-end
-
-local function _GetGuildBankFaction(guild)
-	return guild.faction
-end
-
-local function _ImportGuildBankTab(guild, tabID, data)
-	wipe(guild.Tabs[tabID])							-- clear existing data
-	guild.Tabs[tabID] = data
-end
-
-local function _GetGuildBankTabSuppliers()
-	return guildMembers
-end
-
-local function _GetGuildMemberBankTabInfo(member, tabName)
-	-- for the current guild, return the guild member's data about a given tab
-	if guildMembers[member] then
-		if guildMembers[member][tabName] then
-			local tab = guildMembers[member][tabName]
-			return tab.clientTime, tab.serverHour, tab.serverMinute
-		end
-	end
-end
-
-local function _RequestGuildMemberBankTab(member, tabName)
-	GuildWhisper(member, MSG_BANKTAB_REQUEST, tabName)
-end
-
-local function _RejectBankTabRequest(member)
-	GuildWhisper(member, MSG_BANKTAB_REQUEST_REJECTED)
-end
-
-local function _SendBankTabToGuildMember(member, tabName)
-	-- send the actual content of a bank tab to a guild member
-	local thisGuild = GetThisGuild()
-	if thisGuild then
-		local tabID
-		if guildMembers[member] then
-			if guildMembers[member][tabName] then
-				tabID = guildMembers[member][tabName].id
-			end
-		end	
-	
-		if tabID then
-			GuildWhisper(member, MSG_BANKTAB_TRANSFER, thisGuild.Tabs[tabID])
-		end
-	end
-end
-
 local PublicMethods = {
 	GetContainer = _GetContainer,
 	GetContainers = _GetContainers,
@@ -758,91 +496,6 @@ local PublicMethods = {
 	GetNumFreeBagSlots = _GetNumFreeBagSlots,
 	GetNumBankSlots = _GetNumBankSlots,
 	GetNumFreeBankSlots = _GetNumFreeBankSlots,
-	-- DeleteGuild = _DeleteGuild,
-	GetGuildBankItemCount = _GetGuildBankItemCount,
-	GetGuildBankTab = _GetGuildBankTab,
-	GetGuildBankTabName = _GetGuildBankTabName,
-	GetGuildBankTabIcon = _GetGuildBankTabIcon,
-	GetGuildBankTabItemCount = _GetGuildBankTabItemCount,
-	GetGuildBankTabLastUpdate = _GetGuildBankTabLastUpdate,
-	GetGuildBankMoney = _GetGuildBankMoney,
-	GetGuildBankFaction = _GetGuildBankFaction,
-	ImportGuildBankTab = _ImportGuildBankTab,
-	GetGuildMemberBankTabInfo = _GetGuildMemberBankTabInfo,
-	RequestGuildMemberBankTab = _RequestGuildMemberBankTab,
-	RejectBankTabRequest = _RejectBankTabRequest,
-	SendBankTabToGuildMember = _SendBankTabToGuildMember,
-	GetGuildBankTabSuppliers = _GetGuildBankTabSuppliers,
-}
-
--- *** Guild Comm ***
---[[	*** Protocol ***
-
-At login: 
-	Broadcast of guild bank timers on the guild channel
-After the guild bank frame is closed:
-	Broadcast of guild bank timers on the guild channel
-
-Client addon calls: DataStore:RequestGuildMemberBankTab()
-	Client				Server
-
-	==> MSG_BANKTAB_REQUEST 
-	<== MSG_BANKTAB_REQUEST_ACK (immediate ack)   
-
-	<== MSG_BANKTAB_REQUEST_REJECTED (stop)   
-	or 
-	<== MSG_BANKTAB_TRANSFER (actual data transfer)
---]]
-
-local function OnAnnounceLogin(self, guildName)
-	-- when the main DataStore module sends its login info, share the guild bank last visit time across guild members
-	local timestamps = GetBankTimestamps(guildName)
-	if timestamps then	-- nil if guild bank hasn't been visited yet, so don't broadcast anything
-		GuildBroadcast(MSG_SEND_BANK_TIMESTAMPS, timestamps)
-	end
-end
-
-local function OnGuildMemberOffline(self, member)
-	guildMembers[member] = nil
-	addon:SendMessage("DATASTORE_GUILD_BANKTABS_UPDATED", member)
-end
-
-local GuildCommCallbacks = {
-	[MSG_SEND_BANK_TIMESTAMPS] = function(sender, timestamps)
-			if sender ~= UnitName("player") then						-- don't send back to self
-				local timestamps = GetBankTimestamps()
-				if timestamps then
-					GuildWhisper(sender, MSG_BANK_TIMESTAMPS_REPLY, timestamps)		-- reply by sending my own data..
-				end
-			end
-			SaveBankTimestamps(sender, timestamps)
-		end,
-	[MSG_BANK_TIMESTAMPS_REPLY] = function(sender, timestamps)
-			SaveBankTimestamps(sender, timestamps)
-		end,
-	[MSG_BANKTAB_REQUEST] = function(sender, tabName)
-			-- trigger the event only, actual response (ack or not) must be handled by client addons
-			GuildWhisper(sender, MSG_BANKTAB_REQUEST_ACK)		-- confirm that the request has been received
-			addon:SendMessage("DATASTORE_BANKTAB_REQUESTED", sender, tabName)
-		end,
-	[MSG_BANKTAB_REQUEST_ACK] = function(sender)
-			addon:SendMessage("DATASTORE_BANKTAB_REQUEST_ACK", sender)
-		end,
-	[MSG_BANKTAB_REQUEST_REJECTED] = function(sender)
-			addon:SendMessage("DATASTORE_BANKTAB_REQUEST_REJECTED", sender)
-		end,
-	[MSG_BANKTAB_TRANSFER] = function(sender, data)
-			local guildName = GetGuildInfo("player")
-			local guild	= GetThisGuild()
-			
-			for tabID, tab in pairs(guild.Tabs) do
-				if tab.name == data.name then	-- this is the tab being updated
-					_ImportGuildBankTab(guild, tabID, data)
-					addon:SendMessage("DATASTORE_BANKTAB_UPDATE_SUCCESS", sender, guildName, data.name, tabID)
-					GuildBroadcast(MSG_SEND_BANK_TIMESTAMPS, GetBankTimestamps(guildName))
-				end
-			end
-		end,
 }
 
 function addon:OnInitialize()
@@ -850,7 +503,6 @@ function addon:OnInitialize()
 	UpdateDB()
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
-	DataStore:SetGuildCommCallbacks(commPrefix, GuildCommCallbacks)
 	
 	DataStore:SetCharacterBasedMethod("GetContainer")
 	DataStore:SetCharacterBasedMethod("GetContainers")
@@ -862,20 +514,6 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetNumFreeBagSlots")
 	DataStore:SetCharacterBasedMethod("GetNumBankSlots")
 	DataStore:SetCharacterBasedMethod("GetNumFreeBankSlots")
-	
-	DataStore:SetGuildBasedMethod("GetGuildBankItemCount")
-	DataStore:SetGuildBasedMethod("GetGuildBankTab")
-	DataStore:SetGuildBasedMethod("GetGuildBankTabName")
-	DataStore:SetGuildBasedMethod("GetGuildBankTabIcon")
-	DataStore:SetGuildBasedMethod("GetGuildBankTabItemCount")
-	DataStore:SetGuildBasedMethod("GetGuildBankTabLastUpdate")
-	DataStore:SetGuildBasedMethod("GetGuildBankMoney")
-	DataStore:SetGuildBasedMethod("GetGuildBankFaction")
-	DataStore:SetGuildBasedMethod("ImportGuildBankTab")
-	
-	addon:RegisterMessage("DATASTORE_ANNOUNCELOGIN", OnAnnounceLogin)
-	addon:RegisterMessage("DATASTORE_GUILD_MEMBER_OFFLINE", OnGuildMemberOffline)
-	addon:RegisterComm(commPrefix, DataStore:GetGuildCommHandler())
 end
 
 function addon:OnEnable()

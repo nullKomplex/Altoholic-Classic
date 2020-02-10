@@ -59,7 +59,6 @@
 			<!-- Menu Icons -->
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<!-- <KeyValue key="numIcons" value="11" type="number" /> -->
 					<KeyValue key="numIcons" value="12" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabGridsClassIconTemplate" />
 					<KeyValue key="tabName" value="Grids" />
@@ -84,49 +83,30 @@
 					<KeyValue key="iconFile" value="Interface\Icons\INV_BannerPVP_02" />
 				</KeyValues>
 			</Button>
-			<Button parentKey="Tokens" inherits="AltoTabGridsMenuIconTemplate" id="3">
+			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="3">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Factions" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Spell_Holy_SummonChampion" />
-					<KeyValue key="text" value="CURRENCY" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="4">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Tokens" relativePoint="BOTTOMRIGHT" x="5" y="0" />
 				</Anchors>
 				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
 				</KeyValues>
 			</Button>
+			<Button parentKey="Dailies" inherits="AltoTabGridsMenuIconTemplate" id="4">
+				<Anchors>
+					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dailies" relativePoint="BOTTOMRIGHT" x="5" y="0" />
+				</Anchors>
+				<KeyValues>
+					<KeyValue key="iconFile" value="Interface\Icons\Ability_Repair" />
+				</KeyValues>
+			</Button>
 
-			<Button parentKey="Pets" inherits="AltoTabGridsMenuIconTemplate" id="5">
+			<Button parentKey="Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="5">
 				<Anchors>
 					<Anchor point="BOTTOMLEFT" relativeTo="AltoholicTabGrids" relativePoint="BOTTOMLEFT" x="30" y="200" />
 				</Anchors>
 				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\INV_Box_Birdcage_01" />
-					<KeyValue key="text" value="COMPANIONS" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="Dungeons" inherits="AltoTabGridsMenuIconTemplate" id="6">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Pets" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
 					<KeyValue key="iconFile" value="Interface\Icons\inv_helmet_189" />
 					<KeyValue key="text" value="LOOKING_FOR_DUNGEON" type="global" />
-				</KeyValues>
-			</Button>
-			<Button parentKey="TradeSkills" inherits="AltoTabGridsMenuIconTemplate" id="7">
-				<Anchors>
-					<Anchor point="BOTTOMLEFT" relativeKey="$parent.Dungeons" relativePoint="BOTTOMRIGHT" x="5" y="0" />
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="iconFile" value="Interface\Icons\Ability_Repair" />
-					<KeyValue key="text" value="TRADESKILLS" type="global" />
 				</KeyValues>
 			</Button>
 		</Frames>

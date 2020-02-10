@@ -128,28 +128,6 @@ local function BuildView()
 	isViewValid = true
 end
 
-local function AddGuildsToFactionsTable(realm, account)
-	-- get the guilds on this realm/account
-	local guilds = {}
-	for guildName, guild in pairs(DataStore:GetGuilds(realm, account)) do
-		if DataStore:GetGuildFaction(guildName, realm, account) == FACTION_ALLIANCE then
-			guilds[guildName] = "inv_misc_tournaments_banner_human"
-		else
-			guilds[guildName] = "inv_misc_tournaments_banner_orc"
-		end
-	end
-	
-	-- clean the Factions table
-	for k, v in ipairs(Factions[CAT_GUILD][1]) do	-- ipairs ! only touch the array part, leave the hash untouched
-		Factions[CAT_GUILD][1][k] = nil
-	end
-	
-	-- add them to the Factions table
-	for k, v in pairs(guilds) do
-		table.insert(Factions[CAT_GUILD][1], { name = k, icon = v } )
-	end
-end
-
 local function OnFactionChange(self, xpackIndex, factionGroupIndex)
 	dropDownFrame:Close()
 
@@ -158,29 +136,6 @@ local function OnFactionChange(self, xpackIndex, factionGroupIndex)
 		
 	local factionGroup = Factions[xpackIndex][factionGroupIndex]
 	currentDDMText = factionGroup.name
-	AltoholicTabGrids:SetViewDDMText(currentDDMText)
-	
-	isViewValid = nil
-	AltoholicTabGrids:Update()
-end
-
-local lastRealm, lastAccount
-
-local function OnGuildSelected(self)
-	dropDownFrame:Close()
-	
-	addon:SetOption(OPTION_XPACK, CAT_GUILD)
-	addon:SetOption(OPTION_FACTION, 1)
-	
-	local account, realm = AltoholicTabGrids:GetRealm()
-	
-	if not lastRealm or not lastAccount or lastRealm ~= realm or lastAccount ~= account then	-- realm/account changed ? rebuild view
-		AddGuildsToFactionsTable(realm, account)
-	end
-	
-	lastRealm = realm
-	lastAccount = account
-	currentDDMText = GUILD
 	AltoholicTabGrids:SetViewDDMText(currentDDMText)
 	
 	isViewValid = nil
@@ -215,13 +170,6 @@ local function DropDown_Initialize(frame, level)
 			frame:AddButtonInfo(info, level)
 		end
 		
-		-- Guild factions
-		info.text = GUILD
-		info.hasArrow = nil
-		info.func = OnGuildSelected
-		info.checked = (currentXPack == CAT_GUILD)
-		frame:AddButtonInfo(info, level)
-
 		info.text = L["All-in-one"]
 		info.hasArrow = nil
 		info.func = OnAllInOneSelected
@@ -244,27 +192,6 @@ local function DropDown_Initialize(frame, level)
 	end
 end
 
-local function GetSuggestion(faction, bottom)
-	if not addon.FactionLeveling then return end
-	
-	local factionTable = addon.FactionLeveling[faction]
-	if not factionTable then return end
-	
-	local levels = {}
-	for k, _ in pairs(factionTable) do		-- get the levels for which we have a suggestion for this faction
-		table.insert(levels, k)
-	end
-	table.sort(levels)	-- sort them, otherwise there's a risk of returning a suggestion for the wrong level
-	
-	-- at this point, levels may look like : { 0, 9000, 42000 }
-	
-	for _, level in ipairs(levels) do
-		if bottom < level then	-- the suggestions are sorted by level, so whenever we're below, return the text
-			return format("%s:\n%s", format(L["Up to %s"], DataStore:GetReputationLevelText(level)), factionTable[level] )
-		end
-	end
-end
-
 local callbacks = {
 	OnUpdate = function() 
 			if not isViewValid then
@@ -274,9 +201,7 @@ local callbacks = {
 			local currentXPack = addon:GetOption(OPTION_XPACK)
 			local currentFactionGroup = addon:GetOption(OPTION_FACTION)
 			
-			if (currentXPack == CAT_GUILD) then
-				AltoholicTabGrids:SetStatus(GUILD)
-			elseif (currentXPack == CAT_ALLINONE) then
+            if (currentXPack == CAT_ALLINONE) then
 				AltoholicTabGrids:SetStatus(L["All-in-one"])
 			else
 				AltoholicTabGrids:SetStatus(format("%s / %s", Factions[currentXPack].name, Factions[currentXPack][currentFactionGroup].name))
@@ -366,12 +291,6 @@ local callbacks = {
 			AltoTooltip:AddLine(format("%s: %d/%d (%s)", status, currentLevel, maxLevel, rate),1,1,1 )
 						
 			local bottom = DataStore:GetRawReputationInfo(character, faction)
-			local suggestion = GetSuggestion(faction, bottom)
-			if suggestion then
-				AltoTooltip:AddLine(" ",1,1,1)
-				AltoTooltip:AddLine("Suggestion: ",1,1,1)
-				AltoTooltip:AddLine(colors.teal .. suggestion,1,1,1)
-			end
 			
 			AltoTooltip:AddLine(" ",1,1,1)
 			AltoTooltip:AddLine(format("%s = %s", icons.notReady, UNKNOWN), 0.8, 0.13, 0.13)
@@ -420,11 +339,6 @@ local callbacks = {
 				currentDDMText = Factions[currentXPack][currentFactionGroup].name
 			else
 				currentDDMText = L["All-in-one"]
-			end
-			
-			if (currentXPack == CAT_GUILD) then
-				local account, realm = AltoholicTabGrids:GetRealm()
-				AddGuildsToFactionsTable(realm, account)
 			end
 			
 			frame:SetMenuWidth(100) 

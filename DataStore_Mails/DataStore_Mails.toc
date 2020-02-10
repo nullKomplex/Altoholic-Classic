@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 11303
 ## Title: DataStore_Mails
 ## Notes: Stores information about character mails
 ## Author: Thaoky (EU-Marécages de Zangar)

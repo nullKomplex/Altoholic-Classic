@@ -146,6 +146,11 @@ local function AddRealm(AccountName, RealmName)
 				if rank == 0 then
 					shouldAddCharacter = false 
 				end
+            elseif tradeskill == firstSecondary+2 then
+				local rank = DataStore:GetFirstAidRank(character) or 0
+				if rank == 0 then
+					shouldAddCharacter = false 
+				end    
 			end
 		end
 		

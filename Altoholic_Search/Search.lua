@@ -124,23 +124,13 @@ local RealmScrollFrame_Desc = {
 	Lines = {
 		[PLAYER_ITEM_LINE] = {
 			GetItemData = function(self, result)		-- GetItemData..just to avoid calling it GetItemInfo
-					local name
-					
-					if result.isBattlePet then
-						name = select(7, DataStore:GetBattlePetInfoFromLink(result.link))
-					else					
-						name = GetItemInfo(result.id)
-					end
+					local name = GetItemInfo(result.id)
 					
 					-- return name, source, sourceID
 					return name, colors.teal .. result.location, 0 
 				end,
 			GetItemTexture = function(self, result)
-					if result.isBattlePet then
-						return result.id
-					else
-						return (result.id) and GetItemIcon(result.id) or "Interface\\Icons\\Trade_Engraving"
-					end
+					return (result.id) and GetItemIcon(result.id) or "Interface\\Icons\\Trade_Engraving"
 				end,
 			GetCharacter = function(self, result)
 					local character = result.source
@@ -157,13 +147,7 @@ local RealmScrollFrame_Desc = {
 		},
 		[GUILD_ITEM_LINE] = {
 			GetItemData = function(self, result)		-- GetItemData..just to avoid calling it GetItemInfo
-					local name
-					
-					if result.isBattlePet then
-						name = select(7, DataStore:GetBattlePetInfoFromLink(result.link))
-					else					
-						name = GetItemInfo(result.id)
-					end			
+					local name = GetItemInfo(result.id)		
 			
 					-- return name, source, sourceID
 					return name, colors.teal .. result.location, 0 
@@ -635,7 +619,7 @@ local currentResultLocation	-- what is actually being searched (bags, bank, equi
 
 local MYTHIC_KEYSTONE = 138019
 
-local function VerifyItem(item, itemCount, itemLink, isBattlePet)
+local function VerifyItem(item, itemCount, itemLink)
 	if type(item) == "string" then		-- convert a link to its item id, only data saved
 	
 		if item:match("|Hkeystone:") then
@@ -649,7 +633,7 @@ local function VerifyItem(item, itemCount, itemLink, isBattlePet)
 		itemLink = nil
 	end
 	
-	filters:SetSearchedItem(item, (item ~= MYTHIC_KEYSTONE) and itemLink or nil, isBattlePet)
+	filters:SetSearchedItem(item, (item ~= MYTHIC_KEYSTONE) and itemLink or nil)
 	-- local isOK = filters:ItemPassesFilters((item == 138019))	-- debug item 
 	local isOK = filters:ItemPassesFilters()
 	
@@ -661,7 +645,6 @@ local function VerifyItem(item, itemCount, itemLink, isBattlePet)
 			source = currentResultKey,				-- character or guild key in DataStore
 			count = itemCount,
 			location = currentResultLocation,
-			isBattlePet = isBattlePet
 		} )
 	end
 end
@@ -696,12 +679,11 @@ local function BrowseCharacter(character)
 			end
 		
 			for slotID = 1, container.size do
-				itemID, itemLink, itemCount, isBattlePet = DataStore:GetSlotInfo(container, slotID)
+				itemID, itemLink, itemCount = DataStore:GetSlotInfo(container, slotID)
 				
 				-- use the link before the id if there's one
 				if itemID then
-					-- VerifyItem(itemLink or itemID, itemCount, itemLink, isBattlePet)
-					VerifyItem(itemID, itemCount, itemLink, isBattlePet)
+					VerifyItem(itemID, itemCount, itemLink)
 				end
 			end
 		end
@@ -776,10 +758,10 @@ local function BrowseRealm(realm, account, bothFactions)
 					if tab.name then
 						for slotID = 1, 98 do
 							currentResultLocation = format("%s, %s - col %d/row %d)", GUILD_BANK, tab.name, floor((slotID-1)/7)+1, ((slotID-1)%7)+1)
-							local id, link, count, isBattlePet = DataStore:GetSlotInfo(tab, slotID)
+							local id, link, count = DataStore:GetSlotInfo(tab, slotID)
 							if id then
 								link = link or id
-								VerifyItem(link, count, link, isBattlePet)
+								VerifyItem(link, count, link)
 							end
 						end
 					end

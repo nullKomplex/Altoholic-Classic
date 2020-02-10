@@ -11,6 +11,7 @@ _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "A
 local addon = _G[addonName]
 
 local THIS_ACCOUNT = "Default"
+local L = LibStub("AceLocale-3.0"):GetLocale("DataStore_Crafts")
 
 local AddonDB_Defaults = {
 	global = {
@@ -20,7 +21,7 @@ local AddonDB_Defaults = {
 					['*'] = {				-- ["MemberName"] 
 						lastUpdate = nil,
 						Version = nil,
-						Professions = {},		-- 3 profession links : [1] & [2] for the 2 primary professions, [3] for cooking, [4] for first aid
+						Professions = {},		-- 4 profession links : [1] & [2] for the 2 primary professions, [3] for cooking, [4] for first aid
 					}
 				}
 			},
@@ -39,7 +40,6 @@ local AddonDB_Defaults = {
 						Cooldowns = { ['*'] = nil },		-- list of active cooldowns
 					}
 				},
-				ArcheologyItems = {},
 			}
 		}
 	}
@@ -67,7 +67,8 @@ local SPELL_ID_MINING = 2575
 local SPELL_ID_HERBALISM = 2366
 local SPELL_ID_SMELTING = 2656
 local SPELL_ID_COOKING = 2550
-local SPELL_ID_FISHING = 7731
+local SPELL_ID_FIRSTAID = 3273
+local SPELL_ID_FISHING = 7733
 
 local ProfessionSpellID = {
 	-- GetSpellInfo with this value will return localized spell name
@@ -82,6 +83,7 @@ local ProfessionSpellID = {
 	["Herbalism"] = SPELL_ID_HERBALISM,
 	["Smelting"] = SPELL_ID_SMELTING,
 	["Cooking"] = SPELL_ID_COOKING,
+    ["First Aid"] = SPELL_ID_FIRSTAID,
 	["Fishing"] = SPELL_ID_FISHING,
 }
 
@@ -157,39 +159,7 @@ local function LocalizeProfessionSpellIDs()
 end
 
 local function GetRecipeRank(info)
-    print("Deprecated function called: GetRecipeRank")
-    return;
---[[	local currentRank = 0
-	local totalRanks = 1
-	local highestRankID = info.recipeID
-
-	-- Go back to the first rank of the recipe
-	while info.previousRecipeID do
-		info = C_TradeSkillUI.GetRecipeInfo(info.previousRecipeID)
-	end
-
-	-- if this happens, the level 1 recipe is not known, so set it as highest rank (even if we came from level 2)
-	if not info.learned then
-		highestRankID = info.recipeID
-	end
-	
-	-- Loop until the last rank
-	while info.nextRecipeID do
-		totalRanks = totalRanks + 1
-		if info.learned then
-			currentRank = currentRank + 1
-			highestRankID = info.recipeID
-		end
-		info = C_TradeSkillUI.GetRecipeInfo(info.nextRecipeID)
-	end
-	
-	-- process the last item
-	if info.learned then
-		currentRank = currentRank + 1
-		highestRankID = info.recipeID
-	end
-	
-	return currentRank, totalRanks, highestRankID]]--
+    return 1, 1, 1
 end
 
 -- *** Scanning functions ***
@@ -203,22 +173,6 @@ local function ClassicProfessionLevelToLevelName(level)
         return "Artisian"
     end 
     return "Master"
-end
-
-local function ScanProfessionLinks()
-    print("Altoholic: Deprecated function called: ScanProfessionLinks")
-    return;
-    
-    -- Not possible to scan professions in Classic until the player opens them manually
---[[	local prof1, prof2, arch, fish, cook = GetProfessions()
-
-	ScanProfessionInfo(cook)
-	ScanProfessionInfo(fish)
-	ScanProfessionInfo(arch)
-	ScanProfessionInfo(prof1, 1)
-	ScanProfessionInfo(prof2, 2)
-	
-	addon.ThisCharacter.lastUpdate = time()]]--
 end
 
 local SkillTypeToColor = {
@@ -674,13 +628,6 @@ local function _GetNumRecipeCategorySubItems(profession, index)
     return 0
 end
 
-local function _GetRecipeSubCategoryInfo(profession, catIndex, subCatIndex)
-	local catID = profession.Categories[catIndex].SubCategories[subCatIndex]
-	
-	-- return real category id, name, and list of recipes
-	return catID, GetCategoryName(catID), profession.Crafts[catID]
-end
-
 local function _GetRecipeInfo(recipeData)
 	local color = bAnd(recipeData, 3)			-- Bits 0-1 = color
 	local isLearned = TestBit(recipeData, 2) 	-- Bit 2 = isLearned
@@ -777,8 +724,6 @@ local function _IsCraftKnown(profession, spellID)
              
 	_IterateRecipes(profession, 0, 0, function(recipeData)
 		local _, recipeID, isLearned = _GetRecipeInfo(recipeData)
-    --    print(recipeID)
-    --    print(spellID)
 		if recipeID == spellID and isLearned then
             isKnown = true
 			return true	-- stop iteration
@@ -835,6 +780,13 @@ local function _GetCookingRank(character)
 	end
 end
 
+local function _GetFirstAidRank(character)
+    local profession = _GetProfession(character, GetSpellInfo(SPELL_ID_FIRSTAID))
+    if profession then
+        return _GetProfessionInfo(profession)
+    end
+end
+
 local function _GetFishingRank(character)
 	local profession = _GetProfession(character, GetSpellInfo(SPELL_ID_FISHING))
 	if profession then
@@ -874,7 +826,6 @@ local PublicMethods = {
 	GetNumRecipeCategories = _GetNumRecipeCategories,
 	GetRecipeCategoryInfo = _GetRecipeCategoryInfo,
 	GetNumRecipeCategorySubItems = _GetNumRecipeCategorySubItems,
-	GetRecipeSubCategoryInfo = _GetRecipeSubCategoryInfo,
 	GetRecipeInfo = _GetRecipeInfo,
 	IterateRecipes = _IterateRecipes,
 	IsCraftKnown = _IsCraftKnown,		-- needs update
@@ -885,6 +836,7 @@ local PublicMethods = {
 	GetProfession2 = _GetProfession2,
 	GetCookingRank = _GetCookingRank,
 	GetFishingRank = _GetFishingRank,
+    GetFirstAidRank = _GetFirstAidRank,
 	GetCraftReagents = _GetCraftReagents,
 	GetCraftResultItem = _GetCraftResultItem,
     GetResultItemName = _GetResultItemName
@@ -902,6 +854,7 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetProfession2")
 	DataStore:SetCharacterBasedMethod("GetCookingRank")
 	DataStore:SetCharacterBasedMethod("GetFishingRank")
+    DataStore:SetCharacterBasedMethod("GetFirstAidRank")
 	
 	DataStore:SetGuildBasedMethod("GetGuildCrafters")
 	DataStore:SetGuildBasedMethod("GetGuildMemberProfession")

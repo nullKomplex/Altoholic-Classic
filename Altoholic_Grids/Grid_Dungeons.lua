@@ -6,20 +6,11 @@ local icons = addon.Icons
 local L = LibStub("AceLocale-3.0"):GetLocale(addonName)
 
 -- *** Dungeons ***
-local DIFFICULTY_DUNGEON_HEROIC = 2
-local DIFFICULTY_RAID_10P = 3
-local DIFFICULTY_RAID_25P = 4
-local DIFFICULTY_RAID_40P = 9
-local DIFFICULTY_RAID_10PH = 5
-local DIFFICULTY_RAID_25PH = 6
-local DIFFICULTY_RAID_LFR = 7
-local DIFFICULTY_RAID_FLEX = 14
-local DIFFICULTY_SCENARIO_HEROIC = 11
 
 local Dungeons = {
 	{	-- [1]
 		name = EXPANSION_NAME0,	-- "Classic"
-		{	-- [1] 10 player raids
+		{	-- [1] 20 player raids
 			name = format("%s - %s", RAIDS, "20 Player"),
 			{ id = 160, achID = 689 },	-- Ahn'Qiraj Ruins
 		},
@@ -209,4 +200,4 @@ local callbacks = {
 		end,
 }
 
-AltoholicTabGrids:RegisterGrid(6, callbacks)
+AltoholicTabGrids:RegisterGrid(5, callbacks)

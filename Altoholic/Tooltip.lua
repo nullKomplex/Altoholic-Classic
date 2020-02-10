@@ -218,8 +218,6 @@ local function GetItemCount(searchedID)
 	else
 		count = GetAccountItemCount(THIS_ACCOUNT, searchedID)
 	end
-	
-	local showCrossFaction = addon:GetOption("UI.Tooltip.ShowCrossFactionCount")
 
 	return count
 end
@@ -242,19 +240,15 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 		profession = DataStore:GetProfession(character, professionName)
 		isKnownByChar = nil
 		if profession then
---			if spellID then			-- if spell id is known, just find its equivalent in the professions
---				isKnownByChar = DataStore:IsCraftKnown(profession, spellID)
---			else
-				DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
-					local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
-					local skillName = DataStore:GetResultItemName(recipeID) --GetSpellInfo(recipeID) or ""
+			DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
+				local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
+				local skillName = DataStore:GetResultItemName(recipeID)
 
-					if (skillName) and --[[(craftName) and--]] (string.lower(skillName) == string.lower(craftName)) and isLearned then
-						isKnownByChar = true
-						return true	-- stop iteration
-					end
-				end)
---			end
+				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
+					isKnownByChar = true
+					return true	-- stop iteration
+				end
+			end)
 
 			local coloredName = DataStore:GetColoredCharacterName(character)
 			
@@ -294,31 +288,6 @@ local function GetRecipeOwnersText(professionName, link, recipeLevel)
 	end
 	
 	return table.concat(lines, "\n")
-end
-
-local function AddGlyphOwners(itemID, tooltip)
-	local know = {}				-- list of alts who know this glyoh
-	local couldLearn = {}		-- list of alts who could learn it
-
-	local knows, could
-	for characterName, character in pairs(DataStore:GetCharacters()) do
-		knows, could = DataStore:IsGlyphKnown(character, itemID)
-		if knows then
-			table.insert(know, characterName)
-		elseif could then
-			table.insert(couldLearn, characterName)
-		end
-	end
-	
-	if #know > 0 then
-		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(colors.teal .. L["Already known by "] ..": ".. colors.white.. table.concat(know, ", "), 1, 1, 1, 1);
-	end
-	
-	if #couldLearn > 0 then
-		tooltip:AddLine(" ",1,1,1);
-		tooltip:AddLine(colors.yellow .. L["Could be learned by "] ..": ".. colors.white.. table.concat(couldLearn, ", "), 1, 1, 1, 1);
-	end
 end
 
 local function ShowGatheringNodeCounters()
@@ -414,13 +383,11 @@ local function ProcessTooltip(tooltip, link)
 		end
 	end
 	
-	local _, _, _, _, _, itemType, itemSubType = GetItemInfo(itemID)
+	local _, _, _, _, _, itemType, itemSubType, _, _, _, sellPrice = GetItemInfo(itemID)
 	
-	-- 25/01/2015: Removed the code that displayed the pet owners, since they have been account wide for a while now..
-	
-	if itemType == GetItemClassInfo(LE_ITEM_CLASS_GLYPH) then
-		AddGlyphOwners(itemID, tooltip)
-		return
+	if sellPrice and sellPrice > 0 and addon:GetOption("UI.Tooltip.ShowSellPrice") then	-- 0 = cannot be sold
+		tooltip:AddLine(" ",1,1,1)
+		tooltip:AddLine("Sells for " .. addon:GetMoneyStringShort(sellPrice, colors.white) .. " per unit",1,1,1)
 	end
 	
 	if addon:GetOption("UI.Tooltip.ShowKnownRecipes") == false then return end -- exit if recipe information is not wanted

@@ -126,7 +126,7 @@ local callbacks = {
 			end
 			
 			local prof = GetSpellInfo(tradeskills[currentTradeSkill])
-			AltoholicTabGrids:SetStatus(format("%s / %s", colors.green..prof, colors.white .. xPacks[currentXPack]))
+			AltoholicTabGrids:SetStatus(format("%s / %s", colors.green, prof))
 		end,
 	OnUpdateComplete = function() end,
 	GetSize = function() return #currentList end,
@@ -220,4 +220,4 @@ local callbacks = {
 		end,
 }
 
-AltoholicTabGrids:RegisterGrid(7, callbacks)
+AltoholicTabGrids:RegisterGrid(4, callbacks)

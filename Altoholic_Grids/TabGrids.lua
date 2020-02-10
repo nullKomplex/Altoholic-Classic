@@ -12,7 +12,6 @@ addon:Controller("AltoholicUI.TabGrids", {
 		frame.Equipment.text = L["Equipment"]
 		frame.Factions.text = L["Reputations"]
 		frame.Dailies.text = "Daily Quests"
---		frame.Sets.text = WARDROBE_SETS
 		
 		frame.SelectRealm:RegisterClassEvent("RealmChanged", function()
 				frame.Status:SetText("")
@@ -100,18 +99,6 @@ addon:Controller("AltoholicUI.TabGrids", {
 			frame.Factions:EnableIcon()
 		else
 			frame.Factions:DisableIcon()
-		end
-		
-		if DataStore_Currencies then
-			frame.Tokens:EnableIcon()
-		else
-			frame.Tokens:DisableIcon()
-		end
-		
-		if DataStore_Pets then
-			frame.Pets:EnableIcon()
-		else
-			frame.Pets:DisableIcon()
 		end
 
 		if DataStore_Quests then

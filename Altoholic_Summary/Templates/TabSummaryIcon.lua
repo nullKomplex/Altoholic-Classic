@@ -105,10 +105,12 @@ local function LevelIcon_Initialize(frame, level)
 	local option = addon:GetOption(OPTION_LEVELS)
 	
 	frame:AddTitle(L["FILTER_LEVELS"])
-	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 120, (option == 1))
+	frame:AddButtonWithArgs(ALL, 1, OnLevelFilterChange, 1, 60, (option == 1))
 	frame:AddTitle()
 	frame:AddButtonWithArgs("1-59", 2, OnLevelFilterChange, 1, 59, (option == 2))
-	frame:AddButtonWithArgs("60", 3, OnLevelFilterChange, 60, 60, (option == 3))
+	frame:AddButtonWithArgs("1-39", 3, OnLevelFilterChange, 1, 39, (option == 3))
+	frame:AddButtonWithArgs("40-59", 4, OnLevelFilterChange, 40, 59, (option == 4))
+	frame:AddButtonWithArgs("60", 5, OnLevelFilterChange, 60, 60, (option == 5))
 	frame:AddCloseMenu()
 end
 

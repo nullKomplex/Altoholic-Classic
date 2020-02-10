@@ -72,12 +72,7 @@ local function UpdateSpread()
 			if bagIndices[line].from == 1 then		-- if this is the first line for this bag .. draw bag icon
 				itemButton.Icon:SetDesaturated(false)
 				
-				-- 15/10/2014: note, find a better way for this than this ugly hack
-				if containerID == -3 then
-					itemButton:SetID(300)
-				else
-					itemButton:SetID(containerID)
-				end
+				itemButton:SetID(containerID)
 				
 				itemButton.Icon:SetTexture(containerIcon)
 				itemButton:SetScript("OnEnter", function(self)

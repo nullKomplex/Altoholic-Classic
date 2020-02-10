@@ -22,7 +22,6 @@ local AddonDB_Defaults = {
 			['*'] = {				-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
 				guildName = nil,		-- nil = not in a guild, as returned by GetGuildInfo("player")
-				guildRep = nil,
 				Factions = {},
 			}
 		}
@@ -39,10 +38,9 @@ local BottomLevelNames = {
 	[9000] = FACTION_STANDING_LABEL6,	 -- "Honored"
 	[21000] = FACTION_STANDING_LABEL7,	 -- "Revered"
 	[42000] = FACTION_STANDING_LABEL8,	 -- "Exalted"
-	[43000] = PARAGON_LABEL,	 -- "Paragon"
 }
 
-local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000, 43000 }
+local BottomLevels = { -42000, -6000, -3000, 0, 3000, 9000, 21000, 42000 }
 
 local BF = LibStub("LibBabble-Faction-3.0"):GetUnstrictLookupTable()
 
@@ -174,16 +172,10 @@ local function GetLimits(earned)
 end
 
 local function GetEarnedRep(character, faction)
-	local earned 
-	if character.guildName and faction == character.guildName then
-		return character.guildRep
-	end
 	return character.Factions[FactionUIDsRev[faction]]
 end
 
 -- *** Scanning functions ***
-local currentGuildName
-
 local function ScanReputations()
 	SaveHeaders()
 	local f = addon.ThisCharacter.Factions
@@ -202,41 +194,13 @@ local function ScanReputations()
 	addon.ThisCharacter.lastUpdate = time()
 end
 
-local function ScanGuildReputation()
-	SaveHeaders()
-	for i = 1, GetNumFactions() do		-- 2nd pass, data collection
-		local name, _, _, _, _, earned = GetFactionInfo(i)
-		if name and name == currentGuildName then
-			addon.ThisCharacter.guildRep = earned
-		end
-	end
-	RestoreHeaders()
-end
-
 -- *** Event Handlers ***
 local function OnPlayerAlive()
 	ScanReputations()
 end
 
-local function OnPlayerGuildUpdate()
-	-- at login this event is called between OnEnable and PLAYER_ALIVE, where GetGuildInfo returns a wrong value
-	-- however, the value returned here is correct
-	if IsInGuild() and not currentGuildName then		-- the event may be triggered multiple times, and GetGuildInfo may return incoherent values in subsequent calls, so only save if we have no value.
-		currentGuildName = GetGuildInfo("player")
-		if currentGuildName then	
-			addon.ThisCharacter.guildName = currentGuildName
-			ScanGuildReputation()
-		end
-	end
-end
-
 local function OnFactionChange(event, messageType, faction, amount)
 	if messageType ~= "FACTION" then return end
-	
-	if faction == GUILD then
-		ScanGuildReputation()
-		return
-	end
 	
 	local bottom, top, earned = DataStore:GetRawReputationInfo(DataStore:GetCharacter(), faction)
 	if not earned then 	-- faction not in the db, scan all
@@ -280,10 +244,6 @@ local function _GetReputations(character)
 	return character.Factions
 end
 
-local function _GetGuildReputation(character)
-	return character.guildRep or 0
-end
-
 local function _GetReputationLevels()
 	return BottomLevels
 end
@@ -300,7 +260,6 @@ local PublicMethods = {
 	GetReputationInfo = _GetReputationInfo,
 	GetRawReputationInfo = _GetRawReputationInfo,
 	GetReputations = _GetReputations,
-	GetGuildReputation = _GetGuildReputation,
 	GetReputationLevels = _GetReputationLevels,
 	GetReputationLevelText = _GetReputationLevelText,
 	GetFactionName = _GetFactionName,
@@ -313,19 +272,16 @@ function addon:OnInitialize()
 	DataStore:SetCharacterBasedMethod("GetReputationInfo")
 	DataStore:SetCharacterBasedMethod("GetRawReputationInfo")
 	DataStore:SetCharacterBasedMethod("GetReputations")
-	DataStore:SetCharacterBasedMethod("GetGuildReputation")
 end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
 	addon:RegisterEvent("COMBAT_TEXT_UPDATE", OnFactionChange)
-	addon:RegisterEvent("PLAYER_GUILD_UPDATE", OnPlayerGuildUpdate)				-- for gkick, gquit, etc..
 end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
 	addon:UnregisterEvent("COMBAT_TEXT_UPDATE")
-	addon:UnregisterEvent("PLAYER_GUILD_UPDATE")
 end
 
 -- *** Utility functions ***

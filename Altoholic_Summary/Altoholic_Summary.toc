@@ -1,4 +1,4 @@
-## Interface: 80200
+## Interface: 11303
 ## Title: Altoholic_Summary
 ## Notes: Altoholic's Summary Tab
 ## Author: Thaoky (EU-Marécages de Zangar)
@@ -14,3 +14,9 @@ Characters.lua
 AccountSummary.xml
 
 Data\Suggestions_enUS.lua
+Data\Suggestions_deDE.lua
+Data\Suggestions_frFR.lua
+Data\Suggestions_koKR.lua
+Data\Suggestions_ruRU.lua
+Data\Suggestions_zhCN.lua
+Data\Suggestions_zhTW.lua

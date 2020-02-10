@@ -187,7 +187,6 @@ function ns:SetCurrentProfession(prof)
 	local recipes = AltoholicTabCharacters.Recipes
 	recipes:SetCurrentProfession(currentProfession)
 	recipes:SetMainCategory(0)
-	recipes:SetSubCategory(0)
 	recipes:SetCurrentColor(SKILL_ANY)
 	recipes:SetCurrentSlots(ALL_INVENTORY_SLOTS)
 	
@@ -326,7 +325,7 @@ local function OnProfessionCategoryChange(self)
 	ns:SetMode(VIEW_PROFESSION)
 	
 	local previousProfession = currentProfession
-	local professionName, mainCategory, subCategory = strsplit(",", self.value)
+	local professionName, mainCategory = strsplit(",", self.value)
 	currentProfession = professionName
 	
 	local recipes = AltoholicTabCharacters.Recipes
@@ -337,18 +336,7 @@ local function OnProfessionCategoryChange(self)
 	end
 	recipes:SetCurrentProfession(currentProfession)
 	recipes:SetMainCategory(tonumber(mainCategory))
-	recipes:SetSubCategory(tonumber(subCategory))
 	recipes:Update()
-end
-
-local function OnShowLearned(self)
-	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewLearnedRecipes")
-	ns:ViewCharInfo(VIEW_PROFESSION)
-end
-
-local function OnShowUnlearned(self)
-	addon:ToggleOption(nil, "UI.Tabs.Characters.ViewUnlearnedRecipes")
-	ns:ViewCharInfo(VIEW_PROFESSION)
 end
 
 local function OnViewChange(self)
@@ -569,7 +557,7 @@ local function MailIcon_Initialize(self, level)
 end
 
 local function SpellbookIcon_Initialize(self, level)
---[[	local currentCharacterKey = ns:GetAltKey()
+	local currentCharacterKey = ns:GetAltKey()
 	if not currentCharacterKey then return end
 	
 	DDM_AddTitle(format("%s / %s", SPELLBOOK, DataStore:GetColoredCharacterName(currentCharacterKey)))
@@ -578,18 +566,7 @@ local function SpellbookIcon_Initialize(self, level)
 		DDM_Add(spellTab, spellTab, OnSpellTabChange)
 	end
 	
-	DDM_AddTitle(" ")
-	
-	local last = DataStore:GetModuleLastUpdateByKey("DataStore_Pets", currentCharacterKey)
-	if DataStore_Pets and last then
-		local pets = DataStore:GetPets(currentCharacterKey, "CRITTER")
-		local numPets = DataStore:GetNumPets(pets) or 0
-
-		DDM_Add(format(COMPANIONS .. " %s(%d)", colors.green, numPets), VIEW_COMPANIONS, OnViewChange, nil, (currentView == VIEW_COMPANIONS))
-	else
-		DDM_Add(format(COMPANIONS .. " %s(%d)", colors.grey, numPets), nil, nil)
-	end
-	DDM_AddCloseMenu() ]]--
+	DDM_AddCloseMenu()
 end
 
 local function ProfessionsIcon_Initialize(self, level)
@@ -619,9 +596,25 @@ local function ProfessionsIcon_Initialize(self, level)
 			UIDropDownMenu_AddButton(info, level)
 			
 		else
-			DDM_Add(colors.grey..PROFESSIONS_COOKING, nil, nil)
+			DDM_Add(format("%s%s", colors.grey, PROFESSIONS_COOKING), nil, nil)
 		end
 		
+        -- First Aid
+		rank = DataStore:GetFirstAidRank(currentCharacterKey)
+		if last and rank then
+			local info = UIDropDownMenu_CreateInfo()
+			
+			info.text = format("%s %s(%s)", PROFESSIONS_FIRST_AID, colors.green, rank )
+			info.hasArrow = 1
+			info.checked = (PROFESSIONS_FIRST_AID == (currentProfession or ""))
+			info.value = PROFESSIONS_FIRST_AID
+			info.func = OnProfessionChange
+			UIDropDownMenu_AddButton(info, level)
+			
+		else
+			DDM_Add(format("%s%s", colors.grey, PROFESSIONS_FIRST_AID), nil, nil)
+		end	
+        
 		-- Profession 1
 		rank, _, _, professionName = DataStore:GetProfession1(currentCharacterKey)
 		if last and rank and professionName then
@@ -654,9 +647,6 @@ local function ProfessionsIcon_Initialize(self, level)
 			DDM_Add(colors.grey..professionName, nil, nil)
 		end
 		
-		DDM_AddTitle(" ")
-		DDM_Add(TRADE_SKILLS_LEARNED_TAB, nil, OnShowLearned, nil, addon:GetOption("UI.Tabs.Characters.ViewLearnedRecipes"))
-		DDM_Add(TRADE_SKILLS_UNLEARNED_TAB, nil, OnShowUnlearned, nil, addon:GetOption("UI.Tabs.Characters.ViewUnlearnedRecipes"))
 		DDM_AddTitle(" ")
 		DDM_AddTitle(FILTERS)
 		
@@ -746,43 +736,16 @@ local function ProfessionsIcon_Initialize(self, level)
 			local profession = DataStore:GetProfession(currentCharacterKey, UIDROPDOWNMENU_MENU_VALUE)
 			
 			for index = 1, DataStore:GetNumRecipeCategories(profession) do
-				local categoryID, name, rank, maxRank = DataStore:GetRecipeCategoryInfo(profession, index)
-				
-				if rank and maxRank then
-					local color = (maxRank == 0) and colors.red or colors.green
-					name = format("%s (%s%s|r / %s%s|r)", name, color, rank, color, maxRank)
-				end
+				local categoryID, name = DataStore:GetRecipeCategoryInfo(profession, index)
 				
 				info.text = name
-				info.value = format("%s,%d,0", UIDROPDOWNMENU_MENU_VALUE, index)		-- "Tailoring,1,0"
-				info.hasArrow = (DataStore:GetNumRecipeCategorySubItems(profession, index) > 0) and 1 or nil
+				info.value = format("%s,%d", UIDROPDOWNMENU_MENU_VALUE, index)		-- "Tailoring,1"
 				info.checked = ((recipes:GetCurrentProfession() == UIDROPDOWNMENU_MENU_VALUE) and (recipes:GetMainCategory() == index))
 				info.func = OnProfessionCategoryChange
 				UIDropDownMenu_AddButton(info, level)	
 			end
 		end
-	
-	elseif level == 3 then	-- ** filters **
-		
-		local info = UIDropDownMenu_CreateInfo()
-		local professionName, categoryIndex = strsplit(",", UIDROPDOWNMENU_MENU_VALUE)
-		
-		local profession = DataStore:GetProfession(currentCharacterKey, professionName)
-		categoryIndex = tonumber(categoryIndex)
-		
-		for subCatIndex = 1, DataStore:GetNumRecipeCategorySubItems(profession, categoryIndex) do
-			local categoryID, name = DataStore:GetRecipeSubCategoryInfo(profession, categoryIndex, subCatIndex)
-			info.text = name
-			info.value = format("%s,%d,%d", professionName, categoryIndex, subCatIndex)		-- "Tailoring,1,2"
-			info.checked = (
-				(recipes:GetCurrentProfession() == professionName) and 
-				(recipes:GetMainCategory() == categoryIndex) and 
-				(recipes:GetSubCategory() == subCatIndex)
-			)
-			info.func = OnProfessionCategoryChange
-			UIDropDownMenu_AddButton(info, level)	
-		end
-	end
+    end
 end
 
 local menuIconCallbacks = {
@@ -797,16 +760,6 @@ local menuIconCallbacks = {
 }
 
 function ns:Icon_OnEnter(frame)
-	-- local currentMenuID = frame:GetID()
-	
-	-- local menu = frame:GetParent():GetParent().ContextualMenu
-	
-	-- menu:Initialize(menuIconCallbacks[currentMenuID], "LIST")
-	-- menu:Close()
-	-- menu:Toggle(frame, 0, 0)
-
-
-
 	local currentMenuID = frame:GetID()
 	
 	addon:DDM_Initialize(parent.ContextualMenu, menuIconCallbacks[currentMenuID])
