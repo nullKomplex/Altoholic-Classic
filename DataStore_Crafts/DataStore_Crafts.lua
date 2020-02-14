@@ -695,19 +695,16 @@ local function _GetNumRecipesByColor(profession)
 	return counts[3], counts[2], counts[1], counts[0]		-- orange, yellow, green, grey
 end
 
-local function _IsCraftKnown(profession, spellName)
-    if (type(spellName) ~= "string") then
-        print("Error in Datastore_Crafts: profession spellIDs can not be checked in Classic, this function needs to be passed the craft name instead")
-        return false
-    end
+local function _IsCraftKnown(profession, spellID)
 	-- returns true if a given spell ID is known in the profession passed as first argument
 	local isKnown = false
-
+    local spellName = GetSpellInfo(spellID)
+    
     if (not profession) then return false end                
          
 	_IterateRecipes(profession, 0, 0, function(recipeData)
 		local _, recipeID, isLearned = _GetRecipeInfo(recipeData) 
-        
+
 		if addon.ref.global.ResultItemNames[recipeID] == spellName and isLearned then
             isKnown = true
 			return true	-- stop iteration

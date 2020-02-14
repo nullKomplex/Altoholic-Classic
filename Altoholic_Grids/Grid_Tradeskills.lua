@@ -173,8 +173,7 @@ local callbacks = {
 					-- button.IconBorder:Show()
 				-- end
                 
-                local spellName = GetSpellInfo(currentList[dataRowID])
-				if DataStore:IsCraftKnown(profession, spellName) then
+				if DataStore:IsCraftKnown(profession, currentList[dataRowID]) then
 					vc = 1.0
 					text = icons.ready
 				else
