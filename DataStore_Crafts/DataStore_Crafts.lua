@@ -473,14 +473,31 @@ end
 -- *** Event Handlers ***
 local function OnPlayerAlive()
     -- Grab the player's fishing skill from the Skills API
+    local char = addon.ThisCharacter
     for i = 1, GetNumSkillLines() do
         local name, _, _, skillLevel, _, _, maxSkillLevel = GetSkillLineInfo(i)
         if (name == L["Fishing"]) then
             if (not addon.ThisCharacter.Professions["Fishing"]) then addon.ThisCharacter.Professions["Fishing"] = {} end
-            addon.ThisCharacter.Professions["Fishing"].Rank = skillLevel
-            addon.ThisCharacter.Professions["Fishing"].Name = name
-            addon.ThisCharacter.Professions["Fishing"].MaxRank = maxSkillLevel
-       end
+            char.Professions["Fishing"].Rank = skillLevel
+            char.Professions["Fishing"].Name = name
+            char.Professions["Fishing"].MaxRank = maxSkillLevel
+            char.lastUpdate = time()
+        end
+        for _, s in ipairs({L["Herbalism"], L["Skinning"], L["Mining"]}) do
+            if (name == s) then
+                for j = 1, 2 do
+                    local p = char["Prof"..j]
+                    if (p == nil) or (p == "UNKNOWN") then
+                        char["Prof"..j] = name
+                        break
+                    end
+                end
+                char.Professions[s].Rank = skillLevel
+                char.Professions[s].Name = name
+                char.Professions[s].MaxRank = maxSkillLevel
+                char.lastUpdate = time()
+            end
+        end
     end
 end
 
@@ -745,7 +762,6 @@ end
 
 local function _GetProfession1(character)
 	local profession = _GetProfession(character, character.Prof1)
-
 	if profession then
 		local rank, maxRank, spellID = _GetProfessionInfo(profession)
 		return rank or 0, maxRank or 0, spellID, character.Prof1
@@ -777,7 +793,7 @@ local function _GetFirstAidRank(character)
 end
 
 local function _GetFishingRank(character)
-	local profession = _GetProfession(character, GetSpellInfo("Fishing"))
+	local profession = _GetProfession(character, "Fishing")
 	if profession then
 		return _GetProfessionInfo(profession)
 	end
