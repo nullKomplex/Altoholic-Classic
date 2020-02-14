@@ -11,7 +11,7 @@ addon:Controller("AltoholicUI.TabGrids", {
 		frame.Label1:SetText(L["Realm"])
 		frame.Equipment.text = L["Equipment"]
 		frame.Factions.text = L["Reputations"]
-		frame.Dailies.text = "Daily Quests"
+        frame.TradeSkills.text = "Trade Skills"
 		
 		frame.SelectRealm:RegisterClassEvent("RealmChanged", function()
 				frame.Status:SetText("")
@@ -99,18 +99,6 @@ addon:Controller("AltoholicUI.TabGrids", {
 			frame.Factions:EnableIcon()
 		else
 			frame.Factions:DisableIcon()
-		end
-
-		if DataStore_Quests then
-			frame.Dailies:EnableIcon()
-		else
-			frame.Dailies:DisableIcon()
-		end
-		
-		if DataStore_Agenda then
-			frame.Dungeons:EnableIcon()
-		else
-			frame.Dungeons:DisableIcon()
 		end
 	end,
 	SetStatus = function(frame, text)

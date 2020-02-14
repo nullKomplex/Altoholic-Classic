@@ -209,26 +209,11 @@ local function ScanRecipeCategories(profession, useCraftInstead)
     end
 	
 	local names = addon.ref.global.RecipeCategoryNames
---	local cumulatedRank = 0
---	local cumulatedMaxRank = 0
 	             
 	-- loop through this profession's categories
 	for _, headerID in ipairs( GetTradeSkillHeaders() ) do
---		local info = C_TradeSkillUI.GetCategoryInfo(headerID)
-		                                 
---		cumulatedRank = 0
---		cumulatedMaxRank = 0
 
 		names[headerID] = GetTradeSkillInfo(headerID)
-	
-		-- save the names of subcategories
---		local subCats = { C_TradeSkillUI.GetSubCategories(info.categoryID) }
---		for _, subCatID in pairs(subCats) do
---			local subCatInfo = C_TradeSkillUI.GetCategoryInfo(subCatID)
-			
---			names[subCatInfo.categoryID] = subCatInfo.name
---		end
-
 		table.insert(profession.Categories, { 
 			id = headerID,   
 		})
@@ -246,9 +231,6 @@ end
 --end
 
 local function GetItemNameFromLink(link)
-	-- returns nil if recipe id is not in the DB, returns the spellID otherwise
-	--local recipeID = addon:GetIDFromLink(link)
-	--return LCI:GetRecipeLearnedSpell(recipeID)
     return GetItemInfo(link)
 end
 
@@ -267,12 +249,6 @@ local function ScanRecipes(useCraftInstead)
     profession.Name = tradeskillName
 	
 	ScanRecipeCategories(profession, useCraftInstead)
-	           
-	-- Get profession link
---	local profLink = C_TradeSkillUI.GetTradeSkillListLink()
---	if profLink then	-- sometimes a nil value may be returned, so keep the old one if nil
---		profession.FullLink = profLink
---	end
 		
 	local numRecipes 
     if (useCraftInstead) then
@@ -719,18 +695,20 @@ local function _GetNumRecipesByColor(profession)
 	return counts[3], counts[2], counts[1], counts[0]		-- orange, yellow, green, grey
 end
 
-local function _IsCraftKnown(profession, spellID)
+local function _IsCraftKnown(profession, spellName)
+    if (type(spellName) ~= "string") then
+        print("Error in Datastore_Crafts: profession spellIDs can not be checked in Classic, this function needs to be passed the craft name instead")
+        return false
+    end
 	-- returns true if a given spell ID is known in the profession passed as first argument
 	local isKnown = false
 
     if (not profession) then return false end                
-
-        -- need to hash the spell ID
-        spellID = GenerateSpellID(spellID, profession.Name)
-             
+         
 	_IterateRecipes(profession, 0, 0, function(recipeData)
-		local _, recipeID, isLearned = _GetRecipeInfo(recipeData)
-		if recipeID == spellID and isLearned then
+		local _, recipeID, isLearned = _GetRecipeInfo(recipeData) 
+        
+		if addon.ref.global.ResultItemNames[recipeID] == spellName and isLearned then
             isKnown = true
 			return true	-- stop iteration
 		end
