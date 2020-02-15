@@ -7,13 +7,12 @@ addon:Controller("AltoholicUI.RecipeRow", {
 		-- ** set the crafted item **
 		local craftedItemID, maxMade = DataStore:GetCraftResultItem(recipeID)
 		local itemName, itemLink, itemRarity
-		
+
 		if craftedItemID then
 			frame.CraftedItem:SetIcon(GetItemIcon(craftedItemID))
 			frame.CraftedItem.itemID = craftedItemID
 			
 			itemName, itemLink, itemRarity = GetItemInfo(craftedItemID)
-			
 			local vc = (isLearned) and 1 or 0.3
 			frame.CraftedItem.Icon:SetVertexColor(vc, vc, vc)
 			if itemRarity then
@@ -27,7 +26,15 @@ addon:Controller("AltoholicUI.RecipeRow", {
 				frame.CraftedItem.Count:Hide()
 			end
 			frame.CraftedItem:Show()
-		else
+		elseif profession == "Enchanting" then
+            itemName = DataStore:GetResultItemName(recipeID); itemRarity = 4; maxMade = 1;
+            frame.CraftedItem:SetIcon("Interface\\Icons\\Trade_Engraving.blp")
+            frame.CraftedItem.itemID = nil
+            frame.CraftedItem.Icon:SetVertexColor(1,1,1)
+            frame.CraftedItem:SetRarity(itemRarity)
+            frame.CraftedItem.Count:Hide()
+            frame.CraftedItem:Show()
+        else
 			frame.CraftedItem:Hide()
 		end
 			

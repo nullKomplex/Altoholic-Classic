@@ -485,6 +485,8 @@ end
 local function OnTradeSkillShow()
     -- can't link tradeskills from other players in Classic, so this line is not needed
 	-- if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
+    
+    if (addon.isOpen) then return end
               
 	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
 	addon.isOpen = true
@@ -498,6 +500,9 @@ end
 
 -- This one is for Enchanting. For some reason Enchanting isn't programmed as a "tradeskill"
 local function OnCraftShow()
+    -- To prevent issues caused by players jumping from one open profession window to another without closing the original first.
+    if (addon.isOpen) then return end
+    
     addon:RegisterEvent("CRAFT_CLOSE", OnCraftClose)
 	addon.isOpen = true
     ClassicScanProfessionInfo(true);
@@ -842,7 +847,7 @@ end
 
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ENTERING_WORLD", OnPlayerAlive)
-	addon:RegisterEvent("TRADE_SKILL_SHOW", OnTradeSkillShow)
+	addon:RegisterEvent("TRADE_SKILL_UPDATE", OnTradeSkillShow)
     addon:RegisterEvent("CRAFT_SHOW", OnCraftShow)
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
@@ -855,7 +860,7 @@ end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ENTERING_WORLD")
-	addon:UnregisterEvent("TRADE_SKILL_SHOW")
+	addon:UnregisterEvent("TRADE_SKILL_UPDATE")
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 	addon:UnregisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED")
