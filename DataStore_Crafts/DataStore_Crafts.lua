@@ -194,7 +194,7 @@ local function GetTradeSkillHeaders()
 end
 
 local function ScanRecipeCategories(profession, useCraftInstead)
-    if (#GetTradeSkillHeaders() == 0) then return end
+    if (not useCraftInstead) and (#GetTradeSkillHeaders() == 0) then return end
     
 	-- clear storage
 	profession.Categories = profession.Categories or {}
@@ -239,15 +239,15 @@ local function ScanRecipes(useCraftInstead)
     if (useCraftInstead) then
         tradeskillName = GetCraftDisplaySkillLine()
     else
-        tradeskillName = GetTradeSkillLine() --select(7, C_TradeSkillUI.GetTradeSkillLine())
+        tradeskillName = GetTradeSkillLine()
     end
-                     
+                 
 	if (not tradeskillName) or (tradeskillName == "UNKNOWN") then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
-                                                
+                                   
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
     profession.Name = tradeskillName
-	
+
 	ScanRecipeCategories(profession, useCraftInstead)
 		
 	local numRecipes 
@@ -426,7 +426,7 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     end
        
 	if not char or not index then return end
-	                           
+                     
     local _, rank, maxRank
     if (useCraftInstead) then
         _, rank, maxRank = GetCraftDisplaySkillLine();
@@ -502,7 +502,7 @@ end
 local function OnCraftShow()
     -- To prevent issues caused by players jumping from one open profession window to another without closing the original first.
     if (addon.isOpen) then return end
-    
+     
     addon:RegisterEvent("CRAFT_CLOSE", OnCraftClose)
 	addon.isOpen = true
     ClassicScanProfessionInfo(true);
@@ -848,7 +848,7 @@ end
 function addon:OnEnable()
 	addon:RegisterEvent("PLAYER_ENTERING_WORLD", OnPlayerAlive)
 	addon:RegisterEvent("TRADE_SKILL_UPDATE", OnTradeSkillShow)
-    addon:RegisterEvent("CRAFT_SHOW", OnCraftShow)
+    addon:RegisterEvent("CRAFT_UPDATE", OnCraftShow)
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 	addon:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", OnDataSourceChanged)
@@ -861,6 +861,7 @@ end
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ENTERING_WORLD")
 	addon:UnregisterEvent("TRADE_SKILL_UPDATE")
+    addon:UnregisterEvent("CRAFT_UPDATE")
 	addon:UnregisterEvent("CHAT_MSG_SKILL")
 	addon:UnregisterEvent("CHAT_MSG_SYSTEM")
 	addon:UnregisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED")
