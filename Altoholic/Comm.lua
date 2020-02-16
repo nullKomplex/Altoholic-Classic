@@ -74,8 +74,8 @@ local importedChars
 
 local function Whisper(player, messageType, ...)
 	local serializedData = Altoholic:Serialize(messageType, ...)
-	print("Sending to other player:")
-    DEFAULT_CHAT_FRAME:AddMessage(serializedData)
+	--print("DEBUG - Sending to other player:")
+    --DEFAULT_CHAT_FRAME:AddMessage(serializedData)
 	
 	-- if compressionMode == 1 then				-- no comp
 		Altoholic:SendCommMessage("AltoShare", serializedData, "WHISPER", player)
@@ -269,11 +269,6 @@ local AUTH_ASK		= 2
 local AUTH_NEVER	= 3
 
 function Altoholic.Comm.Sharing:OnSharingRequest(sender, data)
-    print("OnSharingRequest")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
     self.SharingEnabled = nil
 	
 	if InCombatLockdown() then
@@ -348,41 +343,21 @@ function Altoholic.Comm.Sharing:SetMode(mode)
 end
 
 function Altoholic.Comm.Sharing:OnSharingRefused(sender, data)
-    print("OnSharingRefused")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	SetStatus(format(L["Request rejected by %s"], sender))
 	self.SharingInProgress = nil
 end
 
 function Altoholic.Comm.Sharing:OnPlayerInCombat(sender, data)
-    print("OnPlayerInCombat")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	SetStatus(format(L["%s is in combat, request cancelled"], sender))
 	self.SharingInProgress = nil
 end
 
 function Altoholic.Comm.Sharing:OnSharingDisabled(sender, data)
-    print("OnSharingDisabled")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	SetStatus(format(L["%s has disabled account sharing"], sender))
 	self.SharingInProgress = nil
 end
 
 function Altoholic.Comm.Sharing:OnSharingAccepted(sender, data)
-    print("OnSharingAccepted")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	self.DestTOC = data
 	self.NetDestCurItem = 0
 	SetStatus(format(L["Table of content received (%d items)"], #self.DestTOC))
@@ -397,11 +372,6 @@ end
 
 -- Send Content
 function Altoholic.Comm.Sharing:OnSendItemReceived(sender, data)
-    print("OnSendItemReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	-- Server side, a request to send a given item is processed here
 	if not self.SharingEnabled or not self.AuthorizedRecipient then
 		return
@@ -437,11 +407,6 @@ function Altoholic.Comm.Sharing:OnSendItemReceived(sender, data)
 end
 
 function Altoholic.Comm.Sharing:OnSharingCompleted(sender, data)
-    print("OnSharingCompleted")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	self.SharingEnabled = nil
 	self.AuthorizedRecipient = nil
 	self.ServerRealmName = nil
@@ -454,22 +419,12 @@ function Altoholic.Comm.Sharing:OnSharingCompleted(sender, data)
 end
 
 function Altoholic.Comm.Sharing:OnAckReceived(sender, data)
-    print("OnAckReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	self:RequestNext(sender)
 end
 
 
 -- Receive content
 function Altoholic.Comm.Sharing:OnDataStoreReceived(sender, data)
-    print("OnDataStoreReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
 	local TocData = self.DestTOC[self.NetDestCurItem]
 	local _, moduleID = strsplit(TOC_SEP, TocData)
 	local moduleName = Altoholic.Sharing.Content:GetOptionalModuleName(tonumber(moduleID))
@@ -478,12 +433,7 @@ function Altoholic.Comm.Sharing:OnDataStoreReceived(sender, data)
 	self:RequestNext(sender)
 end
 
-function Altoholic.Comm.Sharing:OnDataStoreCharReceived(sender, data)
-    print("OnDataStoreCharReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)    
+function Altoholic.Comm.Sharing:OnDataStoreCharReceived(sender, data)   
 	DataStore:ImportData("DataStore_Characters", data, self.ClientCharName, self.ClientRealmName, self.account)
 
 	-- temporarily deal with this here, will be changed when account sharing goes to  DataStore.
@@ -494,26 +444,16 @@ function Altoholic.Comm.Sharing:OnDataStoreCharReceived(sender, data)
 	importedChars[key].guild = data.guildName
 	
 	-- NO REQUEST NEXT HERE !!
+    self:RequestNext(sender)
 end
 
-function Altoholic.Comm.Sharing:OnDataStoreStatReceived(sender, data)    
-    print("OnDataStoreStatReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
-    
+function Altoholic.Comm.Sharing:OnDataStoreStatReceived(sender, data)        
 	DataStore:ImportData("DataStore_Stats", data, self.ClientCharName, self.ClientRealmName, self.account)
 	-- Request next, to resume transfer after processing mandatory data
 	self:RequestNext(sender)
 end
 
 function Altoholic.Comm.Sharing:OnRefDataReceived(sender, data)
-    print("OnRefDataReceived")
-	print("sender:")
-    print(sender)
-    print("data")
-    print(data)
     local TocData = self.DestTOC[self.NetDestCurItem]
 	local _, class = strsplit(TOC_SEP, TocData)
 	
