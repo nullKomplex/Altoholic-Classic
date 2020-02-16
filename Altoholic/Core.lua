@@ -281,8 +281,6 @@ function addon:OnInitialize()
 	addon:RegisterComm(commPrefix, DataStore:GetGuildCommHandler())
 	
 	-- this event MUST stay here, we have to be able to respond to a request event if the guild tab is not loaded
-	addon:RegisterMessage("DATASTORE_BANKTAB_REQUESTED")
-	addon:RegisterMessage("DATASTORE_GUILD_MAIL_RECEIVED")
 	addon:RegisterMessage("DATASTORE_GLOBAL_MAIL_EXPIRY")
 	addon:RegisterMessage("DATASTORE_CS_TIMEGAP_FOUND")
 end
