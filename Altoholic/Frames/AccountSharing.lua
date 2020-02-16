@@ -137,7 +137,6 @@ end
 
 local mandatoryModules = {		-- mandatory modules are sent anyway (if the character is shared, of course)
 	"DataStore_Characters",
-	"DataStore_Stats",
 }
 
 local optionalModules = {		-- this defines the order in which modules should be listed
@@ -148,8 +147,6 @@ local optionalModules = {		-- this defines the order in which modules should be 
 	"DataStore_Mails",
 	"DataStore_Quests",
 	"DataStore_Reputations",
-	"DataStore_Spells",
-	"DataStore_Talents",
 }
 
 local moduleLabels = {		-- these are the labels
@@ -160,13 +157,11 @@ local moduleLabels = {		-- these are the labels
 	["DataStore_Mails"] = L["Mails"],
 	["DataStore_Quests"] = L["Quests"],
 	["DataStore_Reputations"] = L["Reputations"],
-	["DataStore_Spells"] = SPELLBOOK,
-	["DataStore_Talents"] = format("%s & %s", TALENTS, GLYPHS),
 }
 
 
-local GUILD_HEADER_LINE				= 1
-local GUILD_BANKTAB_LINE			= 2
+--local GUILD_HEADER_LINE				= 1
+--local GUILD_BANKTAB_LINE			=function() print("Error in AccountSharing: Guild Bank Tabs don't exist anymore") end
 local CHARACTER_HEADER_LINE		= 3
 local CHARACTER_DATASTORE_LINE	= 4
 local CLASS_REFDATA_LINE			= 5		-- only for available content, not for shared content view
@@ -226,46 +221,6 @@ local ContentScrollFrame_Desc = {
 			end
 		end,
 	Lines = {
-		[GUILD_HEADER_LINE] = {
-			GetText = function(self, line)
-					return format("%s|r / %s", colors.white..line.realm, colors.green..line.name)
-				end,
-			GetOffset = function(self, line)
-					return 20
-				end,
-			DrawCollapseButton = function(self, line, entry)
-					local item = _G[ entry.."Collapse" ]
-					local index = format("%s.%s.%s", THIS_ACCOUNT, line.realm, line.name)
-					
-					if not ContentCollapsedHeaders[index] then
-						item:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
-					else
-						item:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
-					end
-					item:Show()
-				end,
-			DrawCheckBox = function(self, line, entry)
-					_G[ entry.."Check" ]:SetChecked(isGuildShared(line.realm, line.name))
-				end,
-		},
-		[GUILD_BANKTAB_LINE] = {
-			GetText = function(self, line)
-					local DS = DataStore
-					local guild = DS:GetGuild(line.name, line.realm)
-					local tabName = DS:GetGuildBankTabName(guild, line.tabID)
-					
-					return tabName
-				end,
-			GetOffset = function(self, line)
-					return 40
-				end,
-			DrawCollapseButton = function(self, line, entry)
-					_G[ entry.."Collapse" ]:Hide()
-				end,
-			DrawCheckBox = function(self, line, entry)
-					_G[ entry.."Check" ]:SetChecked(isGuildBankTabShared(line.realm, line.name, line.tabID))
-				end,
-		},
 		[CHARACTER_HEADER_LINE] = {
 			GetText = function(self, line)
 					local _, realm, name = strsplit(".", line.key)
@@ -311,22 +266,7 @@ function Altoholic.Sharing.Content:BuildView()
 	wipe(self.view)
 	
 	local DS = DataStore
-	for realm in pairs(DS:GetRealms()) do			-- all realms on this account
-		for guildName, guild in pairs(DS:GetGuilds(realm)) do		-- add guilds
-			table.insert(self.view, { linetype = GUILD_HEADER_LINE, realm = realm, name = guildName } )
-			
-			local index = format("%s.%s.%s", THIS_ACCOUNT, realm, guildName)
-			
-			if not ContentCollapsedHeaders[index] then
-				for i=1, 8 do		-- add guild bank tabs
-					local tabName = DS:GetGuildBankTabName(guild, i)
-					if tabName then
-						table.insert(self.view, { linetype = GUILD_BANKTAB_LINE, realm = realm, name = guildName, tabID = i } )
-					end
-				end
-			end
-		end
-	
+	for realm in pairs(DS:GetRealms()) do			-- all realms on this account	
 		for characterName, character in pairs(DS:GetCharacters(realm)) do
 			table.insert(self.view, { linetype = CHARACTER_HEADER_LINE, key = character } )
 			
@@ -374,11 +314,7 @@ function Altoholic.Sharing.Content:Check_OnClick(self, button)
 	local sc = Altoholic.db.global.Sharing.SharedContent
 	local index
 	
-	if line.linetype == GUILD_HEADER_LINE then
-		index = format("%s.%s.%s", THIS_ACCOUNT, line.realm, line.name)
-	elseif line.linetype == GUILD_BANKTAB_LINE then
-		index = format("%s.%s.%s.%s", THIS_ACCOUNT, line.realm, line.name, line.tabID)
-	elseif line.linetype == CHARACTER_HEADER_LINE then
+    if line.linetype == CHARACTER_HEADER_LINE then
 		index = line.key
 	else
 		index = line.key .. "." .. line.module
@@ -434,12 +370,6 @@ function Altoholic.Sharing.Content:CheckAll(self, button)
 			local index = format("%s.%s.%s", THIS_ACCOUNT, realm, guildName)
 			sc[index] = self.isChecked
 			
-			for i=1, 8 do		-- add guild bank tabs
-				if DS:GetGuildBankTabName(guild, i) then
-					index = format("%s.%s.%s.%s", THIS_ACCOUNT, realm, guildName, i)
-					sc[index] = self.isChecked
-				end
-			end
 		end
 	
 		-- characters
@@ -459,7 +389,7 @@ end
 
 local TOC_SETREALM				= "1"
 local TOC_SETGUILD				= "2"
-local TOC_BANKTAB					= "3"
+local TOC_BANKTAB					= function() print("Error in AccountSharing: call to TOC_BANKTAB which should have been removed for Classic") end
 local TOC_SETCHAR					= "4"
 local TOC_DATASTORE				= "5"
 local TOC_REFDATA					= "6"
@@ -486,16 +416,6 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 		for guildName, guild in pairs(DS:GetGuilds(realm)) do		-- add guilds
 		    if isGuildShared(realm, guildName) then
 			    table.insert(toc, format("%s|%s", TOC_SETGUILD, guildName))
-								
-				--no guild bank in classic
-				--for tabID = 1, 8 do		-- add guild bank tabs
-					--local tabName = DS:GetGuildBankTabName(guild, tabID)
-					--if tabName and isGuildBankTabShared(realm, guildName, tabID) then
-						--serializedData = Altoholic:Serialize(DS:GetGuildBankTab(guild, tabID))
-						--lastUpdate = DS:GetGuildBankTabLastUpdate(guild, tabID)
-						--table.insert(toc, format("%s|%s|%s|%s|%s", TOC_BANKTAB, tabName, tabID, strlen(serializedData), lastUpdate or 0))
-					--end
-				--end
 			end
 		end
 	
@@ -533,8 +453,8 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	-- add reference here
 	-- whatever this is it doesn't work in classic
 	--for class, _ in pairs(DS:GetReferenceTable()) do
-		--serializedData = Altoholic:Serialize(DS:GetClassReference(class))
-		--table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
+	--	serializedData = Altoholic:Serialize(DS:GetClassReference(class))
+	--	table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
 	--end
 	
 	return toc
@@ -595,42 +515,6 @@ local AvailableContentScrollFrame_Desc = {
 			end
 		end,
 	Lines = {
-		[GUILD_HEADER_LINE] = {
-			GetText = function(self, line)
-					return format("%s|r / %s", colors.white..line.realm, colors.green..line.name)
-				end,
-			GetOffset = function(self, line)
-					return 20
-				end,
-			DrawCollapseButton = function(self, line, entry)
-					local item = _G[ entry.."Collapse" ]
-					local index = format("%s.%s.%s", Altoholic.Comm.Sharing:GetAccount(), line.realm, line.name)
-					
-					if not AvailableContentCollapsedHeaders[index] then
-						item:SetNormalTexture("Interface\\Buttons\\UI-MinusButton-Up"); 
-					else
-						item:SetNormalTexture("Interface\\Buttons\\UI-PlusButton-Up");
-					end
-					item:Show()
-				end,
-			GetDate = function(self, line)
-					return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
-				end,
-		},
-		[GUILD_BANKTAB_LINE] = {
-			GetText = function(self, line)
-					return line.tabName
-				end,
-			GetOffset = function(self, line)
-					return 40
-				end,
-			DrawCollapseButton = function(self, line, entry)
-					_G[ entry.."Collapse" ]:Hide()
-				end,
-			GetDate = function(self, line)
-					return colors.lightBlue..date("%m/%d/%Y %H:%M", line.lastUpdate)
-				end,
-		},
 		[CHARACTER_HEADER_LINE] = {
 			GetText = function(self, line)
 					local _, realm, name = strsplit(".", line.key)
@@ -717,21 +601,6 @@ function Altoholic.Sharing.AvailableContent:BuildView()
 		
 		if tocType == TOC_SETREALM then
 			realm = arg1
-		elseif tocType == TOC_SETGUILD then
-			guildName = arg1
-			table.insert(self.view, { linetype = GUILD_HEADER_LINE, realm = realm, name = guildName, parentID = i } )
-		elseif tocType == TOC_BANKTAB then
-			local index = format("%s.%s.%s", account, realm, guildName)
-			if not AvailableContentCollapsedHeaders[index] then
-				table.insert(self.view, { 
-					linetype = GUILD_BANKTAB_LINE, 
-					tabName = arg1, 
-					tabID = tonumber(arg2), 
-					size = tonumber(arg3),
-					lastUpdate = tonumber(arg4),
-					parentID = i,
-				} )
-			end
 		elseif tocType == TOC_SETCHAR then
 			character = format("%s.%s.%s", account, realm, arg1)
 			table.insert(self.view, { 
@@ -771,9 +640,8 @@ function Altoholic.Sharing.AvailableContent:Collapse_OnClick(self, button)
 	local line = content.view[id]
 	
 	local index
-	if line.linetype == GUILD_HEADER_LINE then
-		index = format("%s.%s.%s", Altoholic.Comm.Sharing:GetAccount(), line.realm, line.name)
-	elseif line.linetype == CHARACTER_HEADER_LINE then
+    
+    if line.linetype == CHARACTER_HEADER_LINE then
 		index = line.key
 	end
 	
@@ -813,9 +681,7 @@ function Altoholic.Sharing.AvailableContent:ToggleAll(self, button)
 	
 	for k, v in pairs(content.view) do			-- parse the whole view
 		local index
-		if v.linetype == GUILD_HEADER_LINE then			-- get the right index in lines that actually require it
-			index = format("%s.%s.%s", Altoholic.Comm.Sharing:GetAccount(), v.realm, v.name)
-		elseif v.linetype == CHARACTER_HEADER_LINE then
+		if v.linetype == CHARACTER_HEADER_LINE then
 			index = v.key
 		end
 
