@@ -402,6 +402,9 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     if (profName == "UNKNOWN") then
         print("DataStore_Crafts error: profName is UNKNOWN")
         return
+    elseif (profName == nil) then
+        -- This should handle the beast training case, but I don't have a hunter to test it with
+        return
     end
 	local char = addon.ThisCharacter
     local index = 0
@@ -421,7 +424,6 @@ local function ClassicScanProfessionInfo(useCraftInstead)
         index = 2
         mainIndex = true
     else
-        print("DataStore_Crafts: one of your professions has been unlearned; addon hasn't been programmed to handle this yet")
         return
     end
        
