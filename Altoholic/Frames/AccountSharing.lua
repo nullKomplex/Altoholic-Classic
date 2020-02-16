@@ -452,10 +452,10 @@ function Altoholic.Sharing.Content:GetSourceTOC()
 	
 	-- add reference here
 	-- whatever this is it doesn't work in classic
-	for class, _ in pairs(DS:GetReferenceTable()) do
-		serializedData = Altoholic:Serialize(DS:GetClassReference(class))
-		table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
-	end
+	--for class, _ in pairs(DS:GetReferenceTable()) do
+	--	serializedData = Altoholic:Serialize(DS:GetClassReference(class))
+	--	table.insert(toc, format("%s|%s|%s", TOC_REFDATA, class, strlen(serializedData)))
+	--end
 	
 	return toc
 end
