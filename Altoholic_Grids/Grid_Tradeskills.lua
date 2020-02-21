@@ -15,19 +15,9 @@ local xPacks = {
 local OPTION_XPACK = "UI.Tabs.Grids.Tradeskills.CurrentXPack"
 local OPTION_TRADESKILL = "UI.Tabs.Grids.Tradeskills.CurrentTradeSkill"
 
-local currentDDMText
 local currentItemID
 local currentList
 local dropDownFrame
-
-local function OnXPackChange(self)
-	local currentXPack = self.value
-	
-	addon:SetOption(OPTION_XPACK, currentXPack)
-
-	AltoholicTabGrids:SetViewDDMText(xPacks[currentXPack])
-	AltoholicTabGrids:Update()
-end
 
 local function OnTradeSkillChange(self)
 	dropDownFrame:Close()
@@ -116,6 +106,7 @@ local callbacks = {
 			
 			local prof = GetSpellInfo(tradeskills[currentTradeSkill])
 			AltoholicTabGrids:SetStatus(format("%s / %s", colors.green, prof))
+            AltoholicTabGrids:SetViewDDMText(prof)
 		end,
 	OnUpdateComplete = function() end,
 	GetSize = function() return #currentList end,
@@ -162,6 +153,8 @@ local callbacks = {
 			local vc = 0.25	-- vertex color
 			local tradeskills = addon.TradeSkills.spellIDs
 			local profession = DataStore:GetProfession(character, GetSpellInfo(tradeskills[addon:GetOption(OPTION_TRADESKILL)]))			
+
+            if not profession then return end
 
 			if #profession.Crafts ~= 0 then
 				-- do not enable this yet .. working fine, but better if more filtering allowed. ==> filtering on rarity

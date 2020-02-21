@@ -59,7 +59,7 @@
 			<!-- Menu Icons -->
 			<Frame parentKey="ClassIcons" inherits="AltoClassIconsContainerTemplate">
 				<KeyValues>
-					<KeyValue key="numIcons" value="12" type="number" />
+					<KeyValue key="numIcons" value="10" type="number" />
 					<KeyValue key="iconTemplate" value="AltoTabGridsClassIconTemplate" />
 					<KeyValue key="tabName" value="Grids" />
 				</KeyValues>
