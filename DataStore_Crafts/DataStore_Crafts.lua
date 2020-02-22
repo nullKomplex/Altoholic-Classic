@@ -393,6 +393,11 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     -- arguments should be: index and mainIndex ... wtf are these even?
     local profName
     
+    -- 1.13-012: adding a check to remove duplicate professions incorrectly saved in previous versions of this addon
+    if (char["Prof"..1] == char["Prof"..2]) then
+        char["Prof"..2] = nil
+    end
+    
     if (useCraftInstead) then
         profName = GetCraftDisplaySkillLine();
         -- TODO: Ignore Beast Training window, which is programmed as a "craft"
