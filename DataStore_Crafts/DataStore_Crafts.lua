@@ -406,6 +406,7 @@ local function ClassicScanProfessionInfo(useCraftInstead)
         -- This should handle the beast training case, but I don't have a hunter to test it with
         return
     end
+    
 	local char = addon.ThisCharacter
     local index = 0
     local mainIndex = false

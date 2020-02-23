@@ -117,8 +117,8 @@ function ns:Update()
 			
 			local _, seconds = DataStore:GetMailExpiry(character, index)
 			_G[ entry..i.."Expiry" ]:SetText(format("%s:\n%s", msg, colors.white .. SecondsToTime(seconds)))
-			
-			local itemButton = _G[ entry..i.."Item" ]
+
+            local itemButton = _G[ entry..i.."Item" ]
 			itemButton:SetIcon(icon)			
 			itemButton:SetCount(count)
             

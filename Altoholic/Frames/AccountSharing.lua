@@ -160,8 +160,8 @@ local moduleLabels = {		-- these are the labels
 }
 
 
---local GUILD_HEADER_LINE				= 1
---local GUILD_BANKTAB_LINE			=function() print("Error in AccountSharing: Guild Bank Tabs don't exist anymore") end
+local GUILD_HEADER_LINE				= 1
+--local GUILD_BANKTAB_LINE			=2
 local CHARACTER_HEADER_LINE		= 3
 local CHARACTER_DATASTORE_LINE	= 4
 local CLASS_REFDATA_LINE			= 5		-- only for available content, not for shared content view
@@ -169,13 +169,6 @@ local CLASS_REFDATA_LINE			= 5		-- only for available content, not for shared co
 local function isGuildShared(realm, name)
 	local sc = Altoholic.db.global.Sharing.SharedContent
 	local index = format("%s.%s.%s", THIS_ACCOUNT, realm, name)
-
-	return sc[index]
-end
-
-local function isGuildBankTabShared(realm, name, tabID)
-	local sc = Altoholic.db.global.Sharing.SharedContent
-	local index = format("%s.%s.%s.%s", THIS_ACCOUNT, realm, name, tabID)
 
 	return sc[index]
 end
@@ -389,7 +382,7 @@ end
 
 local TOC_SETREALM				= "1"
 local TOC_SETGUILD				= "2"
-local TOC_BANKTAB					= function() print("Error in AccountSharing: call to TOC_BANKTAB which should have been removed for Classic") end
+--local TOC_BANKTAB					= "3"
 local TOC_SETCHAR					= "4"
 local TOC_DATASTORE				= "5"
 local TOC_REFDATA					= "6"
