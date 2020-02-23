@@ -15,8 +15,8 @@ local addonList = {
 	"Altoholic_Grids",
 }
 
-local url1 = "http://wow.curse.com/downloads/wow-addons/details/altoholic.aspx"
-local url2 = "http://www.wowinterface.com/downloads/info8533-Altoholic.html"
+local url1 = "https://www.curseforge.com/wow/addons/altoholic/" 
+local url2 = "https://github.com/teelolws/Altoholic-Classic" 
 local url3 = "http://wow.curseforge.com/addons/altoholic/localization/"
 
 local help = {
@@ -61,7 +61,7 @@ local help = {
 			"Do I have to open all professions manually?",
 		},
 		answers = {
-			"Yes. Some advanced features require that you open the tradeskill pane once per profession.",
+			"Yes. On Classic, only your gathering professions and Fishing can be scanned when you login. You will need to open the crafting windows for all other professions.",
 		}
 	},
 	{	name = "Mails",
@@ -95,10 +95,10 @@ local support = {
 			"I have multiple Lua errors at login, should I report them all?",
 		},
 		answers = {
-			"Both Curse and WoWInterface have a ticket section, I also read comments and respond as often as I materially can, so feel free to report in one of these places.",
+ 			format("%s%s", "Please use the Issue Tracker on Github: ", colors.green..url2), 
 			format("%s\n\n%s\n%s\n%s\n%s\n%s\n", 
 				"A few things:",
-				colors.green.."1)|r Make sure you have the latest version of the add-on.\n",
+ 				colors.green.."1)|r Make sure you have the latest version of the add-on. Check for alpha builds on Github that address your issue.\n", 
 				colors.green.."2)|r If you suspect a conflict with another add-on, try to reproduce the issue with only Altoholic enabled. As the add-on deals with a lot of things, a conflict is always possible.\n",
 				colors.green.."3)|r Make sure your issue has not been reported by someone else.\n",
 				colors.green.."4)|r Never, ever, report that 'it does not work', this is the most useless sentence in the world! Be specific about what does not work.\n",

@@ -1,5 +1,6 @@
 --[[	*** Altoholic ***
-Written by : Thaoky, EU-Marécages de Zangar
+Originally Written by : Thaoky, EU-Marécages de Zangar
+Altoholic-Classic ported and maintained by: Teelo, US-Jubei'thos
 --]]
 
 local addonName = ...
