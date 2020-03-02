@@ -65,7 +65,6 @@ Altoholic.Comm.Sharing.Callbacks = {
 
 	[CMD_DATASTORE_XFER] = "OnDataStoreReceived",
 	[CMD_DATASTORE_CHAR_XFER] = "OnDataStoreCharReceived",
-	[CMD_DATASTORE_STAT_XFER] = "OnDataStoreStatReceived",
 	[CMD_REFDATA_XFER] = "OnRefDataReceived",
 }
 
@@ -73,10 +72,11 @@ local compressionMode = 1
 local importedChars
 
 local function Whisper(player, messageType, ...)
+    --print("Sending whisper to: ", player, ", type: ", messageType, ", content:", ...)
 	local serializedData = Altoholic:Serialize(messageType, ...)
 	--print("DEBUG - Sending to other player:")
     --DEFAULT_CHAT_FRAME:AddMessage(serializedData)
-	
+	--print("serialized: ", serializedData)
 	-- if compressionMode == 1 then				-- no comp
 		Altoholic:SendCommMessage("AltoShare", serializedData, "WHISPER", player)
 		
@@ -112,7 +112,7 @@ local function GetRequestee()
 	end
 
 	if player and strlen(player) > 0 then
-		return player
+		return player          
 	end
 end
 
@@ -136,24 +136,27 @@ end
 
 function Altoholic.Comm.Sharing:EmptyHandler(prefix, message, distribution, sender)
 	-- automatically reply that the option is disabled
+    --print("replying that option is disabled")
 	Whisper(sender, MSG_ACCOUNT_SHARING_REFUSEDDISABLED)
 end
 
 function Altoholic.Comm.Sharing:ActiveHandler(prefix, message, distribution, sender)
 	local success, msgType, msgData
-	
+	--print("message recieved, prefix: ", prefix, ", message: ", message, ", distribution: ", distribution, ", sender: ", sender)
 	if compressionMode == 1 then	
 		success, msgType, msgData = Altoholic:Deserialize(message)
 --	else
 --		local decompData = LibComp:Decompress(message)
 --		success, msgType, msgData = Altoholic:Deserialize(decompData)
 	end
-	
+	--print("success: ", success)
+    --print("msgType: ", msgType)
+    --print("msgData: ", msgData)
 	if not success then
 		self.SharingEnabled = nil
-        print("Debug: Sharing:Activehandler(...)")
-		 self:Print(msgType)
-		 self:Print(string.sub(decompData, 1, 15))
+        --print("Debug: Sharing:Activehandler(...)")
+		 --self:Print(msgType)
+		 --self:Print(string.sub(decompData, 1, 15))
 		return
 	end
 	
@@ -168,7 +171,7 @@ function Altoholic.Comm.Sharing:ActiveHandler(prefix, message, distribution, sen
 end
 
 function Altoholic.Comm.Sharing:Request()
-
+    --print("Sharing button was clicked")
 	local account = AltoAccountSharing_AccNameEditBox:GetText()
 	if not account or strlen(account) == 0 then 		-- account name cannot be empty
 		Altoholic:Print("[" .. L["Account Name"] .. "] " .. L["This field |cFF00FF00cannot|r be left empty."])
@@ -181,7 +184,7 @@ function Altoholic.Comm.Sharing:Request()
 	if player then
 		self.SharingInProgress = true
 		-- AltoAccountSharing:Hide()
-		-- Altoholic:Print(format(L["Sending account sharing request to %s"], player))
+		Altoholic:Print(format(L["Sending account sharing request to %s"], player))
 		SetStatus(format("Getting table of content from %s", player))
 		Whisper(player, MSG_ACCOUNT_SHARING_REQUEST)
 	end
@@ -390,10 +393,9 @@ function Altoholic.Comm.Sharing:OnSendItemReceived(sender, data)
 	elseif TocType == TOC_SETGUILD then
 		_, self.ServerGuildName = strsplit(TOC_SEP, TocData)
 		Whisper(self.AuthorizedRecipient, MSG_ACCOUNT_SHARING_ACK)
-	elseif TocType == TOC_SETCHAR then		-- character ? send mandatory modules (char definition = DS_Char + DS_Stats)
+	elseif TocType == TOC_SETCHAR then		-- character ? send mandatory modules (char definition = DS_Char)
 		_, self.ServerCharacterName = strsplit(TOC_SEP, TocData)
 		Whisper(self.AuthorizedRecipient, CMD_DATASTORE_CHAR_XFER, DS:GetCharacterTable("DataStore_Characters", self.ServerCharacterName, self.ServerRealmName))
-		Whisper(self.AuthorizedRecipient, CMD_DATASTORE_STAT_XFER, DS:GetCharacterTable("DataStore_Stats", self.ServerCharacterName, self.ServerRealmName))
 	
 	elseif TocType == TOC_DATASTORE then	-- DS ? Send the appropriate DS module
 		local _, moduleID = strsplit(TOC_SEP, TocData)
@@ -445,12 +447,6 @@ function Altoholic.Comm.Sharing:OnDataStoreCharReceived(sender, data)
 	
 	-- NO REQUEST NEXT HERE !!
     self:RequestNext(sender)
-end
-
-function Altoholic.Comm.Sharing:OnDataStoreStatReceived(sender, data)        
-	DataStore:ImportData("DataStore_Stats", data, self.ClientCharName, self.ClientRealmName, self.account)
-	-- Request next, to resume transfer after processing mandatory data
-	self:RequestNext(sender)
 end
 
 function Altoholic.Comm.Sharing:OnRefDataReceived(sender, data)

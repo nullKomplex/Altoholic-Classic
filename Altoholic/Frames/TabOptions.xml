@@ -419,6 +419,7 @@
 				</Anchors>      
 				<Scripts>
 					<OnClick>
+                        -- This code here should probably be changed a bit. The button should only block the receiving of sharing requests, but it blocks sending them from working properly, too.
 						if self:GetChecked() then 
 							Altoholic:SetOption("UI.AccountSharing.IsEnabled", true)
 							Altoholic.Comm.Sharing:SetMessageHandler("ActiveHandler")
