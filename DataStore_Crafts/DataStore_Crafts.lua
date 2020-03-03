@@ -852,6 +852,13 @@ function addon:OnInitialize()
 	
 	DataStore:SetGuildBasedMethod("GetGuildCrafters")
 	DataStore:SetGuildBasedMethod("GetGuildMemberProfession")
+    
+    -- temporary code to remove duplicate professions
+    for _, char in pairs(addon.Characters) do
+        if (char.Prof1 == char.Prof2) then
+            char.Prof2 = nil
+        end
+    end
 end
 
 function addon:OnEnable()
