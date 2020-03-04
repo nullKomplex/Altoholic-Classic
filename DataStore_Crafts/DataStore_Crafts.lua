@@ -1,6 +1,13 @@
 --[[	*** DataStore_Crafts ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 23rd, 2009
+
+======
+2020/03/04: 
+There was an issue that has been resolved where some characters would have the same profession showing for Slot 1 and Slot 2.
+To fix this, either delete the character and re-scan it, or run this macro:
+    /run for _,c in pairs(DataStore_Crafts.Characters) do if (c.Prof1==c.Prof2) then c.Prof2=nil end end
+======
 --]]
 if not DataStore then return end
 
@@ -457,7 +464,7 @@ end
 
 -- *** Event Handlers ***
 local function OnPlayerAlive()
-    -- Grab the player's fishing skill from the Skills API
+    -- Grab the player's fishing and gathering skills from the Skills API
     local char = addon.ThisCharacter
     for i = 1, GetNumSkillLines() do
         local name, _, _, skillLevel, _, _, maxSkillLevel = GetSkillLineInfo(i)
@@ -474,6 +481,8 @@ local function OnPlayerAlive()
                     local p = char["Prof"..j]
                     if (p == nil) or (p == "UNKNOWN") then
                         char["Prof"..j] = name
+                        break
+                    elseif p == s then
                         break
                     end
                 end
@@ -852,13 +861,6 @@ function addon:OnInitialize()
 	
 	DataStore:SetGuildBasedMethod("GetGuildCrafters")
 	DataStore:SetGuildBasedMethod("GetGuildMemberProfession")
-    
-    -- temporary code to remove duplicate professions
-    for _, char in pairs(addon.Characters) do
-        if (char.Prof1 == char.Prof2) then
-            char.Prof2 = nil
-        end
-    end
 end
 
 function addon:OnEnable()
