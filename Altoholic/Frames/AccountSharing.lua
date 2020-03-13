@@ -660,17 +660,17 @@ function Altoholic.Sharing.AvailableContent:Check_OnClick(self, button)
                 
         -- Code added 2020/03/12: purpose is to check the parent header when a child option is checked
         -- Since I can't find a clean way to do this, using content visible to this function, I'll do it mathematically using the id instead
-        -- If the ID is between 3 and 9, check 2
-        -- If the ID is between 12 and 18, check 11
+        -- If the ID is between 5 and 11, check 4
+        -- If the ID is between 13 and 19, check 12
         -- and so on
-        -- so... remainder: x mod 9 : math.fmod(id, 9)
-        -- multiple, the padding to add: id/9 round down
+        local idInitialOffset = 3
+        local idNumRows = 8
         
-        local idMultiple = math.floor(id/9)
-        local idRemainder = math.fmod(id, 9)
-        
-        if (idRemainder > 2) and (idRemainder < 10) then 
-            AvailableContentCheckedItems[(idMultiple * 9) + 2] = true
+        local idMultiple = math.floor((id - idInitialOffset) / idNumRows)
+        local idRemainder = math.fmod((id - idInitialOffset), idNumRows)
+
+        if (idRemainder > 1) and (idRemainder < (idNumRows + 1)) then 
+            AvailableContentCheckedItems[(idMultiple * idNumRows) + 1 + idInitialOffset] = true
             local content = Altoholic.Sharing.AvailableContent
             content:BuildView()
 	        content:Update()
