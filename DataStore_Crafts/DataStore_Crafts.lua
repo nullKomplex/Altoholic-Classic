@@ -92,7 +92,26 @@ local ProfessionSpellID = {
 	["Cooking"] = SPELL_ID_COOKING,
     ["First Aid"] = SPELL_ID_FIRSTAID,
 	["Fishing"] = SPELL_ID_FISHING,
+    -- Edit 2020/03/26: Adding localised versions to this table rather than finding a way to reverse-lookup language translations
+    -- Might cause errors if the language hasn't been fully localised
+    [L["Alchemy"]] = SPELL_ID_ALCHEMY,
+	[L["Blacksmithing"]] = SPELL_ID_BLACKSMITHING,
+	[L["Enchanting"]] = SPELL_ID_ENCHANTING,
+	[L["Engineering"]] = SPELL_ID_ENGINEERING,
+	[L["Leatherworking"]] = SPELL_ID_LEATHERWORKING,
+	[L["Tailoring"]] = SPELL_ID_TAILORING,
+	[L["Skinning"]] = SPELL_ID_SKINNING,
+	[L["Mining"]] = SPELL_ID_MINING,
+	[L["Herbalism"]] = SPELL_ID_HERBALISM,
+	[L["Smelting"]] = SPELL_ID_SMELTING,
+	[L["Cooking"]] = SPELL_ID_COOKING,
+    [L["First Aid"]] = SPELL_ID_FIRSTAID,
+	[L["Fishing"]] = SPELL_ID_FISHING,
 }
+
+-- French seems to have different names for first aid
+local firstaidAlternateName = GetSpellInfo(SPELL_ID_FIRSTAID)
+ProfessionSpellID[firstaidAlternateName] = SPELL_ID_FIRSTAID
 
 -- *** Utility functions ***
 local bAnd = bit.band
@@ -432,6 +451,7 @@ local function ClassicScanProfessionInfo(useCraftInstead)
         return
     elseif (profName == L["First Aid"]) then    
         index = 4
+        profName = GetSpellInfo(SPELL_ID_FIRSTAID)
     elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
         index = 1
         mainIndex = true
@@ -598,7 +618,7 @@ end
 -- RETURNS: rank, maxRank, spellID
 local function _GetProfessionInfo(profession)
 	-- accepts a pointer (type == table)to the profession table, as returned by addon:GetProfession()
-	
+
 	local rank, maxRank, spellID
 
     if (not profession) then
@@ -611,7 +631,7 @@ local function _GetProfessionInfo(profession)
 	elseif type(profession) == "string" then
         print("Error in DataStore_Crafts - professions cannot be linked in classic, so this function should not have been called this way")
 	end
-    
+
     spellID = ProfessionSpellID[profession.Name]
 	
 	return tonumber(rank) or 0, tonumber(maxRank) or 0, tonumber(spellID)

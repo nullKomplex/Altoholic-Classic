@@ -8,4 +8,5 @@ L["BROADCAST_PROFS_ENABLED"] = "Les métiers connus de vos rerolls seront envoy�
 L["BROADCAST_PROFS_TITLE"] = "Envoi des liens"
 L["Professions"] = "Métiers"
 L["Secondary Skills"] = "Compétences secondaires"
-
+L["First Aid"] = "Secourisme"
+L["Cooking"] = "Cuisine"
