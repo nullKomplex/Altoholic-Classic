@@ -159,9 +159,11 @@ local function ScanInventory()
 			end
 		end
 	end
-	
+
     if itemCount > 0 then
         addon.ThisCharacter.averageItemLvl = totalItemLevel / itemCount
+    else
+        addon.ThisCharacter.averageItemLvl = 0
     end
 	addon.ThisCharacter.lastUpdate = time()
 end
