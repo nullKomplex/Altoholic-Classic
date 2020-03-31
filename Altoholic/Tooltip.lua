@@ -240,30 +240,42 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
 		profession = DataStore:GetProfession(character, professionName)
 		isKnownByChar = nil
 		if profession then
-			DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
-				local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
-				local skillName = DataStore:GetResultItemName(recipeID)
-
-				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
-					isKnownByChar = true
-					return true	-- stop iteration
-				end
-			end)
-
-			local coloredName = DataStore:GetColoredCharacterName(character)
-			
-			if isKnownByChar then
-				table.insert(know, coloredName)
-			else
-				local currentLevel = DataStore:GetProfessionInfo(DataStore:GetProfession(character, professionName))
-				if currentLevel > 0 then
-					if currentLevel < recipeLevel then
-						table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
-					else
-						table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
-					end
-				end
-			end
+            local coloredName = DataStore:GetColoredCharacterName(character)
+            local currentLevel, maxLevel = DataStore:GetProfessionInfo(DataStore:GetProfession(character, professionName))
+            
+            -- Is the recipe Expert First Aid - Under Wraps?
+            local itemID = GetItemInfoInstant(link)
+            if itemID == 16084 then
+                if (currentLevel > 124) and (maxLevel == 150) then
+                    table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
+                elseif (currentLevel < 125) then
+                    table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
+                else
+                    table.insert(know, coloredName)
+                end
+    		else
+            	DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
+    				local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
+    				local skillName = DataStore:GetResultItemName(recipeID)
+    
+    				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
+    					isKnownByChar = true
+    					return true	-- stop iteration
+    				end
+    			end)
+    			
+    			if isKnownByChar then
+    				table.insert(know, coloredName)
+    			else
+    				if currentLevel > 0 then
+    					if currentLevel < recipeLevel then
+    						table.insert(willLearn, format("%s |r(%d)", coloredName, currentLevel))
+    					else
+    						table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
+    					end
+    				end
+    			end
+            end
 		end
 	end
 	
