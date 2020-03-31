@@ -243,9 +243,9 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
             local coloredName = DataStore:GetColoredCharacterName(character)
             local currentLevel, maxLevel = DataStore:GetProfessionInfo(DataStore:GetProfession(character, professionName))
             
-            -- Is the recipe Expert First Aid - Under Wraps?
+            -- Is the recipe Expert First Aid - Under Wraps or Expert Cookbook or the fishing book?
             local itemID = GetItemInfoInstant(link)
-            if itemID == 16084 then
+            if (itemID == 16084) or (itemID == 16072) or (itemID == 16083) then
                 if (currentLevel > 124) and (maxLevel == 150) then
                     table.insert(couldLearn, format("%s |r(%d)", coloredName, currentLevel))
                 elseif (currentLevel < 125) then
