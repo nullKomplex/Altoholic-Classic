@@ -77,6 +77,12 @@ local SPELL_ID_COOKING = 2550
 local SPELL_ID_FIRSTAID = 3273
 local SPELL_ID_FISHING = 7733
 
+-- alternate select function that returns only the variable at index
+local function s(index, ...)
+    local arg = select(index, ...)
+    return arg
+end
+
 local ProfessionSpellID = {
 	-- GetSpellInfo with this value will return localized spell name
 	["Alchemy"] = SPELL_ID_ALCHEMY,
@@ -92,26 +98,34 @@ local ProfessionSpellID = {
 	["Cooking"] = SPELL_ID_COOKING,
     ["First Aid"] = SPELL_ID_FIRSTAID,
 	["Fishing"] = SPELL_ID_FISHING,
-    -- Edit 2020/03/26: Adding localised versions to this table rather than finding a way to reverse-lookup language translations
-    -- Might cause errors if the language hasn't been fully localised
+    -- Edit 2020/03/26: Alternate names, some languages have two different names used for the same profession
+    [s(1, GetSpellInfo(SPELL_ID_ALCHEMY))] = SPELL_ID_ALCHEMY,
+	[s(1, GetSpellInfo(SPELL_ID_BLACKSMITHING))] = SPELL_ID_BLACKSMITHING,
+	[s(1, GetSpellInfo(SPELL_ID_ENCHANTING))] = SPELL_ID_ENCHANTING,
+	[s(1, GetSpellInfo(SPELL_ID_ENGINEERING))] = SPELL_ID_ENGINEERING,
+	[s(1, GetSpellInfo(SPELL_ID_LEATHERWORKING))] = SPELL_ID_LEATHERWORKING,
+	[s(1, GetSpellInfo(SPELL_ID_TAILORING))] = SPELL_ID_TAILORING,
+	[s(1, GetSpellInfo(SPELL_ID_SKINNING))] = SPELL_ID_SKINNING,
+	[s(1, GetSpellInfo(SPELL_ID_MINING))] = SPELL_ID_MINING,
+	[s(1, GetSpellInfo(SPELL_ID_HERBALISM))] = SPELL_ID_HERBALISM,
+	[s(1, GetSpellInfo(SPELL_ID_SMELTING))] = SPELL_ID_SMELTING,
+	[s(1, GetSpellInfo(SPELL_ID_COOKING))] = SPELL_ID_COOKING,
+    [s(1, GetSpellInfo(SPELL_ID_FIRSTAID))] = SPELL_ID_FIRSTAID,
+	[s(1, GetSpellInfo(SPELL_ID_FISHING))] = SPELL_ID_FISHING,
     [L["Alchemy"]] = SPELL_ID_ALCHEMY,
-	[L["Blacksmithing"]] = SPELL_ID_BLACKSMITHING,
-	[L["Enchanting"]] = SPELL_ID_ENCHANTING,
-	[L["Engineering"]] = SPELL_ID_ENGINEERING,
-	[L["Leatherworking"]] = SPELL_ID_LEATHERWORKING,
-	[L["Tailoring"]] = SPELL_ID_TAILORING,
-	[L["Skinning"]] = SPELL_ID_SKINNING,
-	[L["Mining"]] = SPELL_ID_MINING,
-	[L["Herbalism"]] = SPELL_ID_HERBALISM,
-	[L["Smelting"]] = SPELL_ID_SMELTING,
-	[L["Cooking"]] = SPELL_ID_COOKING,
+    [L["Blacksmithing"]] = SPELL_ID_BLACKSMITHING,
+    [L["Enchanting"]] = SPELL_ID_ENCHANTING,
+    [L["Engineering"]] = SPELL_ID_ENGINEERING,
+    [L["Leatherworking"]] = SPELL_ID_LEATHERWORKING,
+    [L["Tailoring"]] = SPELL_ID_TAILORING,
+    [L["Skinning"]] = SPELL_ID_SKINNING,
+    [L["Mining"]] = SPELL_ID_MINING,
+    [L["Herbalism"]] = SPELL_ID_HERBALISM,
+    [L["Smelting"]] = SPELL_ID_SMELTING,
+    [L["Cooking"]] = SPELL_ID_COOKING,
     [L["First Aid"]] = SPELL_ID_FIRSTAID,
-	[L["Fishing"]] = SPELL_ID_FISHING,
+    [L["Fishing"]] = SPELL_ID_FISHING, 
 }
-
--- French seems to have different names for first aid
-local firstaidAlternateName = GetSpellInfo(SPELL_ID_FIRSTAID)
-ProfessionSpellID[firstaidAlternateName] = SPELL_ID_FIRSTAID
 
 -- *** Utility functions ***
 local bAnd = bit.band
@@ -452,10 +466,10 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     elseif (profName == L["First Aid"]) then    
         index = 4
         profName = GetSpellInfo(SPELL_ID_FIRSTAID)
-    elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") then
+    elseif (char["Prof"..1] == profName) or (char["Prof"..1] == nil) or (char["Prof"..1] == "UNKNOWN") or (char["Prof"..1] == L["First Aid"]) then
         index = 1
         mainIndex = true
-    elseif (char["Prof"..2] == profName) or (char["Prof"..2] == nil) or (char["Prof"..2] == "UNKNOWN") then
+    elseif (char["Prof"..2] == profName) or (char["Prof"..2] == nil) or (char["Prof"..2] == "UNKNOWN") or (char["Prof"..2] == L["First Aid"]) then
         index = 2
         mainIndex = true
     else
