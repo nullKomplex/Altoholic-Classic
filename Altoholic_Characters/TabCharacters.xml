@@ -51,17 +51,9 @@
 							<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
 						</KeyValues>
 					</Button>
-					<Button parentKey="TalentsIcon" inherits="AltoTabCharactersIconTemplate" id="4">
-						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
-						</Anchors>
-						<KeyValues>
-							<KeyValue key="iconFile" value="Interface\Icons\Ability_Marksmanship.blp" />
-						</KeyValues>
-					</Button>
 					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
 						<Anchors>
-							<Anchor point="TOPLEFT" relativeKey="$parent.TalentsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
+							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
 						<KeyValues>
 							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Coin_01" />
