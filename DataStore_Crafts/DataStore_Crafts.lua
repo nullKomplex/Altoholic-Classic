@@ -127,6 +127,28 @@ local ProfessionSpellID = {
     [L["Fishing"]] = SPELL_ID_FISHING, 
 }
 
+-- Made this to solve some localisation issues
+function DataStore:ConvertProfessionSecondaryNameToPrimary(spellName)
+    local reverseLocalProfTable = {    
+        [SPELL_ID_ALCHEMY] = L["Alchemy"],
+        [SPELL_ID_BLACKSMITHING] = L["Blacksmithing"],
+        [SPELL_ID_ENCHANTING] = L["Enchanting"],
+        [SPELL_ID_ENGINEERING] = L["Engineering"],
+        [SPELL_ID_LEATHERWORKING] = L["Leatherworking"],
+        [SPELL_ID_TAILORING] = L["Tailoring"],
+        [SPELL_ID_SKINNING] = L["Skinning"],
+        [SPELL_ID_MINING] = L["Mining"],
+        [SPELL_ID_HERBALISM] = L["Herbalism"],
+        [SPELL_ID_SMELTING] = L["Smelting"],
+        [SPELL_ID_COOKING] = L["Cooking"],
+        [SPELL_ID_FIRSTAID] = L["First Aid"],
+        [SPELL_ID_FISHING] = L["Fishing"],
+    }
+
+    local spellID = ProfessionSpellID[spellName]    
+    return reverseLocalProfTable[spellID]
+end
+
 -- *** Utility functions ***
 local bAnd = bit.band
 local LShift = bit.lshift
