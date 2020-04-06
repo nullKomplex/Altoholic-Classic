@@ -51,7 +51,7 @@
 							<KeyValue key="iconFile" value="Interface\LFGFrame\LFGIcon-Quest" />
 						</KeyValues>
 					</Button>
-					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="5">
+					<Button parentKey="AuctionIcon" inherits="AltoTabCharactersIconTemplate" id="4">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeKey="$parent.QuestsIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
@@ -59,7 +59,7 @@
 							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Coin_01" />
 						</KeyValues>
 					</Button>
-					<Button parentKey="MailIcon" inherits="AltoTabCharactersIconTemplate" id="6">
+					<Button parentKey="MailIcon" inherits="AltoTabCharactersIconTemplate" id="5">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeKey="$parent.AuctionIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
@@ -75,7 +75,7 @@
 							<KeyValue key="iconFile" value="Interface\Icons\INV_Misc_Book_09" />
 						</KeyValues>
 					</Button>-->
-					<Button parentKey="ProfessionsIcon" inherits="AltoTabCharactersIconTemplate" id="8">
+					<Button parentKey="ProfessionsIcon" inherits="AltoTabCharactersIconTemplate" id="6">
 						<Anchors>
 							<Anchor point="TOPLEFT" relativeKey="$parent.MailIcon" relativePoint="TOPRIGHT" x="5" y="0" />
 						</Anchors>
