@@ -56,7 +56,6 @@ local ReferenceDB_Defaults = {
 	global = {
 		Reagents = {},		-- [recipeID] = "itemID1,count1 | itemID2,count2 | ..."
 		ResultItems = {},	-- [recipeID] = itemID
-        ResultItemNames = {}, -- [recipeID] = itemName
 		Recipes = {},		-- [recipeID] = 
 		RecipeCategoryNames = {},		-- [categoryID] = name
 	}
@@ -282,18 +281,13 @@ local function ScanRecipeCategories(profession, useCraftInstead)
 	end
 end
 
-local function GenerateSpellID(recipeID, professionName)
-    -- first 14 bits: professionID
-    -- remaining bits: recipe ID
-    return ProfessionSpellID[professionName] + LShift(recipeID, 14)
-end
-
---local function RetrieveSpellIDFromHash(hash)
---    return RShift(hash, 14)
---end
-
 local function GetItemNameFromLink(link)
     return GetItemInfo(link)
+end
+
+-- Because theres no locale value for this in Altoholic, so doing an ugly workaround that I hate.
+function DataStore:GetLocaleEnchantingName()
+    return L["Enchanting"]
 end
 
 local function ScanRecipes(useCraftInstead)
@@ -327,7 +321,6 @@ local function ScanRecipes(useCraftInstead)
 	wipe(crafts)
     
 	local resultItems = addon.ref.global.ResultItems
-    local resultItemNames = addon.ref.global.ResultItemNames
 	local reagentsDB = addon.ref.global.Reagents
 	
 	addon.ref.global.Recipes[tradeskillName] = addon.ref.global.Recipes[tradeskillName] or {}
@@ -345,7 +338,6 @@ local function ScanRecipes(useCraftInstead)
     end    
     
 	for recipeIndex = firstTradeSkillNum, numRecipes do
-        local recipeID = GenerateSpellID(recipeIndex, profession.Name)
         local skillType, itemLink, itemName
         if (useCraftInstead) then
             skillType = select(3, GetCraftInfo(recipeIndex))
@@ -353,11 +345,32 @@ local function ScanRecipes(useCraftInstead)
             itemName = GetCraftInfo(recipeIndex)
         else
             skillType = select(2, GetTradeSkillInfo(recipeIndex))
-            itemLink = GetTradeSkillItemLink(recipeIndex) --C_TradeSkillUI.GetRecipeItemLink(recipeID)
+            itemLink = GetTradeSkillItemLink(recipeIndex)
             if (itemLink) then  --exclude headers
                 itemName = GetItemNameFromLink(itemLink)
             end
         end
+        
+        local recipeID = nil
+        -- Is the recipe already stored?
+        for k,v in pairs(resultItems) do
+            if type(v) == "table" then
+                if (v.name == itemName) then
+                    recipeID = k
+                end
+            end
+        end
+        
+        if not recipeID then
+            -- find a new recipeID that isn't already taken
+            local i = 1
+            while (resultItems[i] ~= nil) do
+                i = i + 1
+            end
+            recipeID = i
+            resultItems[recipeID] = {}
+        end
+        
 		if (skillType == "header") then
             categoryID = recipeIndex
         else
@@ -368,7 +381,7 @@ local function ScanRecipes(useCraftInstead)
             if (useCraftInstead) then
                 numReagents = GetCraftNumReagents(recipeIndex)
             else
-                numReagents = GetTradeSkillNumReagents(recipeIndex) --C_TradeSkillUI.GetRecipeNumReagents(recipeID)
+                numReagents = GetTradeSkillNumReagents(recipeIndex)
             end
     		for reagentIndex = 1, numReagents do
                 local count, link
@@ -376,8 +389,8 @@ local function ScanRecipes(useCraftInstead)
     			     _, _, count = GetCraftReagentInfo(recipeIndex, reagentIndex)
     			     link = GetCraftReagentItemLink(recipeIndex, reagentIndex) 
                 else
-                     _, _, count = GetTradeSkillReagentInfo(recipeIndex, reagentIndex) --C_TradeSkillUI.GetRecipeReagentInfo(recipeID, reagentIndex)
-    			     link = GetTradeSkillReagentItemLink(recipeIndex, reagentIndex) --C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+                     _, _, count = GetTradeSkillReagentInfo(recipeIndex, reagentIndex)
+    			     link = GetTradeSkillReagentItemLink(recipeIndex, reagentIndex)
     			end
                 
     			if link and count then
@@ -395,46 +408,35 @@ local function ScanRecipes(useCraftInstead)
                 -- there does not seem to be an equivalent Craft function to GetTradeSkillNumMade. Presuming its always 1 for those windows. I mean its enchanting so it must be.
     			local maxMade = 1
                 if (not useCraftInstead) then
-                    _, maxMade = GetTradeSkillNumMade(recipeIndex) --C_TradeSkillUI.GetRecipeNumItemsProduced(recipeID)
+                    _, maxMade = GetTradeSkillNumMade(recipeIndex)
                 end
     			if maxMade > 255 then maxMade = 255 end
     			          
     			local itemID = tonumber(itemLink:match("item:(%d+)"))
                           
     			if itemID then
-    				resultItems[recipeID] = maxMade + LShift(itemID, 8) 	-- bits 0-7 = maxMade, bits 8+ = item id
-                    resultItemNames[recipeID] = itemName
+                    resultItems[recipeID].maxMade = maxMade
+                    resultItems[recipeID].itemID = itemID
+                    resultItems[recipeID].name = itemName
                 elseif itemName then
-                    resultItemNames[recipeID] = itemName
+                    resultItems[recipeID] = {["name"] = itemName}
     			end
     		end
-    		
-    		-- Get recipe info
-    		--local info = C_TradeSkillUI.GetRecipeInfo(recipeID)
-            -- only one rank in Classic
-    		local recipeRank = 1;
-            local totalRanks = 1;
-            local highestRankID = 1;
-    		
-    		-- if we are rank 2 out of 3 for a recipe, do not save rank 1 and rank 3
-    		--if recipeID == highestRankID then
-    		
-                -- Classic: The actual spellID of the recipeID cannot be retrieved by addons, so we have to convert the recipeID into something we can store that will still be unique
-    			-- save the recipe
-    			crafts[categoryID] = crafts[categoryID] or {}
-    			table.insert(crafts[categoryID], 
-    				SkillTypeToColor[skillType]
-                    -- Classic: you can't see unlearned recipes in the tradeskill window 
-    			    + LShift(1, 2) 	-- bit 2 => 1 = learned, 0 = not learned     --[[(info.learned == true) and 1 or 0]]--
-    				+ LShift(recipeRank, 3)		-- bits 3-4 = recipe rank
-    				+ LShift(totalRanks, 5)		-- bits 5-6 = max rank
-    				+ LShift(recipeID, 7))		-- bits 7+ = recipeID
-    		--end
+    		   		
+            -- Classic: The actual spellID of the recipeID cannot be retrieved by addons, so we have to convert the recipeID into something we can store that will still be unique
+  			-- save the recipe
+  			crafts[categoryID] = crafts[categoryID] or {}
+  			table.insert(crafts[categoryID], 
+                  {
+                      ["color"] = SkillTypeToColor[skillType],
+                      ["isLearned"] = true,
+                      ["recipeID"] = recipeID
+                  })
     		
     		-- scan cooldown
     		local cooldown = nil
             if (not useCraftInstead) then
-                cooldown = GetTradeSkillCooldown(recipeIndex)--C_TradeSkillUI.GetRecipeCooldown(recipeID)
+                cooldown = GetTradeSkillCooldown(recipeIndex)
             end
     		if cooldown then
     			-- ex: "Hexweave Cloth|86220|1533539676" expire at "now + cooldown"
@@ -691,15 +693,21 @@ local function _GetNumRecipeCategorySubItems(profession, index)
 end
 
 local function _GetRecipeInfo(recipeData)
-	local color = bAnd(recipeData, 3)			-- Bits 0-1 = color
-	local isLearned = TestBit(recipeData, 2) 	-- Bit 2 = isLearned
-	local recipeRank = bAnd(RShift(recipeData, 3), 3)		-- bits 3-4 = recipe rank
-	local totalRanks = bAnd(RShift(recipeData, 5), 3)		-- bits 5-6 = max rank
-	-- local minMade = bAnd(RShift(recipeData, 7), 255)		-- bits 7-14 = minMade (8 bits)
-	-- local maxMade = bAnd(RShift(recipeData, 15), 255)		-- bits 15-22 = maxMade (8 bits)
-	local recipeID = RShift(recipeData, 7)		-- bits 7+ = recipeID
-	
-	return color, recipeID, isLearned, recipeRank, totalRanks, minMade, maxMade
+    if type(recipeData) == "table" then
+        local color = recipeData.color
+        local isLearned = recipeData.isLearned
+        local recipeID = recipeData.recipeID
+        
+        return color, recipeID, isLearned
+    else
+    	local color = bAnd(recipeData, 3)			-- Bits 0-1 = color
+    	local isLearned = TestBit(recipeData, 2) 	-- Bit 2 = isLearned
+    	local recipeRank = bAnd(RShift(recipeData, 3), 3)		-- bits 3-4 = recipe rank
+    	local totalRanks = bAnd(RShift(recipeData, 5), 3)		-- bits 5-6 = max rank
+    	local recipeID = RShift(recipeData, 7)		-- bits 7+ = recipeID
+    	
+    	return color, recipeID, isLearned, recipeRank, totalRanks, minMade, maxMade
+    end
 end
 
 -- Iterate through all recipes, and callback a function for each of them
@@ -785,7 +793,7 @@ local function _IsCraftKnown(profession, spellID)
 	_IterateRecipes(profession, 0, 0, function(recipeData)
 		local _, recipeID, isLearned = _GetRecipeInfo(recipeData) 
 
-		if addon.ref.global.ResultItemNames[recipeID] == spellName and isLearned then
+		if addon.ref.global.ResultItems[recipeID].name == spellName and isLearned then
             isKnown = true
 			return true	-- stop iteration
 		end
@@ -859,7 +867,7 @@ local function _GetCraftReagents(recipeID)
 end
 
 local function _GetResultItemName(recipeID)
-    return addon.ref.global.ResultItemNames[recipeID]
+    return addon.ref.global.ResultItems[recipeID].name
 end
 
 local function _GetCraftResultItem(recipeID)
@@ -867,8 +875,13 @@ local function _GetCraftResultItem(recipeID)
 	local itemID, maxMade
 	
 	if itemData then
-		maxMade = bAnd(itemData, 255)		-- bits 0-7 = maxMade (8 bits)
-		itemID = RShift(itemData, 8)		-- bits 8+ = recipeID
+        if type(itemData) == "table" then
+            maxMade = itemData.maxMade
+            itemID = itemData.itemID
+        else
+    		maxMade = bAnd(itemData, 255)		-- bits 0-7 = maxMade (8 bits)
+    		itemID = RShift(itemData, 8)		-- bits 8+ = recipeID
+        end
 	end
 
 	return itemID, maxMade
