@@ -257,11 +257,27 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
             	DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
     				local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
     				local skillName = DataStore:GetResultItemName(recipeID)
-    
+                    
+                    -- is the recipe Enchant Weapon - Healing Power or Enchant Weapon - Spell Power?
+                    -- These two recipes have a bug: they have an extra space between "Enchant" and "Weapon"
+                    -- I don't know if this is a Classic bug or if it existed in Vanilla
+                    
+                    if (itemID == 18260) then
+                        -- Healing power
+                        -- I don't do regex, found this code snippet on: https://scripters.boards.net/thread/85/remove-multiple-spaces
+                        skillName = skillName:gsub(" +"," ")
+                    end
+                    
+                    if (itemID == 18259) then
+                        -- Spell power
+                        skillName:gsub(" +"," ")
+                    end
+                    
     				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
     					isKnownByChar = true
     					return true	-- stop iteration
     				end
+                    return true
     			end)
     			
     			if isKnownByChar then
