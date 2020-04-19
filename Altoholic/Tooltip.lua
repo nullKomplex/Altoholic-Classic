@@ -277,7 +277,6 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
     					isKnownByChar = true
     					return true	-- stop iteration
     				end
-                    return true
     			end)
     			
     			if isKnownByChar then
