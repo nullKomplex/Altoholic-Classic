@@ -793,7 +793,7 @@ local function _IsCraftKnown(profession, spellID)
 	_IterateRecipes(profession, 0, 0, function(recipeData)
 		local _, recipeID, isLearned = _GetRecipeInfo(recipeData) 
 
-		if addon.ref.global.ResultItems[recipeID].name == spellName and isLearned then
+		if (type(addon.ref.global.ResultItems[recipeID]) == "table") and (addon.ref.global.ResultItems[recipeID].name == spellName) and isLearned then
             isKnown = true
 			return true	-- stop iteration
 		end
