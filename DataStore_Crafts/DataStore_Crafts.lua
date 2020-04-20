@@ -788,6 +788,11 @@ local function _IsCraftKnown(profession, spellID)
 	local isKnown = false
     local spellName = GetSpellInfo(spellID)
     
+    -- workaround for Mechanical Squirrel --> Mechanical Squirrel Box
+    if (spellID == 3928) then
+        spellName = GetItemInfo(4401)
+    end
+    
     if (not profession) then return false end                
          
 	_IterateRecipes(profession, 0, 0, function(recipeData)

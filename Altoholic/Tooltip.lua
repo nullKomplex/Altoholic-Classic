@@ -254,6 +254,11 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
                     table.insert(know, coloredName)
                 end
     		else
+                -- Special case for Mechanical Squirrel: get the name of the item it creates instead
+                if (itemID == 4408) then
+                    craftName = GetItemInfo(4401)
+                end
+            
             	DataStore:IterateRecipes(profession, 0, 0, function(recipeData)
     				local _, recipeID, isLearned = DataStore:GetRecipeInfo(recipeData)
     				local skillName = DataStore:GetResultItemName(recipeID)
@@ -272,7 +277,7 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
                         -- Spell power
                         skillName:gsub(" +"," ")
                     end
-                    
+
     				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
     					isKnownByChar = true
     					return true	-- stop iteration
