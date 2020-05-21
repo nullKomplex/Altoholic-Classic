@@ -6,4 +6,4 @@ The license will remain 'All Rights Reserved', but I hereby allow code modificat
 The add-on must remain free of use, in accordance with Blizzard's own TOS.
 Future updates shall also preserve all references/credits to the original author in every file when it is currently contained.
 
-The changes I have made use the following licence: My alterations and additions are not to be shared or distributed anywhere without my (Teelo) express permission.
+The changes I have made use the following licence: My alterations and additions are not to be shared or distributed anywhere outside Github without my (Teelo) express permission.
