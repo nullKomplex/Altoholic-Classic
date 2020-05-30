@@ -9,6 +9,9 @@ local THIS_REALM = GetRealmName()
 
 local storedLink = nil
 
+-- Bugfix: make the game cache store this item on load, so we don't get a nil error if the recipe is moused over later on
+GetItemInfo(4401)
+
 local GatheringNodes = {			-- Add herb/ore possession info to Plants/Mines, thanks to Tempus on wowace for gathering this.
 
 	-- Mining nodes
