@@ -277,7 +277,6 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
                         -- Spell power
                         skillName:gsub(" +"," ")
                     end
-
     				if (skillName) and (string.lower(skillName) == string.lower(craftName)) and isLearned then
     					isKnownByChar = true
     					return true	-- stop iteration
