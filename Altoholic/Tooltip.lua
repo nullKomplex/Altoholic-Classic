@@ -551,18 +551,10 @@ function addon:InitTooltip()
 			function(self,type,index) storedLink = GetQuestLogItemLink(type,index) end,
 			nil
 		},
-		SetRecipeResultItem = {
-			function(self, recipeID)
-				if recipeID then
-					storedLink = C_TradeSkillUI.GetRecipeItemLink(recipeID)
-				end
-			end,
-			nil
-		},
-		SetRecipeReagentItem = {
+		SetCraftItem = {
 			function(self, recipeID, reagentIndex)
 				if recipeID and reagentIndex then
-					storedLink = C_TradeSkillUI.GetRecipeReagentItemLink(recipeID, reagentIndex)
+					storedLink = GetCraftReagentItemLink(recipeID, reagentIndex)
 				end
 			end,
 			nil
