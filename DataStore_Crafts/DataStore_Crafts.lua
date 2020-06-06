@@ -256,7 +256,7 @@ end
 
 local function ScanRecipeCategories(profession, useCraftInstead)
     if (not useCraftInstead) and (#GetTradeSkillHeaders() == 0) then return end
-    
+
 	-- clear storage
 	profession.Categories = profession.Categories or {}
 	wipe(profession.Categories)
@@ -300,7 +300,7 @@ local function ScanRecipes(useCraftInstead)
     
     -- Update 2020/03/07: code gets to here when Poisons levels up, adding a catch to make it exit if poisons craft window is open             
 	if (not tradeskillName) or (tradeskillName == "UNKNOWN") or (tradeskillName == L["Poisons"]) then return end	-- may happen after a patch, or under extreme lag, so do not save anything to the db !
-                                   
+                               
 	local char = addon.ThisCharacter
 	local profession = char.Professions[tradeskillName]
     profession.Name = tradeskillName

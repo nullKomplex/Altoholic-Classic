@@ -1,5 +1,5 @@
 ## Interface: 11304
-## Title: Altoholic Classic by |cFF69CCF0Thaoky|r - Fork by Teelo
+## Title: Altoholic Classic - Fork by Teelo
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 
 ## Notes: Provides information about your alts

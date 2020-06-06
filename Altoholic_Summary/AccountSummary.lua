@@ -939,12 +939,12 @@ columns["Prof1"] = {
 	OnEnter = function(frame)
 			local character = frame:GetParent().character
 			local _, _, _, skillName = DataStore:GetProfession1(character)
-			Tradeskill_OnEnter(frame, skillName, true)
+			Tradeskill_OnEnter(frame, DataStore:ConvertProfessionSecondaryNameToPrimary(skillName), true)
 		end,
 	OnClick = function(frame, button)
 			local character = frame:GetParent().character
 			local _, _, _, skillName = DataStore:GetProfession1(character)
-			Tradeskill_OnClick(frame, skillName)
+			Tradeskill_OnClick(frame, DataStore:ConvertProfessionSecondaryNameToPrimary(skillName))
 		end,
 }
 
@@ -1051,7 +1051,7 @@ columns["ProfFishing"] = {
 			return format("%s%s", GetSkillRankColor(rank), rank)
 		end,
 	OnEnter = function(frame)
-			Tradeskill_OnEnter(frame, "Fishing", true)
+			Tradeskill_OnEnter(frame, L["Fishing"], true)
 		end,
 }
 
