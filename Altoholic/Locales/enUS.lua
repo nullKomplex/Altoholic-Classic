@@ -807,4 +807,8 @@ L[ [=[Your confirmation will still be required any time someone requests your in
 ]=] ] = true
 L["Zelemar the Wrathful"] = true
 L["Zone"] = true
-
+L["will be returned upon expiry"] = true
+L["Closest return in"] = true
+L["Closest deletion in"] = true
+local colors = addon.Colors
+L["MAIL_WILL_BE_DELETED_PATTERN"] = colors.green.."%d "..colors.white.."will be "..colors.red.."deleted"..colors.white.." upon expiry"
