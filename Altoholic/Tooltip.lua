@@ -308,7 +308,27 @@ function addon:GetRecipeOwners(professionName, link, recipeLevel)
             end
 		end
 	end
-	
+    
+    local function sortStripFormatting(a, b)
+        local escapes = {
+            ["|c%x%x%x%x%x%x%x%x"] = "", -- color start
+            ["|r"] = "", -- color end
+            ["|H.-|h(.-)|h"] = "%1", -- links
+            ["|T.-|t"] = "", -- textures
+            ["{.-}"] = "", -- raid target icons
+        }
+        local function unescape(str)
+            for k, v in pairs(escapes) do
+                str = gsub(str, k, v)
+            end
+            return str
+        end
+        return (unescape(a) < unescape(b))
+    end
+    
+    table.sort(know, sortStripFormatting)
+    table.sort(couldLearn, sortStripFormatting)
+    table.sort(willLearn, sortStripFormatting)
 	return know, couldLearn, willLearn
 end
 
