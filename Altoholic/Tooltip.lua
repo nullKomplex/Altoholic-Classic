@@ -196,7 +196,15 @@ local function GetAccountItemCount(account, searchedID)
 	local count = 0
 
 	for _, realm in pairs(GetRealmsList()) do
-		for _, character in pairs(DataStore:GetCharacters(realm, account)) do
+        -- sort the characters in alphabetical order
+        local characters = DataStore:GetCharacters(realm, account)
+        local characterKeys = {}
+        for characterKey in pairs(characters) do
+            table.insert(characterKeys, characterKey)
+        end
+        table.sort(characterKeys)
+		for _, characterKey in ipairs(characterKeys) do
+            local character = characters[characterKey]
 			if addon:GetOption("UI.Tooltip.ShowCrossFactionCount") then
 				count = count + GetCharacterItemCount(character, searchedID)
 			else
@@ -455,7 +463,16 @@ local function OnGameTooltipShow(tooltip, ...)
 	GameTooltip:Show()
 end
 
-local function OnGameTooltipUpdate(tooltip, ...)
+local updateTooltip = TOOLTIP_UPDATE_TIME
+
+local function OnGameTooltipUpdate(tooltip, elapsed)
+	-- Only update every TOOLTIP_UPDATE_TIME seconds
+	updateTooltip = updateTooltip - elapsed;
+	if ( updateTooltip > 0 ) then
+		return;
+	end
+	updateTooltip = TOOLTIP_UPDATE_TIME;
+
     if not gatheringNodeWasShown then
         ShowGatheringNodeCounters()
         GameTooltip:Show()
