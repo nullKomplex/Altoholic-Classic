@@ -526,29 +526,29 @@ local function OnGameTooltipCleared(tooltip, ...)
     gatheringNodeWasShown = nil
 end
 
-local function Hook_SetCurrencyToken(self,index,...)
-	if not index then return end
-
-	local currency = GetCurrencyListInfo(index)
-	if not currency then return end
-
-	GameTooltip:AddLine(" ",1,1,1);
-
-	local total = 0
-	for _, character in pairs(DataStore:GetCharacters()) do
-		local _, _, count = DataStore:GetCurrencyInfoByName(character, currency)
-		if count and count > 0 then
-			GameTooltip:AddDoubleLine(DataStore:GetColoredCharacterName(character),  colors.teal .. count);
-			total = total + count
-		end
-		
-	end
+-- This should only ever fire when the Enchanting UI is open
+local function Hook_GameTooltip_SetCraftSpell(tooltip, craftSelectionIndex)
+    if GetCraftName() ~= DataStore:GetLocaleEnchantingName() then return end
+    
+    if not cachedRecipeOwners then 
+        local know, couldLearn = addon:GetRecipeOwners(DataStore:GetLocaleEnchantingName(), GetCraftItemLink(craftSelectionIndex), 1)
+    	
+    	local lines = {}
+    	if #know > 0 then
+    		table.insert(lines, colors.teal .. L["Already known by "] ..": ".. colors.white.. table.concat(know, ", ") .."\n")
+    	end
+    	
+    	if #couldLearn > 0 then
+    		table.insert(lines, colors.yellow .. "Not yet known by " ..": ".. colors.white.. table.concat(couldLearn, ", ") .."\n")
+    	end
 	
-	if total > 0 then
-		GameTooltip:AddLine(" ",1,1,1);
+	    cachedRecipeOwners = table.concat(lines, "\n")
+    end
+    
+    if cachedRecipeOwners then
+		tooltip:AddLine(" ",1,1,1);	
+		tooltip:AddLine(cachedRecipeOwners, 1, 1, 1, 1);
 	end
-	GameTooltip:AddLine(format("%s: %s", colors.gold..L["Total owned"], colors.teal..total ) ,1,1,1);
-	GameTooltip:Show()
 end
 
 -- ** ItemRefTooltip hooks **
@@ -587,10 +587,6 @@ end
 function addon:InitTooltip()
 	-- hooking config, format: MethodName = { prehook, posthook }
 	local tooltipMethodHooks = {
-		SetCurrencyToken = {
-			nil,
-			Hook_SetCurrencyToken
-		},
 		SetQuestItem = {
 			function(self,type,index) storedLink = GetQuestItemLink(type,index) end,
 			nil
@@ -618,6 +614,7 @@ function addon:InitTooltip()
     GameTooltip:HookScript("OnUpdate", OnGameTooltipUpdate)
 	GameTooltip:HookScript("OnTooltipSetItem", OnGameTooltipSetItem)
 	GameTooltip:HookScript("OnTooltipCleared", OnGameTooltipCleared)
+    hooksecurefunc(GameTooltip, "SetCraftSpell", Hook_GameTooltip_SetCraftSpell)
 
 	ItemRefTooltip:HookScript("OnShow", OnItemRefTooltipShow)
 	ItemRefTooltip:HookScript("OnTooltipSetItem", OnItemRefTooltipSetItem)
