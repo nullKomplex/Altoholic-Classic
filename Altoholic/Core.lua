@@ -98,6 +98,7 @@ local AddonDB_Defaults = {
 			["UI.Tabs.Search.IncludeNoMinLevel"] = true,				-- include items with no minimum level
 			["UI.Tabs.Search.IncludeMailboxItems"] = true,
 			["UI.Tabs.Search.IncludeKnownRecipes"] = true,
+            ["UI.Tabs.Search.IncludeAuctionHouseListings"] = true,
 			["UI.Tabs.Search.SortAscending"] = true,							-- ascending or descending sort order
 			TotalLoots = 0,					-- make at least one search in the loot tables to initialize these values
 			UnknownLoots = 0,
