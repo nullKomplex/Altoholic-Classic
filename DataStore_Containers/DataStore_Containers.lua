@@ -2,11 +2,7 @@
 Written by : Thaoky, EU-Marécages de Zangar
 June 21st, 2009
 
-This modules takes care of scanning & storing player bags, bank, & guild banks
-
-Extended services: 
-	- guild communication: at logon, sends guild bank tab info (last visit) to guildmates
-	- triggers events to manage transfers of guild bank tabs
+This modules takes care of scanning & storing player bags + bank
 --]]
 if not DataStore then return end
 
@@ -21,28 +17,6 @@ local MAIN_BANK_SLOTS = 100		-- bag id of the 28 main bank slots
 
 local AddonDB_Defaults = {
 	global = {
-		Guilds = {
-			['*'] = {			-- ["Account.Realm.Name"] 
-				money = nil,
-				faction = nil,
-				Tabs = {
-					['*'] = {		-- tabID = table index [1] to [6]
-						name = nil,
-						icon = nil,
-						visitedBy = "",
-						ClientTime = 0,				-- since epoch
-						ClientDate = nil,
-						ClientHour = nil,
-						ClientMinute = nil,
-						ServerHour = nil,
-						ServerMinute = nil,
-						ids = {},
-						links = {},
-						counts = {}
-					}
-				},
-			}
-		},
 		Characters = {
 			['*'] = {					-- ["Account.Realm.Name"] 
 				lastUpdate = nil,
@@ -90,18 +64,6 @@ local DBUpdaters = {
 						dest[k] = v
 					end
 				end
-			end
-		
-			-- This function moves guild bank tabs from the "Guilds/Guildkey" level to the "Guilds/Guildkey/Tabs" sub-table
-			for guildKey, guildTable in pairs(addon.db.global.Guilds) do
-				for tabID = 1, 8 do		-- convert the 8 tabs
-					if type(guildTable[tabID]) == "table" then
-						CopyTable(guildTable[tabID], guildTable.Tabs[tabID])
-						wipe(guildTable[tabID])
-						guildTable[tabID] = nil						
-					end
-				end
-				guildTable.money = 0
 			end
 		end,
 }
@@ -182,7 +144,7 @@ local function ScanContainer(bagID, containerType)
 	local Container = ContainerTypes[containerType]
 	
 	local bag = addon.ThisCharacter.Containers["Bag" .. bagID]
-	wipe(bag.cooldowns)		-- does not exist for a guild bank
+	wipe(bag.cooldowns)
 	wipe(bag.ids)				-- clean existing bag data
 	wipe(bag.counts)
 	wipe(bag.links)
@@ -193,7 +155,7 @@ local function ScanContainer(bagID, containerType)
 	bag.size = Container:GetSize(bagID)
 	bag.freeslots, bag.bagtype = Container:GetFreeSlots(bagID)
 	
-	-- Scan from 1 to bagsize for normal bags or guild bank tabs, but from 40 to 67 for main bank slots
+	-- Scan from 1 to bagsize for normal bags, but from 40 to 67 for main bank slots
 	-- local baseIndex = (containerType == BANK) and 39 or 0
 	local baseIndex = 0
 	local index
