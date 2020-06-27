@@ -526,12 +526,9 @@ local function OnGameTooltipCleared(tooltip, ...)
     gatheringNodeWasShown = nil
 end
 
--- This should only ever fire when the Enchanting UI is open
-local function Hook_GameTooltip_SetCraftSpell(tooltip, craftSelectionIndex)
-    if GetCraftName() ~= DataStore:GetLocaleEnchantingName() then return end
-    
+local function ListEnchantingOwners(enchantLink, tooltip)
     if not cachedRecipeOwners then 
-        local know, couldLearn = addon:GetRecipeOwners(DataStore:GetLocaleEnchantingName(), GetCraftItemLink(craftSelectionIndex), 1)
+        local know, couldLearn = addon:GetRecipeOwners(DataStore:GetLocaleEnchantingName(), enchantLink, 1)
     	
     	local lines = {}
     	if #know > 0 then
@@ -549,6 +546,13 @@ local function Hook_GameTooltip_SetCraftSpell(tooltip, craftSelectionIndex)
 		tooltip:AddLine(" ",1,1,1);	
 		tooltip:AddLine(cachedRecipeOwners, 1, 1, 1, 1);
 	end
+end
+
+-- This should only ever fire when the Enchanting UI is open
+local function Hook_GameTooltip_SetCraftSpell(tooltip, craftSelectionIndex)
+    if GetCraftName() ~= DataStore:GetLocaleEnchantingName() then return end
+    
+    ListEnchantingOwners(GetCraftItemLink(craftSelectionIndex), tooltip)
 end
 
 -- ** ItemRefTooltip hooks **
