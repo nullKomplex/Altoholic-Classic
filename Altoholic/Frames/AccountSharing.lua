@@ -778,3 +778,65 @@ function Altoholic.Sharing.AvailableContent:Clear()
 	self:BuildView()
 	self:Update()
 end
+
+--====================================
+-- Begin code for Ongoing Sharing tab
+--====================================
+local function OnContainerChangesSingleReceived(self, changes)
+    local player = addon:GetOption("UI.Sharing.Ongoing.Target")
+    if (not player) or (player == "") then return end
+
+    local serializedData = Altoholic:Serialize("OnContainerChangeSingle", changes)
+	Altoholic:SendCommMessage("AltoOngoing", serializedData, "WHISPER", player)
+end
+
+local function OngoingCommHandler(prefix, message, distribution, sender)
+	-- This handler will be used by other modules as well
+	local success, msgType, arg1, arg2, arg3 = addon:Deserialize(message)
+
+	if success and msgType then
+        if msgType == "OnContainerChangeSingle" then
+            sender = Ambiguate(sender, "short")
+            if string.lower(sender) ~= string.lower(addon:GetOption("UI.Sharing.Ongoing.Target")) then return end
+            local realm = GetRealmName()
+            
+            -- find what account the character is saved as
+            -- probably move this to a one-time call when the button is clicked
+            for accountName in pairs(DataStore:GetAccounts()) do
+                for characterName, character in pairs(DataStore:GetCharacters(realm, accountName)) do
+                    if characterName and (string.lower(characterName) == string.lower(sender)) then
+                        DataStore:ImportBagChanges(character, arg1)
+                        break
+                    end
+                end
+            end
+        end
+	end
+end
+
+local currentlySharing = false
+local function ongoingStartButtonClicked()
+    addon:SetOption("UI.Sharing.Ongoing.Target", AltoAccountSharingTab2_AccNameEditBox:GetText())
+    
+    if (not addon:GetOption("UI.Sharing.Ongoing.Target")) or (addon:GetOption("UI.Sharing.Ongoing.Target") == "") then return end
+    
+    if currentlySharing then
+        AltoAccountSharing_StartOngoingButton:SetText("Start Sharing")
+        addon:UnregisterMessage("DATASTORE_CONTAINER_CHANGES_SINGLE")
+    else
+        AltoAccountSharing_StartOngoingButton:SetText("Stop Sharing")
+        addon:RegisterMessage("DATASTORE_CONTAINER_CHANGES_SINGLE", OnContainerChangesSingleReceived)
+        addon:RegisterComm("AltoOngoing", OngoingCommHandler)
+    end
+    currentlySharing = not currentlySharing
+end
+
+local function initialization()
+    AltoAccountSharingOngoingDisclaimer:SetText("This is a work in progress. Only inventory information has been implemented. Expect there to be problems. \nYou might get errors. It might not even work. You will need to share the entire database using the other tab FIRST.\nUse this to share with ONE other character. Activate this on BOTH characters, pointing at each other.\n A different method in a different tab will be added in the future for multiple characters.")
+    AltoAccountSharingOngoingText1:SetText("Character name to share to.")
+    AltoAccountSharing_StartOngoingButton:SetText("Start Sharing")
+    AltoAccountSharing_StartOngoingButton:SetScript("OnClick", ongoingStartButtonClicked)
+    AltoAccountSharingTab2_AccNameEditBox:SetScript("OnEnterPressed", ongoingStartButtonClicked)
+    AltoAccountSharingTab2_AccNameEditBox:SetText(addon:GetOption("UI.Sharing.Ongoing.Target") or "")    
+end
+hooksecurefunc(Altoholic, "OnEnable", initialization)
