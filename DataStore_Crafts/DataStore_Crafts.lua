@@ -517,6 +517,26 @@ local function ClassicScanProfessionInfo(useCraftInstead)
     ScanTradeSkills(useCraftInstead)
 end
 
+local function checkForUnlearnedProfession()
+    local char = addon.ThisCharacter
+    for profIndex = 1, 2 do
+        local professionName = char["Prof"..profIndex]
+        if professionName then
+            local found = false
+            for i = 1, GetNumSkillLines() do
+                local skillName = GetSkillLineInfo(i)
+                if skillName == professionName then
+                    found = true
+                    break
+                end
+            end
+            if not found then
+                char["Prof"..profIndex] = nil
+            end
+        end
+    end
+end
+
 -- *** Event Handlers ***
 local function OnPlayerAlive()
     -- Grab the player's fishing and gathering skills from the Skills API
@@ -548,6 +568,8 @@ local function OnPlayerAlive()
             end
         end
     end
+    
+    checkForUnlearnedProfession()
 end
 
 local function OnTradeSkillClose()
@@ -1066,6 +1088,8 @@ function addon:OnEnable()
 	addon:RegisterEvent("CHAT_MSG_SKILL", OnChatMsgSkill)
 	addon:RegisterEvent("CHAT_MSG_SYSTEM", OnChatMsgSystem)
 	addon:RegisterEvent("TRADE_SKILL_DATA_SOURCE_CHANGED", OnDataSourceChanged)
+    
+    hooksecurefunc("AbandonSkill", checkForUnlearnedProfession)
 	
 --	addon:SetupOptions()
 	ClearExpiredProfessions()	-- automatically cleanup guild profession links that are from an older version
