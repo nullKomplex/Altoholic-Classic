@@ -1,17 +1,15 @@
 --[[	*** DataStore_Crafts ***
 Written by : Thaoky, EU-Marécages de Zangar
 June 23rd, 2009
-
-======
-2020/03/04: 
-There was an issue that has been resolved where some characters would have the same profession showing for Slot 1 and Slot 2.
-To fix this, either delete the character and re-scan it, or run this macro:
-    /run for _,c in pairs(DataStore_Crafts.Characters) do if (c.Prof1==c.Prof2) then c.Prof2=nil end end
-======
 --]]
 if not DataStore then return end
 
 local addonName = "DataStore_Crafts"
+
+if WOW_PROJECT_ID == WOW_PROJECT_MAINLINE then
+    print("DataStore error: You are trying to run the Classic version of this addon on Retail.")
+    return
+end
 
 _G[addonName] = LibStub("AceAddon-3.0"):NewAddon(addonName, "AceConsole-3.0", "AceEvent-3.0", "AceComm-3.0", "AceSerializer-3.0", "AceTimer-3.0")
 
