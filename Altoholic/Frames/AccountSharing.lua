@@ -680,27 +680,40 @@ function Altoholic.Sharing.AvailableContent:Check_OnClick(self, button)
 	
 	if not AvailableContentCheckedItems[id] then
 		AvailableContentCheckedItems[id] = true
-                
-        -- Code added 2020/03/12: purpose is to check the parent header when a child option is checked
-        -- Since I can't find a clean way to do this, using content visible to this function, I'll do it mathematically using the id instead
-        -- If the ID is between 5 and 11, check 4
-        -- If the ID is between 13 and 19, check 12
-        -- and so on
-        local idInitialOffset = 3
-        local idNumRows = 8
         
-        local idMultiple = math.floor((id - idInitialOffset) / idNumRows)
-        local idRemainder = math.fmod((id - idInitialOffset), idNumRows)
-
-        if (idRemainder > 1) and (idRemainder < (idNumRows + 1)) then 
-            AvailableContentCheckedItems[(idMultiple * idNumRows) + 1 + idInitialOffset] = true
-            local content = Altoholic.Sharing.AvailableContent
-            content:BuildView()
-	        content:Update()
-        end
+        -- if a header was just checked, check everything underneath it
+        local content = Altoholic.Sharing.AvailableContent
+    	if not content.view then return end
+    	
+    	for k, v in pairs(content.view) do			-- parse the whole view
+    		local index
+    		if v.parentID == id then
+                if v.linetype == CHARACTER_HEADER_LINE then
+                    local started = false
+                    for k2, v2 in pairs(content.view) do
+                        if started then
+                            if v2.linetype == CHARACTER_HEADER_LINE then
+                                break
+                            else
+                                AvailableContentCheckedItems[v2.parentID] = true
+                            end
+                        else
+                            if (k == k2) and (v == v2) then
+                                started = true
+                            end
+                        end
+                    end
+                end
+                break
+    		end
+    	end
 	else
 		AvailableContentCheckedItems[id] = nil
 	end
+    
+    local content = Altoholic.Sharing.AvailableContent
+    content:BuildView()
+	content:Update()
 end
 
 function Altoholic.Sharing.AvailableContent:ToggleAll(self, button)
