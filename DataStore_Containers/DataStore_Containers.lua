@@ -156,8 +156,8 @@ local function detectBagChanges(originalBag, newBag)
                 -- an item has been removed from this slot
                 table.insert(changes, {["changeType"] = "delete", ["slotID"] = slotID, ["itemID"] = itemID})
             else
-                if itemID ~= newBag.ids[slotID] then
-                    -- a different item is now in this slot
+                if (itemID ~= newBag.ids[slotID]) or (originalBag.counts[slotID] ~= newBag.counts[slotID]) then
+                    -- a different item is now in this slot OR its count changed
                     table.insert(changes, { 
                         ["changeType"] = "changed", 
                         ["slotID"] = slotID, 
@@ -234,6 +234,7 @@ local function ScanContainer(bagID, containerType)
         return nil
     else
         changes.bagID = bagID
+        return changes
     end
 end
 
@@ -336,7 +337,10 @@ local function OnPlayerBankSlotsChanged(event, slotID)
 	if (slotID >= 29) and (slotID <= 35) then
 		ScanBag(slotID - 24)		-- bagID for bank bags goes from 5 to 11, so slotID - 24
 	else
-		ScanContainer(MAIN_BANK_SLOTS, BANK)
+        local changes = ScanContainer(MAIN_BANK_SLOTS, BANK) 
+        if changes then
+            addon:SendMessage("DATASTORE_CONTAINER_CHANGES_SINGLE", changes)
+        end
 		ScanBankSlotsInfo()
 	end
 end
@@ -544,6 +548,7 @@ local function _ImportBagChanges(character, changes)
                     local existingItem = container.ids[change.slotID]
                     container.ids[change.slotID] = nil
                     container.links[change.slotID] = nil
+                    container.counts[change.slotID] = nil
                 end
             elseif change.changeType == "changed" then
                 if change.slotID and change.originalItemID and change.newItemID then
