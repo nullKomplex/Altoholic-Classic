@@ -494,6 +494,7 @@ function addon:GetSpellIcon(spellID)
 	return select(3, GetSpellInfo(spellID))
 end
 
+-- This isn't possible in Classic. Remove all references to this function.
 function addon:GetRecipeLink(spellID, profession, color)
 	local name = GetSpellInfo(spellID) or ""
 	color = color or "|cffffd000"
