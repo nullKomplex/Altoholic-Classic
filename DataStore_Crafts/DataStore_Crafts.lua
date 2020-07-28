@@ -570,17 +570,34 @@ local function OnPlayerAlive()
     checkForUnlearnedProfession()
 end
 
-local function OnTradeSkillShow()    
+local function OnTradeSkillClose()
+	addon:UnregisterEvent("TRADE_SKILL_CLOSE")
+	addon.isOpen = nil
+end
+
+local function OnTradeSkillShow()
+    -- can't link tradeskills from other players in Classic, so this line is not needed
+	-- if C_TradeSkillUI.IsTradeSkillLinked() or C_TradeSkillUI.IsTradeSkillGuild() or C_TradeSkillUI.IsNPCCrafting() then return end
+    
+    if (addon.isOpen) then return end
+              
+	addon:RegisterEvent("TRADE_SKILL_CLOSE", OnTradeSkillClose)
+	addon.isOpen = true
     ClassicScanProfessionInfo();
 end
 
 local function OnCraftClose()
 	addon:UnregisterEvent("CRAFT_CLOSE")
+	addon.isOpen = nil
 end
 
 -- This one is for Enchanting. For some reason Enchanting isn't programmed as a "tradeskill"
-local function OnCraftShow()     
+local function OnCraftShow()
+    -- To prevent issues caused by players jumping from one open profession window to another without closing the original first.
+    if (addon.isOpen) then return end
+     
     addon:RegisterEvent("CRAFT_CLOSE", OnCraftClose)
+	addon.isOpen = true
     ClassicScanProfessionInfo(true);
 end
 
@@ -602,14 +619,14 @@ local skillUpMsg = gsub(ERR_SKILL_UP_SI, arg1pattern, "(.+)")
 skillUpMsg = gsub(skillUpMsg, arg2pattern, "(%%d+)")
 
 local function OnChatMsgSkill(self, msg)
-	if msg then	-- point gained while ts window is open ? rescan
+	if msg and addon.isOpen then	-- point gained while ts window is open ? rescan
 		local skill = msg:match(skillUpMsg)
-		if skill and (skill == GetTradeSkillLine()) then
+        -- TODO: check if the skillup was for the currently open profession pane
+		if skill then -- and skill == --C_TradeSkillUI.GetTradeSkillLine() then	-- if we gained a skill point in the currently opened profession pane, rescan
 			ScanTradeSkills()
-        elseif skill and (skill == (GetCraftDisplaySkillLine())) then
-            ScanTradeSkills(true)
 		end
-	end 
+	end
+--	ScanProfessionLinks() -- added to update skills upon firing of skillup event 
 end
 
 
@@ -1072,6 +1089,7 @@ function addon:OnEnable()
     
     hooksecurefunc("AbandonSkill", checkForUnlearnedProfession)
 	
+--	addon:SetupOptions()
 	ClearExpiredProfessions()	-- automatically cleanup guild profession links that are from an older version
 	LocalizeProfessionSpellIDs()
 end
@@ -1086,5 +1104,6 @@ function addon:OnDisable()
 end
 
 function addon:IsTradeSkillWindowOpen()
-	return (GetCraftDisplaySkillLine()) or ((GetTradeSkillLine()) ~= "UNKNOWN")
+	-- note : maybe there's a function in the WoW API to test this, but I did not find it :(
+	return addon.isOpen
 end
