@@ -60,7 +60,7 @@ Default to an english text.
 local factions = {                                     --UIDs:
 	{ id = 69, name = BF["Darnassus"] },               --1
 	{ id = 930, name = BF["Exodar"] },                 --2 
-	{ id = 54, name = BF["Gnomeregan"] },              --3
+	{ id = 54, name = BF["Gnomeregan Exiles"] },              --3
 	{ id = 47, name = BF["Ironforge"] },               --4
 	{ id = 72, name = BF["Stormwind"] },               --5
 	{ id = 530, name = BF["Darkspear Trolls"] },       --6
