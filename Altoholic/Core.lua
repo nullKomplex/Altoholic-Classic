@@ -361,6 +361,7 @@ local tabList = {
 	"Search",
 	"Guild",
 	"Grids",
+    "Agenda",
 }
 
 local frameToID = {}

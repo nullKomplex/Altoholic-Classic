@@ -28,12 +28,7 @@ local function GetEventExpiry(event)
 	timeTable.hour = tonumber(hour)
 	timeTable.min = tonumber(minute)
 
-	local gap = 0
-	if DataStore_Agenda then
-		gap = DataStore:GetClientServerTimeGap()
-	end
-	
-	return difftime(time(timeTable), time() + gap)	-- in seconds
+	return difftime(time(timeTable), time())	-- in seconds
 end
 
 -- ** Event Types **
