@@ -96,6 +96,7 @@ local factions = {                                     --UIDs:
 	{ id = 270, name = BF["Zandalar Tribe"] },         --36
 	{ id = 469, name = BF["Alliance"] },               --37
 	{ id = 67, name = BF["Horde"] },                   --38
+    { id = 471, name = BF["Wildhammer Clan"] }             --39
 }
 
 local FactionUIDsRev = {} -- key: name, value: UID
