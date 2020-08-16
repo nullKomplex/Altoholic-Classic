@@ -18,6 +18,7 @@ move-folders:
  Altoholic/DataStore_Mails: DataStore_Mails
  Altoholic/DataStore_Quests: DataStore_Quests
  Altoholic/DataStore_Reputations: DataStore_Reputations
+ Altoholic/DataStore_Talents: DataStore_Talents
 
 ignore:
  - LICENCE.md
