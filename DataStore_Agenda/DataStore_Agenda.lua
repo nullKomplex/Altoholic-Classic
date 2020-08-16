@@ -18,7 +18,6 @@ local AddonDB_Defaults = {
 		Characters = {
 			['*'] = {				-- ["Account.Realm.Name"]
 				lastUpdate = nil,
-				Contacts = {},
 				DungeonIDs = {},		-- raid timers
                 DungeonBosses = {},     -- raid timers for individual bosses
 								
@@ -40,47 +39,6 @@ local function SetOption(option, value)
 end
 
 -- *** Scanning functions ***
-local function ScanContacts()
-	local contacts = addon.ThisCharacter.Contacts
-
-	local oldValues = {}
-
-	-- if a known contact disconnected, preserve the info we know about him
-	for name, info in pairs(contacts) do
-		if type(info) == "table" then		-- contacts were only saved as strings in earlier versions,  make sure they're not taken into account
-			if info.level then
-				oldValues[name] = {}
-				oldValues[name].level = info.level
-				oldValues[name].class = info.class
-			end
-		end
-	end
-
-	wipe(contacts)
-
-	for i = 1, C_FriendList.GetNumFriends() do	-- only friends, not real id, as they're always visible
-	    local info = C_FriendList.GetFriendInfo(i)
-        if info then
-            local name, level, class, zone, isOnline, note = info.name, info.level, info.className, info.area, info.connected, info.notes 
-    
-    		if name then
-    			contacts[name] = contacts[name] or {}
-    			contacts[name].note = note
-    
-    			if isOnline then	-- level, class, zone will be ok
-    				contacts[name].level = level
-    				contacts[name].class = class
-    			elseif oldValues[name] then	-- did we save information earlier about this contact ?
-    				contacts[name].level = oldValues[name].level
-    				contacts[name].class = oldValues[name].class
-    			end
-    		end
-        end
-	end
-
-	addon.ThisCharacter.lastUpdate = time()
-end
-
 local function ScanDungeonIDs()
 	local dungeons = addon.ThisCharacter.DungeonIDs
     local dungeonBosses = addon.ThisCharacter.DungeonBosses
@@ -108,12 +66,7 @@ end
 
 -- *** Event Handlers ***
 local function OnPlayerAlive()
-	ScanContacts()
 	ScanDungeonIDs()
-end
-
-local function OnFriendListUpdate()
-	ScanContacts()
 end
 
 local function OnUpdateInstanceInfo()
@@ -140,14 +93,6 @@ local function OnChatMsgSystem(event, arg)
 		if tostring(arg) == INSTANCE_SAVED then
 			RequestRaidInfo()
 		end
-	end
-end
-
--- * Contacts *
-local function _GetContactInfo(character, key)
-	local contact = character.Contacts[key]
-	if type(contact) == "table" then
-		return contact.level, contact.class, contact.note
 	end
 end
 
@@ -192,8 +137,6 @@ local function _DeleteSavedInstance(character, key)
 end
 
 local PublicMethods = {
-	GetContactInfo = _GetContactInfo,
-
 	GetSavedInstances = _GetSavedInstances,
 	GetSavedInstanceInfo = _GetSavedInstanceInfo,
 	HasSavedInstanceExpired = _HasSavedInstanceExpired,
@@ -204,8 +147,6 @@ function addon:OnInitialize()
 	addon.db = LibStub("AceDB-3.0"):New(addonName .. "DB", AddonDB_Defaults)
 
 	DataStore:RegisterModule(addonName, addon, PublicMethods)
-    
-	DataStore:SetCharacterBasedMethod("GetContactInfo")
 
 	DataStore:SetCharacterBasedMethod("GetSavedInstances")
 	DataStore:SetCharacterBasedMethod("GetSavedInstanceInfo")
@@ -214,9 +155,7 @@ function addon:OnInitialize()
 end
 
 function addon:OnEnable()
-	-- Contacts
 	addon:RegisterEvent("PLAYER_ALIVE", OnPlayerAlive)
-	addon:RegisterEvent("FRIENDLIST_UPDATE", OnFriendListUpdate)
 
 	-- Dungeon IDs
 	addon:RegisterEvent("UPDATE_INSTANCE_INFO", OnUpdateInstanceInfo)
@@ -228,7 +167,6 @@ end
 
 function addon:OnDisable()
 	addon:UnregisterEvent("PLAYER_ALIVE")
-	addon:UnregisterEvent("FRIENDLIST_UPDATE")
 	addon:UnregisterEvent("UPDATE_INSTANCE_INFO")
     addon:UnregisterEvent("BOSS_KILL")
 	addon:UnregisterEvent("RAID_INSTANCE_WELCOME")
