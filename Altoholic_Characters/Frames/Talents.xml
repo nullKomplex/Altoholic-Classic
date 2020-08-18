@@ -1,117 +1,286 @@
 <Ui xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.blizzard.com/wow/ui/">
  	 <Script file="Talents.lua"></Script>
-     <Button name="AltoTalentIconTemplate" virtual="true">
+	<Frame name="TalentListTemplate" virtual="true">
 		<Size>
-			<AbsDimension x="36" y="36"/>
+			<AbsDimension x="270" y="304"/>
 		</Size>
+		<Anchors>
+			<Anchor point="TOPLEFT">
+				<Offset>
+					<AbsDimension x="0" y="0"/>
+				</Offset>
+			</Anchor>
+		</Anchors>
 		<Layers>
-			<Layer level="BORDER">
-				<Texture name="$parentIconTexture"/>
-				<FontString name="$parentCount" inherits="NumberFontNormal" justifyH="RIGHT" hidden="true">
-					<Anchors>
-						<Anchor point="BOTTOMRIGHT">
-							<Offset>
-								<AbsDimension x="-5" y="2"/>
-							</Offset>
-						</Anchor>
-					</Anchors>
-				</FontString>
+			<Layer level="BACKGROUND">
+				<Texture name="$parent_Branch1" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch2" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch3" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch4" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch5" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch6" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch7" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch8" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch9" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch10" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch11" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch12" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch13" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch14" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch15" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch16" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch17" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch18" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch19" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch20" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch21" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch22" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch23" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch24" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch25" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch26" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch27" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch28" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch29" inherits="TalentBranchTemplate"/>
+				<Texture name="$parent_Branch30" inherits="TalentBranchTemplate"/>
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame name="$parentShine" inherits="AutoCastShineTemplate">
-				<Anchors>
-					<Anchor point="CENTER">
-						<Offset>
-							<AbsDimension x="0" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<Size>
-					<AbsDimension x="34" y="34"/>
-				</Size>
+			<Button name="$parent_TalentButton1" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton2" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton3" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton4" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton5" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton6" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton7" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton8" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton9" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton10" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton11" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton12" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton13" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton14" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton15" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton16" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton17" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton18" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton19" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton20" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton21" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton22" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton23" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton24" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton25" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton26" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton27" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton28" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton29" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton30" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton31" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton32" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton33" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton34" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton35" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton36" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton37" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton38" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton39" inherits="AltoTalentButtonTemplate" />
+			<Button name="$parent_TalentButton40" inherits="AltoTalentButtonTemplate" />
+			
+			<Frame name="$parent_ArrowFrame" setAllPoints="true">
+				<Layers>
+					<Layer level="OVERLAY">
+						<Texture name="$parent_Arrow1" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow2" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow3" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow4" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow5" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow6" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow7" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow8" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow9" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow10" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow11" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow12" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow13" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow14" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow15" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow16" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow17" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow18" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow19" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow20" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow21" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow22" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow23" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow24" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow25" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow26" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow27" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow28" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow29" inherits="TalentArrowTemplate"/>
+						<Texture name="$parent_Arrow30" inherits="TalentArrowTemplate"/>
+					</Layer>
+				</Layers>
 			</Frame>
 		</Frames>
-		<Scripts>
-			<OnEnter>
-            	local DS = DataStore
-            	local character = Altoholic.Tabs.Characters:GetAltKey()
-            	local _, class = DS:GetCharacterClass(character)
-            	local treeName = DS:GetTreeNameByID(class, self:GetID())
-            	
-            	if treeName then
-            		AltoTooltip:ClearLines();
-            		AltoTooltip:SetOwner(self, "ANCHOR_RIGHT");
-            		AltoTooltip:AddLine(treeName,1,1,1);
-            		AltoTooltip:Show();
-            	end
-			</OnEnter>
-			<OnLeave>
-				AltoTooltip:Hide();
-			</OnLeave>
-			<OnClick>
-				AltoholicTabCharacters.Talents:Update(self:GetID())
-			</OnClick>
-		</Scripts>
-		<PushedTexture file="Interface\Buttons\UI-Quickslot-Depress"/>
-		<HighlightTexture file="Interface\Buttons\ButtonHilight-Square" alphaMode="ADD"/>
-	</Button>
+	</Frame>
 	
 	<Frame parentKey="Talents" parent="AltoholicTabCharacters" inherits="AltoDataPanelTemplate">
 		<Size>
 			<AbsDimension x="615" y="306"/>
 		</Size>
 		<Anchors>
-			<Anchor point="TOPLEFT">
+			<Anchor point="TOPRIGHT">
 				<Offset>
 					<AbsDimension x="0" y="-105"/>
 				</Offset>
 			</Anchor>
 		</Anchors>
 		<Layers>
-			<Layer level="ARTWORK">
-				<Texture name="$parent_bgTopLeft">
+			<Layer level="ARTWORK" sublevel="0">
+				<Texture name="$parent_bgTopLeft1">
 					<Size>
-						<AbsDimension x="232" y="232"/>
+						<AbsDimension x="150" y="232"/>
 					</Size>
 					<Anchors>
 						<Anchor point="TOPLEFT">
 							<Offset>
-								<AbsDimension x="345" y="0"/>
+								<AbsDimension x="0" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture name="$parent_bgTopRight">
+				<Texture name="$parent_bgTopRight1">
 					<Size>
 						<AbsDimension x="58" y="232"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft" relativePoint="TOPRIGHT">
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft1" relativePoint="TOPRIGHT">
 							<Offset>
 								<AbsDimension x="0" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture name="$parent_bgBottomLeft">
+				<Texture name="$parent_bgBottomLeft1">
 					<Size>
-						<AbsDimension x="232" y="116"/>
+						<AbsDimension x="150" y="116"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft" relativePoint="BOTTOMLEFT">
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft1" relativePoint="BOTTOMLEFT">
 							<Offset>
 								<AbsDimension x="0" y="0"/>
 							</Offset>
 						</Anchor>
 					</Anchors>
 				</Texture>
-				<Texture name="$parent_bgBottomRight">
+				<Texture name="$parent_bgBottomRight1">
 					<Size>
 						<AbsDimension x="58" y="116"/>
 					</Size>
 					<Anchors>
-						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft" relativePoint="BOTTOMRIGHT">
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft1" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+            </Layer>
+            <Layer level="ARTWORK" sublevel="1">
+                <Texture name="$parent_bgTopLeft2">
+					<Size>
+						<AbsDimension x="150" y="232"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="200" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgTopRight2">
+					<Size>
+						<AbsDimension x="58" y="232"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft2" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgBottomLeft2">
+					<Size>
+						<AbsDimension x="150" y="116"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft2" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgBottomRight2">
+					<Size>
+						<AbsDimension x="58" y="116"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft2" relativePoint="BOTTOMRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+            </Layer>
+            <Layer level="ARTWORK" sublevel="2">
+                <Texture name="$parent_bgTopLeft3">
+					<Size>
+						<AbsDimension x="150" y="232"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT">
+							<Offset>
+								<AbsDimension x="400" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgTopRight3">
+					<Size>
+						<AbsDimension x="58" y="232"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft3" relativePoint="TOPRIGHT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgBottomLeft3">
+					<Size>
+						<AbsDimension x="150" y="116"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft3" relativePoint="BOTTOMLEFT">
+							<Offset>
+								<AbsDimension x="0" y="0"/>
+							</Offset>
+						</Anchor>
+					</Anchors>
+				</Texture>
+				<Texture name="$parent_bgBottomRight3">
+					<Size>
+						<AbsDimension x="58" y="116"/>
+					</Size>
+					<Anchors>
+						<Anchor point="TOPLEFT" relativeTo="$parent_bgTopLeft3" relativePoint="BOTTOMRIGHT">
 							<Offset>
 								<AbsDimension x="0" y="0"/>
 							</Offset>
@@ -120,176 +289,26 @@
 				</Texture>
 			</Layer>
 		</Layers>
-		<Frames>
-			<Button name="$parent_SpecIcon1" inherits="AltoTalentIconTemplate" id="1">
-				<Anchors>
-					<Anchor point="LEFT" relativeTo="AltoholicFrameSearchLabel" relativePoint="RIGHT" >
-						<Offset x="360" y="-23" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_SpecIcon2" inherits="AltoTalentIconTemplate" id="2">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_SpecIcon1" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			<Button name="$parent_SpecIcon3" inherits="AltoTalentIconTemplate" id="3">
-				<Anchors>
-					<Anchor point="TOPLEFT" relativeTo="$parent_SpecIcon2" relativePoint="TOPRIGHT" >
-						<Offset x="5" y="0" />
-					</Anchor>
-				</Anchors>
-			</Button>
-			
-			<ScrollFrame name="$parent_ScrollFrame">
-				<Size>
-					<AbsDimension x="270" y="304"/>
-				</Size>
-			    <Frames>
-                    <Slider parentKey="ScrollBar" inherits="AltoUIPanelScrollBarTemplate">
-				        <Anchors>
-					           <Anchor point="TOPLEFT" relativePoint="TOPRIGHT" x="6" y="-16" />
-					           <Anchor point="BOTTOMLEFT" relativePoint="BOTTOMRIGHT" x="6" y="16" />
-				        </Anchors>
-		      	   </Slider>
-                </Frames>
-				<Anchors>
-					<Anchor point="TOPLEFT">
-						<Offset>
-							<AbsDimension x="345" y="0"/>
-						</Offset>
-					</Anchor>
-				</Anchors>
-				<ScrollChild>
-					<Frame name="$parentScrollChildFrame">
-						<Size>
-							<AbsDimension x="270" y="304"/>
-						</Size>
-						<Anchors>
-							<Anchor point="TOPLEFT">
-								<Offset>
-									<AbsDimension x="0" y="0"/>
-								</Offset>
-							</Anchor>
-						</Anchors>
-						<Layers>
-							<Layer level="BACKGROUND">
-								<Texture name="AltoholicFrameTalents_Branch1" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch2" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch3" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch4" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch5" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch6" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch7" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch8" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch9" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch10" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch11" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch12" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch13" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch14" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch15" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch16" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch17" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch18" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch19" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch20" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch21" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch22" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch23" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch24" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch25" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch26" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch27" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch28" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch29" inherits="TalentBranchTemplate"/>
-								<Texture name="AltoholicFrameTalents_Branch30" inherits="TalentBranchTemplate"/>
-							</Layer>
-						</Layers>
-						<Frames>
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent1" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent2" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent3" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent4" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent5" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent6" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent7" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent8" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent9" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent10" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent11" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent12" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent13" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent14" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent15" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent16" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent17" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent18" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent19" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent20" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent21" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent22" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent23" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent24" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent25" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent26" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent27" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent28" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent29" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent30" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent31" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent32" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent33" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent34" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent35" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent36" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent37" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent38" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent39" inherits="AltoTalentButtonTemplate" />
-							<Button name="AltoholicFrameTalents_ScrollFrameTalent40" inherits="AltoTalentButtonTemplate" />
-							
-							<Frame name="AltoholicFrameTalents_ArrowFrame" setAllPoints="true">
-								<Layers>
-									<Layer level="OVERLAY">
-										<Texture name="AltoholicFrameTalents_Arrow1" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow2" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow3" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow4" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow5" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow6" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow7" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow8" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow9" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow10" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow11" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow12" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow13" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow14" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow15" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow16" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow17" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow18" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow19" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow20" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow21" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow22" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow23" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow24" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow25" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow26" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow27" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow28" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow29" inherits="TalentArrowTemplate"/>
-										<Texture name="AltoholicFrameTalents_Arrow30" inherits="TalentArrowTemplate"/>
-									</Layer>
-								</Layers>
-							</Frame>
-						</Frames>
-					</Frame>
-				</ScrollChild>
-			</ScrollFrame>
+		<Frames>		
+            <Frame name="$parent_TalentFrame1" inherits="TalentListTemplate" />
+            <Frame name="$parent_TalentFrame2" inherits="TalentListTemplate">
+                <Anchors>
+        			<Anchor point="TOPLEFT">
+        				<Offset>
+        					<AbsDimension x="200" y="0"/>
+        				</Offset>
+        			</Anchor>
+        		</Anchors>
+            </Frame>
+            <Frame name="$parent_TalentFrame3" inherits="TalentListTemplate">
+                <Anchors>
+        			<Anchor point="TOPLEFT">
+        				<Offset>
+        					<AbsDimension x="400" y="0"/>
+        				</Offset>
+        			</Anchor>
+        		</Anchors>
+            </Frame>
 		</Frames>
         <Scripts>
 			<OnLoad>
