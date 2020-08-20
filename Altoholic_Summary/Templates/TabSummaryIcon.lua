@@ -14,6 +14,18 @@ local OPTION_TRADESKILL = "UI.Tabs.Summary.CurrentTradeSkill"
 
 -- ** Icon events **
 
+addon.ResetAllFilters = function()
+    addon:SetOption(OPTION_REALMS, 4)
+    addon:SetOption(OPTION_FACTIONS, 3)
+    addon:SetOption(OPTION_LEVELS, 1)
+    addon:SetOption(OPTION_LEVELS_MIN, 1)
+    addon:SetOption(OPTION_LEVELS_MAX, 120)
+    addon:SetOption(OPTION_CLASSES, 0)
+    addon:SetOption(OPTION_TRADESKILL, 0)
+    addon.Characters.InvalidateView()
+    addon.Summary:Update()
+end
+
 local function OnRealmFilterChange(frame)
 	addon:SetOption(OPTION_REALMS, frame.value)
 	addon.Characters:InvalidateView()
