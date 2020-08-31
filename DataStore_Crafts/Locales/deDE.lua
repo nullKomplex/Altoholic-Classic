@@ -8,4 +8,4 @@ L["BROADCAST_PROFS_ENABLED"] = "Die Berufe-Links deiner alternativen Charaktere 
 L["BROADCAST_PROFS_TITLE"] = "Berufe-Links verbreiten"
 L["Professions"] = "Berufe"
 L["Secondary Skills"] = "Sekundäre Fertigkeiten"
-
+L["Fishing"] = "Angeln"
