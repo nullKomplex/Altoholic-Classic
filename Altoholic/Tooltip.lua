@@ -504,6 +504,7 @@ end
 
 -- ** GameTooltip hooks **
 local function OnGameTooltipShow(tooltip, ...)
+    if GameTooltip:GetItem() then return end
 	if ShowGatheringNodeCounters() then
 	   GameTooltip:Show()
     end
