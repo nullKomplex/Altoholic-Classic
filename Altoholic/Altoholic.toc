@@ -1,4 +1,4 @@
-## Interface: 11305
+## Interface: 11306
 ## Title: Altoholic Classic - Fork by Teelo
 ## Title-zhCN: |cffeedd99 [物品] |r: 全角色统计 Altoholic
 
